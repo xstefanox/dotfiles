@@ -54,3 +54,21 @@ function man()
 }
 export -f man
 
+## List all the open TCP or UDP ports on the machine
+alias open-ports='nc -vz localhost 1-65535 2>&1 | $(which grep) -i succeeded'
+
+## Transmission
+alias tda='transmission-remote --add'
+alias tdl='transmission-remote --list'
+
+## Debian-based distro specific functions
+if [[ -e /etc/debian_version ]]
+then
+    alias search='apt-cache search --names-only'
+    alias add='apt-get install'
+    alias show='apt-cache show'
+    alias purge='apt-get autoremove'
+    alias dist-upgrade='apt-get dist-upgrade'
+    alias dist-sync='apt-get update'
+    alias list='dpkg -L'
+fi
