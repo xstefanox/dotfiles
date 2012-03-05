@@ -9,9 +9,8 @@ alias df='df -h'
 
 # MySQL
 alias mysql='mysql --host=localhost --user=root'
-alias mysqldump='mysql --host=localhost --user=root'
-alias mysqlimport='mysql --host=localhost --user=root'
-
+alias mysqldump='mysqldump --host=localhost --user=root'
+alias mysqlimport='mysqlimport --host=localhost --user=root'
 
 ## Calculate the space occupied by each subdirectory of the current directory
 ## FIXME: not working if a subdirectory contains a space character
