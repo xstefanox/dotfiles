@@ -12,6 +12,7 @@ alias mysql='mysql --host=localhost --user=root'
 alias mysqldump='mysql --host=localhost --user=root'
 alias mysqlimport='mysql --host=localhost --user=root'
 
+
 ## Calculate the space occupied by each subdirectory of the current directory
 ## FIXME: not working if a subdirectory contains a space character
 alias baobab='for item in $(find . -maxdepth 1 -type d -and -not -wholename . -prune | sort); do du -sh $item; done;'
