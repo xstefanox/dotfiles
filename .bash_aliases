@@ -4,7 +4,7 @@ if [[ $(uname -s) == Darwin ]]
 then
     alias ls='ls -G'
 else
-    alias ls=ls --color=auto'
+    alias ls='ls --color=auto'
 fi
 alias l='ls -1'     # 1-column output
 alias ll='ls -lh'   # show details, with size on human readable form
