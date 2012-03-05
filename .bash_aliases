@@ -1,3 +1,12 @@
+## Misc
+alias ls='ls -G'    # enable colors
+alias l='ls -1'     # 1-column output
+alias ll='ls -lh'   # show details, with size on human readable form
+alias la='ls -alh'  # show hidden files
+alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const'
+alias ping='ping -c 3'
+alias df='df -h'
+
 ## Calculate the space occupied by each subdirectory of the current directory
 ## FIXME: not working if a subdirectory contains a space character
 alias baobab='for item in $(find . -maxdepth 1 -type d -and -not -wholename . -prune | sort); do du -sh $item; done;'
