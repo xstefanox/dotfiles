@@ -1,5 +1,11 @@
 ## Misc
-alias ls='ls -G'    # enable colors
+# enable colors on directory listing
+if [[ $(uname -s) == Darwin ]]
+then
+    alias ls='ls -G'
+else
+    alias ls=ls --color=auto'
+fi
 alias l='ls -1'     # 1-column output
 alias ll='ls -lh'   # show details, with size on human readable form
 alias la='ls -alh'  # show hidden files
