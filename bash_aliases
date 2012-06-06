@@ -14,9 +14,9 @@ alias ping='ping -c 3'
 alias df='df -h'
 
 # MySQL
-alias mysql='mysql --host=localhost --user=root'
-alias mysqldump='mysqldump --host=localhost --user=root'
-alias mysqlimport='mysqlimport --host=localhost --user=root'
+which mysql &> /dev/null && alias mysql='mysql --host=localhost --user=root'
+which mysqldump &> /dev/null && alias mysqldump='mysqldump --host=localhost --user=root'
+which mysqlimport &> /dev/null && alias mysqlimport='mysqlimport --host=localhost --user=root'
 
 ## Calculate the space occupied by each subdirectory of the current directory
 ## FIXME: not working if a subdirectory contains a space character
@@ -60,8 +60,8 @@ function man()
             # on Mac OSX/Darwin
             open https://developer.apple.com/library/mac/#documentation/darwin/reference/manpages/${category}/${page}
         else
-            # fallback on Ubuntu
-            xdg-open http://manpages.ubuntu.com/manpages/$(lsb_release --codename | cut -d$'\t' -f2)/en/${category}/${page} 2> /dev/null
+            # fallback on Ubuntu; try to select the release using lsb_release if possible
+            xdg-open http://manpages.ubuntu.com/manpages/$(which lsb_release &> /dev/null && lsb_release --codename | cut -d$'\t' -f2)/en/${category}/${page} 2> /dev/null
         fi
         
     else
@@ -78,8 +78,8 @@ export -f man
 alias open-ports='nc -vz localhost 1-65535 2>&1 | $(which grep) -i succeeded'
 
 ## Transmission
-alias tda='transmission-remote --add'
-alias tdl='transmission-remote --list'
+which transmission-remote &> /dev/null && alias tda='transmission-remote --add'
+which transmission-remote &> /dev/null && alias tdl='transmission-remote --list'
 
 ## Debian-based distro specific functions
 if [[ -e /etc/debian_version ]]
@@ -91,4 +91,14 @@ then
     alias dist-upgrade='apt-get dist-upgrade'
     alias dist-sync='apt-get update'
     alias list='dpkg -L'
+elif [[ -e /etc/fedora-release ]]
+then
+    alias search='yum search'
+    alias add='yum install'
+    alias show='yum info'
+    alias purge='yum erase'
+    alias dist-upgrade='yum upgrade'
+#    alias dist-sync='apt-get update'   # this is handled automatically by yum
+    alias list='repoquery --list'
 fi
+
