@@ -13,11 +13,6 @@ alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const'
 alias ping='ping -c 3'
 alias df='df -h'
 
-# MySQL
-which mysql &> /dev/null && alias mysql='mysql --host=localhost --user=root'
-which mysqldump &> /dev/null && alias mysqldump='mysqldump --host=localhost --user=root'
-which mysqlimport &> /dev/null && alias mysqlimport='mysqlimport --host=localhost --user=root'
-
 ## Calculate the space occupied by each subdirectory of the current directory
 ## FIXME: not working if a subdirectory contains a space character
 alias baobab='for item in $(find . -maxdepth 1 -type d -and -not -wholename . -prune | sort); do du -sh $item; done;'
@@ -77,11 +72,57 @@ export -f man
 ## List all the open TCP or UDP ports on the machine
 alias open-ports='nc -vz localhost 1-65535 2>&1 | $(which grep) -i succeeded'
 
+# MySQL
+which mysql &> /dev/null && alias mysql='mysql --host=localhost --user=root'
+which mysqldump &> /dev/null && alias mysqldump='mysqldump --host=localhost --user=root'
+which mysqlimport &> /dev/null && alias mysqlimport='mysqlimport --host=localhost --user=root'
+
 ## Transmission
 which transmission-remote &> /dev/null && alias tda='transmission-remote --add'
 which transmission-remote &> /dev/null && alias tdl='transmission-remote --list'
 
-## Debian-based distro specific functions
+## Git
+## create the git-multistatus plugin if not found in the user path
+if which git &> /dev/null && ! which git-multistatus &> /dev/null
+then
+    
+    IFS=$'\n'
+    
+    for path in $(echo $PATH | tr ':' '\n')
+    do
+        if [[ "${path/$HOME/}" != "$path" && -d "$path" ]]
+        then
+            cat << __EOF__ >> "${path}/git-multistatus"
+#!/bin/bash
+for item in *
+do
+    if [[ -d "\$item" ]]
+    then
+        cd "\$item"
+        
+        echo -e "\n##\${NO_COLOR} \$item"
+        
+        if [[ -z "\$(git status -s)" ]]
+        then
+            echo -e "\${GREEN}OK\${NO_COLOR}"
+        else
+            git status -s
+        fi
+        
+        cd - &> /dev/null
+    fi
+done
+__EOF__
+
+            chmod +x "${path}/git-multistatus"
+            
+            break
+        fi
+    done
+fi
+
+
+## Debian-based distros package manager functions
 if [[ -e /etc/debian_version ]]
 then
     alias search='apt-cache search --names-only'
@@ -91,6 +132,7 @@ then
     alias dist-upgrade='apt-get dist-upgrade'
     alias dist-sync='apt-get update'
     alias list='dpkg -L'
+## Fedora-based distros package manager functions
 elif [[ -e /etc/fedora-release ]]
 then
     alias search='yum search'
