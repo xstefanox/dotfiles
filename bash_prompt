@@ -1,14 +1,21 @@
-# Prompt definition
-PROMPT_COMMAND='RET=$?;'
-RET_VALUE='$([[ $RET == 0 ]] && echo -ne "$NO_COLOR($GREEN$RET$NO_COLOR)" || echo -ne "$NO_COLOR($RED$RET$NO_COLOR)")'
-GIT_STATUS='$(git status &> /dev/null && echo -e $NO_COLOR{$([[ -n "$(git status -s)" ]] && echo -e $RED || echo -e $GREEN)$(git branch | cut -d" " -f2)$NO_COLOR})'
+#!/bin/bash
+
+## PS1: Default prompt
+PROMPT_COMMAND='PS1_RET_VALUE=$?;'
+PS1_RET_VALUE='$([[ $PS1_RET_VALUE == 0 ]] && echo -ne "$NO_COLOR($GREEN$PS1_RET_VALUE$NO_COLOR)" || echo -ne "$NO_COLOR($RED$PS1_RET_VALUE$NO_COLOR)")'
+PS1_GIT_STATUS='$(which git &> /dev/null && git status &> /dev/null && echo -e $NO_COLOR{$([[ -z "$(git status -s)" ]] && echo -ne $GREEN || echo -ne $RED; echo -n "git:"; git branch | cut -d" " -f2)$NO_COLOR})'
+PS1_SVN_STATUS='$(which svn &> /dev/null && [[ -d .svn ]] && echo -e $NO_COLOR{$([[ -z "$(svn status)" ]] && echo -ne $GREEN || echo -ne $RED; svn status -u | sed -n "$ s/Status against revision:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")$NO_COLOR})'
 
 if [[ $UID == 0 ]]
 then
     # prompt for root
-    PS1="[$RED\u$YELLOW@\h$NO_COLOR:$BLUE\w$NO_COLOR]$RET_VALUE$NO_COLOR$GIT_STATUS\n\$ "
+    PS1="[$RED\u$YELLOW@\h$NO_COLOR:$BLUE\w$NO_COLOR]$PS1_RET_VALUE$NO_COLOR$PS1_GIT_STATUS$PS1_SVN_STATUS\n\$ "
 else
     # prompt for regular users
-    PS1="[$GREEN\u$YELLOW@\h$NO_COLOR:$BLUE\w$NO_COLOR]$RET_VALUE$NO_COLOR$GIT_STATUS\n\$ "
+    PS1="[$GREEN\u$YELLOW@\h$NO_COLOR:$BLUE\w$NO_COLOR]$PS1_RET_VALUE$NO_COLOR$PS1_GIT_STATUS$PS1_SVN_STATUS\n\$ "
 fi
 
+## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
+
+## PS4: Debug prompt
+PS4='$0, Line $LINENO: '

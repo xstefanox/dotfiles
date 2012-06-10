@@ -1,0 +1,153 @@
+#!/bin/bash
+
+##############
+## HOME BIN ##
+##############
+
+## Path to the user binaries
+if [[ "$(uname -s)" == Darwin ]]
+then
+    export HOME_BIN="$HOME/Library/bin"
+else
+    export HOME_BIN="$HOME/.local/bin"
+fi
+
+## Ensure HOME_BIN exists
+[[ ! -d "$HOME_BIN" ]] && mkdir "$HOME_BIN"
+
+## Add HOME_BIN to the PATH
+export PATH="$HOME_BIN:$PATH"
+
+#####################
+## BASH COMPLETION ##
+#####################
+
+export BASH_COMPLETION=$HOME/.bash_completion
+export BASH_COMPLETION_DIR=$HOME/.bash_completion.d
+export BASH_COMPLETION_COMPAT_DIR=$HOME/.bash_completion.d
+
+############
+## EDITOR ##
+############
+
+if [[ "$(uname -s)" == Darwin ]]
+then
+    export EDITOR=nano
+elif [[ -n "$DISPLAY" ]]
+then
+    export EDITOR=gedit
+else
+    export EDITOR=nano
+fi
+
+###########
+## PAGER ##
+###########
+
+if which aless &> /dev/null
+then
+    export PAGER=aless
+elif which most &> /dev/null
+then
+    export PAGER=most
+fi
+
+##############
+## HOMEBREW ##
+##############
+
+# Add the Homebrew PATH and Bash completion
+if [[ "$(uname -s)" == Darwin && -d "$HOME/Library/Homebrew" ]]
+then
+    export PATH=$HOME/Library/Homebrew/bin:$PATH
+    export PATH=$HOME/Library/Homebrew/sbin:$PATH
+    which -s brew && source $(brew --prefix)/Library/Contributions/brew_bash_completion.sh
+fi
+
+#################
+## PYTHON EGGS ##
+#################
+
+# Mac OSX 10.7 Lion supports only Python 2.7
+if [[ "$(uname -s)" == Darwin ]]
+then
+    export PYTHONPATH27=$HOME/Library/Python/2.7/site-packages
+    export PATH=$PYTHONPATH27:$PATH
+    export PYTHONPATH=$PYTHONPATH27:$PYTHONPATH
+
+    # don't use the bloated easy_install
+    alias easy_install='echo "!!! Deprecated"; false'
+
+    # make pip use the default paths and install every egg into the user home
+    function pip()
+    {
+	    pip=$(which pip)
+
+    	if [[ $1 == install ]]
+	    then
+		    $pip $@ --install-option="--install-purelib=$PYTHONPATH27" --install-option="--install-platlib=$PYTHONPATH27" --install-option="--prefix=$PYTHONPATH27"
+    	else
+	    	$pip $@
+    	fi
+    }
+    export -f pip
+fi
+
+#########
+## GIT ##
+#########
+
+if which git &> /dev/null
+then
+    git config --global user.name "Stefano Varesi"
+    git config --global credential.helper cache
+    git config --global color.ui true
+    git config --global core.excludesfile /home/xstefanox/.gitignore.global
+fi
+
+#########
+## WII ##
+#########
+
+[[ "$(uname -s)" == Darwin ]] && export PATH=/Volumes/WII/bin:$PATH || export PATH=/media/WII/bin:$PATH
+
+##########
+## MISC ##
+##########
+
+## Maximum allowed file size on a FAT32 filesystem
+export FAT32_MAX_FILE_SIZE="$((2**32 - 1))"
+
+## Size of a Nintendo WII ISO image
+export WII_ISO_SIZE="4699979776"
+
+## Mac OSX
+if [[ "$(uname -s)" == Darwin ]]
+then
+
+    ## @FIXME: Mac OSX only?
+    #export LC_ALL="$LANG"
+    
+    # do not write useless trash to samba shares
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores true
+
+    ## disable the warning when changing a file extension
+    defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+## Linux
+else
+
+    ## Preferences requiring an active X11 session
+    if [[ -n "$DISPLAY" ]]
+    then
+        if which gsettings &> /dev/null
+        then
+            gsettings set org.gnome.gedit.preferences.editor tabs-size 4
+            gsettings set org.gnome.gedit.preferences.editor insert-spaces true
+            gsettings set org.gnome.gedit.preferences.editor create-backup-copy false
+            gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
+            gsettings set org.gnome.gedit.preferences.editor auto-indent true
+        fi
+    fi
+
+fi
