@@ -1,0 +1,11 @@
+# Rules for volumes that should be ignored
+
+# ignore HP_TOOLS partition on HP laptops
+ENV{ID_FS_LABEL}=="HP_TOOLS", ENV{DKD_PRESENTATION_HIDE}="1"      # DeviceKit-Disks rule
+ENV{ID_FS_LABEL}=="HP_TOOLS", ENV{UDISKS_PRESENTATION_HIDE}="1"   # udisks 1.x rule
+ENV{ID_FS_LABEL}=="HP_TOOLS", ENV{UDISKS_IGNORE}="1"              # udisks 2.x rule
+
+# ignore RECOVERY partition on HP laptops
+ENV{ID_FS_LABEL}=="RECOVERY", ENV{DKD_PRESENTATION_HIDE}="1"      # DeviceKit-Disks 1.x rule
+ENV{ID_FS_LABEL}=="RECOVERY", ENV{UDISKS_PRESENTATION_HIDE}="1"   # udisks 1.x rule
+ENV{ID_FS_LABEL}=="RECOVERY", ENV{UDISKS_IGNORE}="1"              # udisks 2.x rule
