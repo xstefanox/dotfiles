@@ -56,10 +56,10 @@ then
 elif [[ -e /etc/fedora-release ]]
 then
     alias search='yum search'
-    alias add='yum install'
+    alias add='[[ $UID == 0 ]] && yum install || sudo yum install'
     alias show='yum info'
-    alias purge='yum erase'
-    alias dist-upgrade='yum upgrade'
+    alias purge='[[ $UID == 0 ]] && yum erase || sudo yum erase'
+    alias dist-upgrade='[[ $UID == 0 ]] && yum upgrade || sudo yum upgrade'
 #    alias dist-sync='apt-get update'   # this is handled automatically by yum
     alias list='repoquery --list'
 fi
