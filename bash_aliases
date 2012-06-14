@@ -26,7 +26,8 @@ alias grep='grep --color -n'
 # - use spaces instead of tabs
 # - don't wrap long lines
 # - always show cursor position
-alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const'
+# - use tabs instead of spaces
+alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const --tabstospaces'
 
 ## Diff
 which diff &> /dev/null && alias diff='diff -Nur'
