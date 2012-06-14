@@ -28,6 +28,10 @@ alias grep='grep --color -n'
 # - always show cursor position
 alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const'
 
+## Diff
+which diff &> /dev/null && alias diff='diff -Nur'
+which colordiff &> /dev/null && alias colordiff='colordiff -Nur'
+
 ## Skynet
 alias skynet='ssh -p7777 root@xstefanox.homelinux.org'
 alias poweroff-skynet='ssh -p7777 root@xstefanox.homelinux.org poweroff'
@@ -60,6 +64,6 @@ then
     alias show='yum info'
     alias purge='[[ $UID == 0 ]] && yum erase || sudo yum erase'
     alias dist-upgrade='[[ $UID == 0 ]] && yum upgrade || sudo yum upgrade'
-#    alias dist-sync='apt-get update'   # this is handled automatically by yum
+    alias dist-sync='yum check-update'
     alias list='repoquery --list'
 fi
