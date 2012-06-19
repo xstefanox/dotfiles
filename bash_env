@@ -18,13 +18,34 @@ fi
 ## Add HOME_BIN to the PATH
 export PATH="$HOME_BIN:$PATH"
 
+##############
+## HOMEBREW ##
+##############
+
+# Add the Homebrew PATH and Bash completion
+if [[ "$(uname -s)" == Darwin && -d "$HOME/Library/Homebrew" ]]
+then
+    export PATH=$HOME/Library/Homebrew/bin:$PATH
+    export PATH=$HOME/Library/Homebrew/sbin:$PATH
+fi
+
 #####################
 ## BASH COMPLETION ##
 #####################
 
-[[ -z "$BASH_COMPLETION" ]] && export BASH_COMPLETION=/etc/bash_completion
-[[ -z "$BASH_COMPLETION_DIR" ]] && export BASH_COMPLETION_DIR=$HOME/.bash_completion.d
-[[ -z "$BASH_COMPLETION_COMPAT_DIR" ]] && export BASH_COMPLETION_COMPAT_DIR=/etc/bash_completion.d
+if [[ "$(uname -s)" == Darwin ]]
+then
+    if which brew &> /dev/null
+    then
+        #source $(brew --prefix)/etc/bash_completion
+        #source $(brew --prefix)/Library/Contributions/brew_bash_completion.sh
+        :
+    fi
+else
+    [[ -z "$BASH_COMPLETION" && -f /etc/bash_completion ]] && export BASH_COMPLETION=/etc/bash_completion
+    [[ -z "$BASH_COMPLETION_DIR" && -f /etc/bash_completion.d ]] && export BASH_COMPLETION_DIR=/etc/bash_completion.d
+    [[ -z "$BASH_COMPLETION_COMPAT_DIR" && -f /etc/bash_completion.d ]] && export BASH_COMPLETION_COMPAT_DIR=/etc/bash_completion.d
+fi
 
 ############
 ## EDITOR ##
@@ -50,18 +71,6 @@ then
 elif which most &> /dev/null
 then
     export PAGER=most
-fi
-
-##############
-## HOMEBREW ##
-##############
-
-# Add the Homebrew PATH and Bash completion
-if [[ "$(uname -s)" == Darwin && -d "$HOME/Library/Homebrew" ]]
-then
-    export PATH=$HOME/Library/Homebrew/bin:$PATH
-    export PATH=$HOME/Library/Homebrew/sbin:$PATH
-    which -s brew && source $(brew --prefix)/Library/Contributions/brew_bash_completion.sh
 fi
 
 #################
@@ -100,8 +109,8 @@ fi
 if which git &> /dev/null
 then
     git config --global user.name "Stefano Varesi"
-# disabled: this creates a daemon and a warning is always raised when closing the window in Mac OSX
-#    git config --global credential.helper cache
+    # disabled: this creates a daemon and a warning is always raised when closing the window in Mac OSX
+    #git config --global credential.helper cache
     git config --global color.ui true
     git config --global core.excludesfile /home/xstefanox/.gitignore.global
 fi
@@ -122,13 +131,14 @@ export FAT32_MAX_FILE_SIZE="$((2**32 - 1))"
 ## Size of a Nintendo WII ISO image
 export WII_ISO_SIZE="4699979776"
 
+## Localization
+[[ -z "$LC_ALL" && -n "$LANG" ]] && export LC_ALL="$LANG"
+[[ -z "$LANG" && -n "$LC_ALL" ]] && export LANG="$LC_ALL"
+
 ## Mac OSX
 if [[ "$(uname -s)" == Darwin ]]
 then
 
-    ## @FIXME: Mac OSX only?
-    #export LC_ALL="$LANG"
-    
     # do not write useless trash to samba shares
     defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 
