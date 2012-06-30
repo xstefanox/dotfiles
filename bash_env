@@ -65,12 +65,17 @@ fi
 ## PAGER ##
 ###########
 
-if which aless &> /dev/null
-then
-    export PAGER=aless
-elif which most &> /dev/null
+#if which aless &> /dev/null
+#then
+#    export PAGER=aless
+#elif which most &> /dev/null
+
+if which most &> /dev/null
 then
     export PAGER=most
+elif which less &> /dev/null
+then
+    export PAGER=less
 fi
 
 #################
@@ -112,7 +117,7 @@ then
     # disabled: this creates a daemon and a warning is always raised when closing the window in Mac OSX
     #git config --global credential.helper cache
     git config --global color.ui true
-    git config --global core.excludesfile /home/xstefanox/.gitignore.global
+    git config --global core.excludesfile "~/.gitignore.global"
 fi
 
 #########

@@ -33,6 +33,9 @@ alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const --tabstospace
 which diff &> /dev/null && alias diff='diff -Nur'
 which colordiff &> /dev/null && alias colordiff='colordiff -Nur'
 
+## free (this command does not exist on Mac OSX, so check for its existence)
+which free &> /dev/null && alias free='free -m'
+
 ## Skynet
 alias skynet='ssh -p7777 root@xstefanox.homelinux.org'
 alias poweroff-skynet='ssh -p7777 root@xstefanox.homelinux.org poweroff'
