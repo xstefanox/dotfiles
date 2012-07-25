@@ -13,7 +13,7 @@ else
 fi
 
 ## Ensure HOME_BIN exists
-[[ ! -d "$HOME_BIN" ]] && mkdir "$HOME_BIN"
+[[ ! -d "$HOME_BIN" ]] && mkdir -p "$HOME_BIN"
 
 ## Add HOME_BIN to the PATH
 export PATH="$HOME_BIN:$PATH"
