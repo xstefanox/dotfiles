@@ -33,13 +33,20 @@ alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const --tabstospace
 which diff &> /dev/null && alias diff='diff -Nur'
 which colordiff &> /dev/null && alias colordiff='colordiff -Nur'
 
+## Tail
+which colortail &> /dev/null && alias tail='colortail'
+
 ## free (this command does not exist on Mac OSX, so check for its existence)
 which free &> /dev/null && alias free='free -m'
 
 ## Skynet
-alias skynet='ssh -p7777 root@xstefanox.homelinux.org'
-alias poweroff-skynet='ssh -p7777 root@xstefanox.homelinux.org poweroff'
-alias reboot-skynet='ssh -p7777 root@xstefanox.homelinux.org reboot'
+# don't create these aliases on skynet itself
+if [[ $(hostname) != skynet ]]
+then
+    alias skynet='ssh -p7777 root@$(ping -c1 -W1 skynet.local &> /dev/null && echo skynet.local || echo xstefanox.homelinux.org)'
+    alias poweroff-skynet='ssh -p7777 root@$(ping -c1 -W1 skynet.local &> /dev/null && echo skynet.local || echo xstefanox.homelinux.org) poweroff'
+    alias reboot-skynet='ssh -p7777 root@$(ping -c1 -W1 skynet.local &> /dev/null && echo skynet.local || echo xstefanox.homelinux.org) reboot'
+fi
 
 ## MySQL
 which mysql &> /dev/null && alias mysql='mysql --host=localhost --user=root'
@@ -49,6 +56,16 @@ which mysqlimport &> /dev/null && alias mysqlimport='mysqlimport --host=localhos
 ## Transmission
 which transmission-remote &> /dev/null && alias tda='transmission-remote --add'
 which transmission-remote &> /dev/null && alias tdl='transmission-remote --list'
+which transmission-remote && function tdr()
+{
+    if [[ -n "$1" ]]
+    then
+        transmission-remote --torrent $1 --remove
+    else
+        echo "Please provide the torrent number"
+        return 1
+    fi
+}
 
 ## Debian-based distros package manager functions
 if [[ -e /etc/debian_version ]]

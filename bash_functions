@@ -119,6 +119,17 @@ function man()
     fi
 }
 
+[[ $(uname -s) == Darwin ]] && which abcde &> /dev/null && function rip()
+{
+    dev="$(mount | \grep cddafs | cut -d' ' -f1)"
+    
+    if [[ -n "$dev" ]]
+    then
+        # unmount the disc
+        hdiutil unmount "$dev" -quiet && abcde -d "$dev" -N -a read,encode,move,clean
+    fi
+}
+
 ## Git
 ## create the git-multistatus plugin if not found in the user path
 if which git &> /dev/null && ! which git-multistatus &> /dev/null && [[ -n "$HOME_BIN" ]]
