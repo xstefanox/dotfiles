@@ -1,11 +1,18 @@
 #!/bin/bash
 
+####################
+## OS RECOGNITION ##
+####################
+
+alias linux='[[ $(uname -s) == Linux ]]'
+alias osx='[[ $(uname -s) == Darwin ]]'
+
 ##############
 ## HOME BIN ##
 ##############
 
 ## Path to the user binaries
-if [[ "$(uname -s)" == Darwin ]]
+if osx
 then
     export HOME_BIN="$HOME/Library/bin"
 else
@@ -23,7 +30,7 @@ export PATH="$HOME_BIN:$PATH"
 ##############
 
 # Add the Homebrew PATH and Bash completion
-if [[ "$(uname -s)" == Darwin && -d "$HOME/Library/Homebrew" ]]
+if [[ osx && -d "$HOME/Library/Homebrew" ]]
 then
     export PATH=$HOME/Library/Homebrew/bin:$PATH
     export PATH=$HOME/Library/Homebrew/sbin:$PATH
@@ -33,7 +40,7 @@ fi
 ## BASH COMPLETION ##
 #####################
 
-if [[ "$(uname -s)" == Darwin ]]
+if osx
 then
     if which brew &> /dev/null
     then
@@ -51,7 +58,7 @@ fi
 ## EDITOR ##
 ############
 
-if [[ "$(uname -s)" == Darwin ]]
+if osx
 then
     export EDITOR=nano
 elif [[ -n "$DISPLAY" ]]
@@ -83,7 +90,7 @@ fi
 #################
 
 # Mac OSX 10.7 Lion supports only Python 2.7
-if [[ "$(uname -s)" == Darwin ]]
+if osx
 then
     export PYTHONPATH27=$HOME/Library/Python/2.7/site-packages
     export PATH=$PYTHONPATH27:$PATH
@@ -124,7 +131,7 @@ fi
 ## WII ##
 #########
 
-[[ "$(uname -s)" == Darwin ]] && export PATH=/Volumes/WII/bin:$PATH || export PATH=/media/WII/bin:$PATH
+osx && export PATH=/Volumes/WII/bin:$PATH || export PATH=/media/WII/bin:$PATH
 
 ##########
 ## MISC ##
@@ -141,7 +148,7 @@ export WII_ISO_SIZE="4699979776"
 [[ -z "$LANG" && -n "$LC_ALL" ]] && export LANG="$LC_ALL"
 
 ## Mac OSX
-if [[ "$(uname -s)" == Darwin ]]
+if osx
 then
 
     # do not write useless trash to samba shares
@@ -167,3 +174,4 @@ else
     fi
 
 fi
+

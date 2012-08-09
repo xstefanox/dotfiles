@@ -19,3 +19,4 @@ fi
 
 ## PS4: Debug prompt
 PS4='$0, Line $LINENO: '
+
