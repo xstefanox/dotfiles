@@ -2,17 +2,80 @@
 
 ## PS1: Default prompt
 PROMPT_COMMAND='PS1_RET_VALUE=$?;'
-PS1_RET_VALUE='$([[ $PS1_RET_VALUE == 0 ]] && echo -ne "$NO_COLOR($GREEN$PS1_RET_VALUE$NO_COLOR)" || echo -ne "$NO_COLOR($RED$PS1_RET_VALUE$NO_COLOR)")'
-PS1_GIT_STATUS='$(which git &> /dev/null && git status &> /dev/null && echo -e $NO_COLOR{$([[ -z "$(git status -s)" ]] && echo -ne $GREEN || echo -ne $RED; echo -n "git:"; git branch | sed -n "1 s:[^ ]* :: p")$NO_COLOR})'
-PS1_SVN_STATUS='$(which svn &> /dev/null && [[ -d .svn ]] && echo -e $NO_COLOR{$([[ -z "$(svn status)" ]] && echo -ne $GREEN || echo -ne $RED; svn status -u | sed -n "$ s/Status against revision:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")$NO_COLOR})'
+
+PS1_RET_VALUE='$(
+    if [[ "${PS1_RET_VALUE}" == 0 ]];
+    then
+        echo -ne "${NO_COLOR}(${GREEN}${PS1_RET_VALUE}${NO_COLOR})";
+    else
+        echo -ne "${NO_COLOR}(${RED}${PS1_RET_VALUE}${NO_COLOR})";
+    fi
+)'
+
+PS1_GIT_STATUS='$(
+    if which git &> /dev/null && git status &> /dev/null;
+    then
+        echo -ne "${NO_COLOR}{";
+        
+        if [[ -z "$(git status -s)" ]];
+        then
+            echo -ne "${GREEN}";
+        else
+            echo -ne "${RED}";
+        fi;
+        
+        echo -n "git:";
+        
+        branch="$(git branch | sed -n "1 s:[^ ]* :: p")";
+        echo -n "${branch}";
+        
+        echo -ne "${NO_COLOR}}";
+    fi
+)'
+
+PS1_SVN_STATUS='$(
+    if which svn &> /dev/null && [[ -d .svn ]];
+    then
+        url=$(svn info | sed -n "/^URL/ s/URL:[[:space:]]*// p");
+        
+        if [[ "${url/:*/}" != "file" ]];
+        then
+            host="${url/*:\/\//}";
+            host="${host/\/*/}";
+            
+            echo -ne "${NO_COLOR}{";
+            
+            if ping -c1 -W1 "${host}" &> /dev/null;
+            then
+        
+                if [[ -z "$(svn status)" ]];
+                then
+                    echo -ne "${GREEN}";
+                else
+                    echo -ne "${RED}";
+                fi
+                
+                rev="$(svn status -u | sed -n "$ s/Status against revision:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
+                echo -n "${rev}";
+            else
+                echo -ne "${YELLOW}svn:unknown";
+            fi;
+            
+            echo -ne "${NO_COLOR}}";
+        fi
+    fi
+)'
+
+PS1_SCM_STATUS="${PS1_GIT_STATUS}${PS1_SVN_STATUS}"
+
 
 if [[ $UID == 0 ]]
 then
     # prompt for root
-    PS1="[$RED\u$YELLOW@\h$NO_COLOR:$BLUE\w$NO_COLOR]$PS1_RET_VALUE$NO_COLOR$PS1_GIT_STATUS$PS1_SVN_STATUS\n\$ "
+    PS1="[${RED}\u${YELLOW}@\h${NO_COLOR}:${BLUE}\w${NO_COLOR}]${PS1_RET_VALUE}${PS1_SCM_STATUS}\n\$ "
 else
     # prompt for regular users
-    PS1="[$GREEN\u$YELLOW@\h$NO_COLOR:$BLUE\w$NO_COLOR]$PS1_RET_VALUE$NO_COLOR$PS1_GIT_STATUS$PS1_SVN_STATUS\n\$ "
+    PS1="[${GREEN}\u${YELLOW}@\h${NO_COLOR}:${BLUE}\w${NO_COLOR}]${PS1_RET_VALUE}${PS1_SCM_STATUS}\n\$ "
 fi
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)

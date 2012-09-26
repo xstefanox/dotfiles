@@ -267,6 +267,25 @@ function archive_file_for_FAT32()
 	fi
 }
 
+## Shortcut for editing text files
+if osx
+then
+    alias edit='open -a TextWrangler'
+fi
+
+## Desktop notification
+if osx
+then
+    if which growlnotify &> /dev/null
+    then
+        function notify()
+        {
+            growlnotify --appIcon "$([[ -n $3 ]] && echo $3)" --message "$1" "$2"
+        }
+        export -f notify
+    fi
+fi
+
 ## Calculate the space occupied by each subdirectory of the current directory
 ## @FIXME: not working if a subdirectory contains a space character
 #function baobab()

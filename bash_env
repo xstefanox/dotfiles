@@ -151,11 +151,15 @@ export WII_ISO_SIZE="4699979776"
 if osx
 then
 
-    # do not write useless trash to samba shares
+    ## do not write useless trash to samba shares
     defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 
     ## disable the warning when changing a file extension
     defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+    ## don't run anything on X11/XQuartz opening
+    defaults write org.x.X11 app_to_run /usr/bin/true
+    defaults write org.macosforge.xquartz.X11 app_to_run /usr/bin/true
 
 ## Linux
 else
