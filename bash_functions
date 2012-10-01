@@ -270,7 +270,7 @@ function archive_file_for_FAT32()
 ## Shortcut for editing text files
 if osx
 then
-    alias edit='open -a TextWrangler'
+    alias edit='open -a TextMate'
 fi
 
 ## Desktop notification

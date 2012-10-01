@@ -8,7 +8,7 @@ PS1_RET_VALUE='$(
     then
         echo -ne "${NO_COLOR}(${GREEN}${PS1_RET_VALUE}${NO_COLOR})";
     else
-        echo -ne "${NO_COLOR}(${RED}${PS1_RET_VALUE}${NO_COLOR})";
+        echo -ne "${NO_COLOR}(${RED}${PS1_RET_VALUE}:$(python -c "import os; print(os.strerror(${PS1_RET_VALUE}))")${NO_COLOR})";
     fi
 )'
 
