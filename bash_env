@@ -203,7 +203,7 @@ then
     alias easy_install-2.7='echo "!!! Deprecated"; false'
 
     # make pip use the default paths and install every egg into the user home
-    function pip()
+    which pip &> /dev/null && function pip()
     {
 	    pip=$(which pip)
 
@@ -213,8 +213,7 @@ then
     	else
 	    	$pip $@
     	fi
-    }
-    export -f pip
+    } && export -f pip
 fi
 
 #########
