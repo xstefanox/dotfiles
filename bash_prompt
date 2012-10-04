@@ -1,8 +1,9 @@
 #!/bin/bash
 
-## PS1: Default prompt
+# save the return value of the last executed process
 PROMPT_COMMAND='PS1_RET_VALUE=$?;'
 
+# translate the saved return value in a colored string containing the error description
 PS1_RET_VALUE='$(
     if [[ "${PS1_RET_VALUE}" == 0 ]];
     then
@@ -12,6 +13,7 @@ PS1_RET_VALUE='$(
     fi
 )'
 
+# generate a colored string describing the status of the Git working copy in the current directory
 PS1_GIT_STATUS='$(
     if which git &> /dev/null && git status &> /dev/null;
     then
@@ -33,6 +35,7 @@ PS1_GIT_STATUS='$(
     fi
 )'
 
+# generate a colored string describing the status of the Subversion working copy in the current directory
 PS1_SVN_STATUS='$(
     if which svn &> /dev/null && [[ -d .svn ]];
     then
@@ -66,17 +69,24 @@ PS1_SVN_STATUS='$(
     fi
 )'
 
+# generate the final source code management status description string
 PS1_SCM_STATUS="${PS1_GIT_STATUS}${PS1_SVN_STATUS}"
 
+# color the username depending on user being root or not
+USER_COLOR="$(
+    if [[ $UID == 0 ]]
+    then
+        echo "${RED}"
+    else
+        echo "${GREEN}"
+    fi
+)"
 
-if [[ $UID == 0 ]]
-then
-    # prompt for root
-    PS1="[${RED}\u${YELLOW}@\h${NO_COLOR}:${BLUE}\w${NO_COLOR}]${PS1_RET_VALUE}${PS1_SCM_STATUS}\n\$ "
-else
-    # prompt for regular users
-    PS1="[${GREEN}\u${YELLOW}@\h${NO_COLOR}:${BLUE}\w${NO_COLOR}]${PS1_RET_VALUE}${PS1_SCM_STATUS}\n\$ "
-fi
+## PS1: Default prompt
+PS1="[${USER_COLOR}\u${YELLOW}@\h${NO_COLOR}:${BLUE}\w${NO_COLOR}]${PS1_RET_VALUE}${PS1_SCM_STATUS}\n\$ "
+
+# clean the environment
+unset PS1_RET_VALUE PS1_GIT_STATUS PS1_SVN_STATUS PS1_SCM_STATUS USER_COLOR
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
 
