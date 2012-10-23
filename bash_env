@@ -1,5 +1,40 @@
 #!/bin/bash
 
+####################################
+# Bash initialization
+#
+# LOGIN:
+# /etc/profile
+# 	/etc/profile.env (if exists)
+# 	/etc/bash/bashrc (if exists)
+# 	/etc/profile.d/*.sh (if exists)
+# 
+# ~/.bash_profile
+# 	/etc/bashrc
+# 	~/.bashrc (if exists)
+# if( ~/.bash_profile doesn't exist)
+# 	~/.bash_login
+# if( ~/.bash_profile doesn't exist)
+# 	~/.bash_login
+#
+# NON-LOGIN
+# /etc/bash/bashrc
+# ~/.bashrc
+####################################
+
+########
+# BASH #
+########
+
+# Fix cd typos
+shopt -s cdspell
+
+# Treat undefined variables as errors
+#set -o nounset
+
+# Don't attempt to search the PATH for possible completions when completion is attempted on an empty line
+shopt -s no_empty_cmd_completion
+
 ####################
 ## OS RECOGNITION ##
 ####################
@@ -54,13 +89,21 @@ else
     [[ -z "$BASH_COMPLETION_COMPAT_DIR" && -f /etc/bash_completion.d ]] && export BASH_COMPLETION_COMPAT_DIR=/etc/bash_completion.d
 fi
 
+# TAB-completion for sudo
+complete -cf sudo
+
 ############
 ## EDITOR ##
 ############
 
 if osx
 then
-    export EDITOR=nano
+    if which mate &> /dev/null
+    then
+        export EDITOR="mate -w"
+    else
+        export EDITOR=nano
+    fi
 elif [[ -n "$DISPLAY" ]]
 then
     export EDITOR=gedit
@@ -72,11 +115,6 @@ fi
 ## PAGER ##
 ###########
 
-#if which aless &> /dev/null
-#then
-#    export PAGER=aless
-#elif which most &> /dev/null
-
 if which most &> /dev/null
 then
     export PAGER=most
@@ -85,9 +123,9 @@ then
     export PAGER=less
 fi
 
-#################
-## PYTHON EGGS ##
-#################
+############
+## PYTHON ##
+############
 
 export PYTHONSTARTUP=$HOME/.pythonrc
 export PYTHONHISTORY=$HOME/.python_history
@@ -248,6 +286,10 @@ export WII_ISO_SIZE="4699979776"
 ## Localization
 [[ -z "$LC_ALL" && -n "$LANG" ]] && export LC_ALL="$LANG"
 [[ -z "$LANG" && -n "$LC_ALL" ]] && export LANG="$LC_ALL"
+
+####################
+## OS PREFERENCES ##
+####################
 
 ## Mac OSX
 if osx

@@ -61,6 +61,9 @@ which colortail &> /dev/null && alias tail='colortail'
 # (this command does not exist on Mac OSX, so check for its existence)
 which free &> /dev/null && alias free='free -m'
 
+## screen
+alias screen='screen -RD'
+
 ## Skynet
 #- don't create these aliases on skynet itself
 if [[ $(hostname) != skynet ]]
