@@ -273,6 +273,45 @@ fi
 
 osx && export PATH=/Volumes/WII/bin:$PATH || export PATH=/media/WII/bin:$PATH
 
+#########
+## RVM ##
+#########
+
+if [[ -d "${HOME}/.rvm" ]]
+then
+    PATH=$HOME/.rvm/bin:$PATH
+    [[ -s "${HOME}/.rvm/scripts/rvm" ]] && source "${HOME}/.rvm/scripts/rvm"
+fi
+
+############
+## NODEJS ##
+############
+
+if osx && which npm &> /dev/null
+then
+    PATH=$(brew --config | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')/share/npm/bin:$PATH
+fi
+
+#########
+## SSH ##
+#########
+
+function _ssh()
+{
+    local cur prev opts config
+    
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    config="${HOME}/.ssh/config"
+    opts="$([[ -f "${config}" ]] && \grep "^Host" "${config}" | cut -d' ' -f2)"
+
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+}
+
+complete -F _ssh ssh
+
+
 ##########
 ## MISC ##
 ##########
