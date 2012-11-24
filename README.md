@@ -1,3 +1,3 @@
-# Common customization for Unix systems
+# dotfiles
 
-This repository contains a list of customizations that I usually apply to my Unix systems upon installations.
+This repository contains a set of dotfiles, adapted for cross-unix installation

@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+import os
+import os.path
+import rlcompleter
+import readline
+import atexit
+
+# use termcolor if installed, otherwise defined our own custom color functions
+try:
+
+    import termcolor
+    
+    def green(msg):
+        return termcolor.colored(msg, 'green')
+    
+    def yellow(msg):
+        return termcolor.colored(msg, 'yellow')
+
+except ImportError:
+
+    def green(msg):
+        return '\x1b[32m{0}\x1b[0m'.format(msg)
+
+    def yellow(msg):
+        return '\x1b[33m{0}\x1b[0m'.format(msg)
+
+# determine the path to the history file
+history = os.getenv('PYTHONHISTORY') or os.path.expanduser('~/.python_history')
+
+# create the history file if it does not exist
+if not os.path.exists(history) and not os.path.isdir(history):
+    try:
+        open(history, 'w').close()
+    # gracefully ignore things if history is not writable
+    except IOError, e:
+        print(yellow('!!! ') + 'Cannot create history file: ' + e.strerror)
+
+# load the history
+try:
+    # load only if there is something to load, otherwise it will fail
+    if os.path.getsize(history) > 0:
+        readline.read_history_file(history)
+except IOError, e:
+    print(yellow('!!! ') + 'Cannot load history file: ' + e.strerror)
+
+# create a function to save the history
+def save_history_at_exit(history):
+
+    import readline
+    
+    try:
+
+        import termcolor
+    
+        def yellow(msg):
+            return termcolor.colored(msg, 'yellow')
+
+    except ImportError:
+
+        def yellow(msg):
+            return '\x1b[33m{0}\x1b[0m'.format(msg)
+    
+    # ensure that the history does not exceed the configured size
+    readline.set_history_length(os.getenv('PYTHONHISTSIZE') or os.getenv('HISTSIZE') or 100)
+    
+    # save the history
+    try:
+        readline.write_history_file(history)
+    except IOError, e:
+        print(yellow('!!! ') + 'Cannot save history file: ' + e.strerror)
+
+# register the handler to be called at exit
+atexit.register(save_history_at_exit, history)
+
+# enable autocompletion on TAB
+readline.parse_and_bind('tab: complete')
+
+# enable colored prompt
+if os.getenv('TERM') in ('xterm', 'xterm-color', 'rxvt', 'Eterm', 'putty'):
+    sys.ps1 = green('>>> ')
+    sys.ps2 = green('... ')
+
+# delete the temporary variables
+del history, green, yellow, atexit, readline, rlcompleter, save_history_at_exit
