@@ -64,15 +64,6 @@ which free &> /dev/null && alias free='free -m'
 ## screen
 alias screen='screen -RD'
 
-## Skynet
-#- don't create these aliases on skynet itself
-if [[ $(hostname) != skynet ]]
-then
-    alias skynet='ssh -p7777 root@$(ping -c1 -W1 skynet.local &> /dev/null && echo skynet.local || echo xstefanox.homelinux.org)'
-    alias poweroff-skynet='ssh -p7777 root@$(ping -c1 -W1 skynet.local &> /dev/null && echo skynet.local || echo xstefanox.homelinux.org) poweroff'
-    alias reboot-skynet='ssh -p7777 root@$(ping -c1 -W1 skynet.local &> /dev/null && echo skynet.local || echo xstefanox.homelinux.org) reboot'
-fi
-
 ## MySQL
 which mysql &> /dev/null && alias mysql='mysql --host=localhost --user=root'
 which mysqldump &> /dev/null && alias mysqldump='mysqldump --host=localhost --user=root'

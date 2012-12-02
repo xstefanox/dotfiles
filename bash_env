@@ -263,6 +263,13 @@ else
             gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
             gsettings set org.gnome.gedit.preferences.editor auto-indent true
         fi
+        
+        ## if using Ubuntu
+        if which lsb_release &> /dev/null && [[ "$(lsb_release --id | sed 's/.*:[[:space:]]*\(.*\)/\1/')" == Ubuntu ]]
+        then
+            ## disable the Unity scrollbar
+            export LIBOVERLAY_SCROLLBAR=0
+        fi
     fi
 
 fi
