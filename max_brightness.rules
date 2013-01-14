@@ -1,0 +1,1 @@
+ACTION=="add", KERNEL=="acpi_video0", SUBSYSTEM=="backlight", SUBSYSTEMS=="pci", ATTR{brightness}="10"
