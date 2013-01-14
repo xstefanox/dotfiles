@@ -169,6 +169,7 @@ then
     #git config --global credential.helper cache
     git config --global color.ui true
     git config --global core.excludesfile "~/.gitignore.global"
+    git config --global push.default simple
 fi
 
 #########
