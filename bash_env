@@ -64,7 +64,7 @@ export PATH="$HOME_BIN:$PATH"
 ## HOMEBREW ##
 ##############
 
-# Add the Homebrew PATH and Bash completion
+# Add the Homebrew PATH
 if [[ osx && -d "$HOME/Library/Homebrew" ]]
 then
     export PATH=$HOME/Library/Homebrew/bin:$PATH
@@ -79,8 +79,8 @@ if osx
 then
     if which brew &> /dev/null
     then
-        #source $(brew --prefix)/etc/bash_completion
-        #source $(brew --prefix)/Library/Contributions/brew_bash_completion.sh
+        source $(brew --prefix)/etc/bash_completion
+        source $(brew --prefix)/Library/Contributions/brew_bash_completion.sh
         :
     fi
 else
@@ -193,7 +193,16 @@ fi
 
 if osx && which npm &> /dev/null
 then
-    PATH=$(brew --config | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')/share/npm/bin:$PATH
+    # get the Homebrew installation path
+    homebrew_path=$(brew --config | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')
+    
+    # add the NodeJS binaries installed by Homebrew to the path
+    PATH=${homebrew_path}/share/npm/bin:$PATH
+    
+    # add the NodeJS modules installation paths
+    export NODE_PATH=${homebrew_path}/share/npm/lib/node_modules:${homebrew_path}/lib/node_modules/npm/node_modules:$NODE_PATH
+    
+    unset homebrew_path
 fi
 
 #########
