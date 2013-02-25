@@ -22,13 +22,13 @@
 # ~/.bashrc
 #--------------------------------------
 
+# if running Bash
 if [[ -n "$BASH" ]]
 then
+    # include .bashrc if it exists
     if [[ -f ~/.bashrc ]]
     then
         . ~/.bashrc
     fi
 fi
 
-# Disallow messages from other users
-mesg n
