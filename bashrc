@@ -382,6 +382,8 @@ then
     export NODE_PATH=${homebrew_path}/share/npm/lib/node_modules:${homebrew_path}/lib/node_modules/npm/node_modules:$NODE_PATH
     
     unset homebrew_path
+else
+    export NODE_PATH=/usr/share/npm/node_modules:/usr/local/lib/node_modules:$NODE_PATH
 fi
 
 #########
