@@ -373,7 +373,7 @@ fi
 if osx && which npm &> /dev/null
 then
     # get the Homebrew installation path
-    homebrew_path=$(brew --config | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')
+    homebrew_path=$(brew --config 2> /dev/null | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')
     
     # add the NodeJS binaries installed by Homebrew to the path
     PATH=${homebrew_path}/share/npm/bin:$PATH
