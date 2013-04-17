@@ -484,6 +484,9 @@ then
     ## don't run anything on X11/XQuartz opening
     defaults write org.x.X11 app_to_run /usr/bin/true
     defaults write org.macosforge.xquartz.X11 app_to_run /usr/bin/true
+    
+    ## disable the Dashboard
+    defaults write com.apple.dashboard mcx-disabled -bool true
 
 ## Linux
 else
