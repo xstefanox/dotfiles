@@ -382,8 +382,6 @@ then
     export NODE_PATH=${homebrew_path}/share/npm/lib/node_modules:${homebrew_path}/lib/node_modules/npm/node_modules:$NODE_PATH
     
     unset homebrew_path
-else
-    export NODE_PATH=/usr/share/npm/node_modules:/usr/local/lib/node_modules:$NODE_PATH
 fi
 
 #########
@@ -449,11 +447,11 @@ function man()
 if which dpkg &> /dev/null
 then
     alias search='apt-cache search --names-only'
-    alias add='apt-get install'
+    alias add='[[ $UID == 0 ]] && sudo apt-get install || apt-get install'
     alias show='apt-cache show'
-    alias purge='apt-get autoremove'
-    alias dist-upgrade='apt-get dist-upgrade'
-    alias dist-sync='apt-get update'
+    alias purge='[[ $UID == 0 ]] && sudo apt-get autoremove || apt-get autoremove'
+    alias dist-upgrade='[[ $UID == 0 ]] && sudo apt-get dist-upgrade || apt-get dist-upgrade'
+    alias dist-sync='[[ $UID == 0 ]] && sudo apt-get update || apt-get update'
     alias list='dpkg -L'
 ## rpm-based distros using yum package manager functions
 elif which yum &> /dev/null
