@@ -366,7 +366,7 @@ fi
 if [[ $(uname -s) == Darwin ]] && which npm &> /dev/null
 then
     # get the Homebrew installation path
-    homebrew_path=$(brew --config | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')
+    homebrew_path=$(brew --config 2> /dev/null | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')
     
     # add the NodeJS binaries installed by Homebrew to the path
     PATH=${homebrew_path}/share/npm/bin:$PATH
@@ -440,11 +440,11 @@ function man()
 if which dpkg &> /dev/null
 then
     alias search='apt-cache search --names-only'
-    alias add='apt-get install'
+    alias add='[[ $UID == 0 ]] && sudo apt-get install || apt-get install'
     alias show='apt-cache show'
-    alias purge='apt-get autoremove'
-    alias dist-upgrade='apt-get dist-upgrade'
-    alias dist-sync='apt-get update'
+    alias purge='[[ $UID == 0 ]] && sudo apt-get autoremove || apt-get autoremove'
+    alias dist-upgrade='[[ $UID == 0 ]] && sudo apt-get dist-upgrade || apt-get dist-upgrade'
+    alias dist-sync='[[ $UID == 0 ]] && sudo apt-get update || apt-get update'
     alias list='dpkg -L'
 ## rpm-based distros using yum package manager functions
 elif which yum &> /dev/null
@@ -475,6 +475,9 @@ then
     ## don't run anything on X11/XQuartz opening
     defaults write org.x.X11 app_to_run /usr/bin/true
     defaults write org.macosforge.xquartz.X11 app_to_run /usr/bin/true
+    
+    ## disable the Dashboard
+    defaults write com.apple.dashboard mcx-disabled -bool true
 
 ## Linux
 else
