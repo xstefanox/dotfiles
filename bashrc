@@ -136,7 +136,7 @@ PS1_git_status='$(
         
         echo -n "git:";
         
-        branch="$(git branch | sed -n "1 s:[^ ]* :: p")";
+        branch="$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
         echo -n "${branch}";
         
         echo -ne "${NO_COLOR}}";
