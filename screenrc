@@ -1,1 +1,5 @@
+# disable vbell
 vbell off
+
+# turn welcome message off
+startup_message off
