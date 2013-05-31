@@ -1,12 +1,5 @@
 #!/bin/bash
 
-####################
-## OS RECOGNITION ##
-####################
-
-alias linux='[[ $(uname -s) == Linux ]]'
-alias osx='[[ $(uname -s) == Darwin ]]'
-
 ##################
 ## LOCALIZATION ##
 ##################
@@ -136,7 +129,7 @@ PS1_git_status='$(
         
         echo -n "git:";
         
-        branch="$(git branch | sed -n "1 s:[^ ]* :: p")";
+        branch="$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
         echo -n "${branch}";
         
         echo -ne "${NO_COLOR}}";
@@ -184,14 +177,14 @@ PS1_scm_status="${PS1_git_status}${PS1_svn_status}"
 user_color="$(
     if [[ $UID == 0 ]]
     then
-        osx && echo "${RED}" || echo "${BRED}"
+        [[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}"
     else
-        osx && echo "${GREEN}" || echo "${BGREEN}"
+        [[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}"
     fi
 )"
 
 ## PS1: Default prompt
-PS1="[${user_color}\u$(osx && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$(osx && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_scm_status}\n\$ "
+PS1="[${user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_scm_status}\n\$ "
 
 # clean the environment
 unset PS1_return_value PS1_git_status PS1_svn_status PS1_scm_status user_color
@@ -206,7 +199,7 @@ PS4='$0, Line $LINENO: '
 ##############
 
 ## Path to the user binaries
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
     export HOME_BIN="$HOME/Library/bin"
 else
@@ -224,7 +217,7 @@ export PATH="$HOME_BIN:$PATH"
 ##############
 
 # Add the Homebrew PATH
-if [[ osx && -d "$HOME/Library/Homebrew" ]]
+if [[ $(uname -s) == Darwin && -d "$HOME/Library/Homebrew" ]]
 then
     export PATH=$HOME/Library/Homebrew/bin:$PATH
     export PATH=$HOME/Library/Homebrew/sbin:$PATH
@@ -234,7 +227,7 @@ fi
 ## BASH COMPLETION ##
 #####################
 
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
     if which brew &> /dev/null
     then
@@ -271,7 +264,7 @@ complete -F _ssh ssh
 ## EDITOR ##
 ############
 
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
     if which mate &> /dev/null
     then
@@ -306,7 +299,7 @@ export PYTHONSTARTUP=$HOME/.pythonrc
 export PYTHONHISTORY=$HOME/.python_history
     
 # Mac OSX 10.7 Lion supports only Python 2.7
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
     export PYTHONPATH27=$HOME/Library/Python/2.7/site-packages
     export PYTHONBINPATH27=$PYTHONPATH27/bin
@@ -343,11 +336,11 @@ then
     # disabled: this creates a daemon and a warning is always raised when closing the window in Mac OSX
     #git config --global credential.helper cache
     git config --global color.ui true
-    git config --global color.status.added "green $(linux && echo bold)"
-    git config --global color.status.changed "yellow $(linux && echo bold)"
-    git config --global color.status.untracked "red $(linux && echo bold)"
-    git config --global color.diff.meta "yellow $(linux && echo bold)"
-    git config --global color.diff.old "red $(linux && echo black)"
+    git config --global color.status.added "green $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.status.changed "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.status.untracked "red $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.diff.meta "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.diff.old "red $([[ $(uname -s) == Linux ]] && echo black)"
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
 fi 
@@ -356,7 +349,7 @@ fi
 ## WII ##
 #########
 
-osx && export PATH=/Volumes/WII/bin:$PATH || export PATH=/media/WII/bin:$PATH
+[[ $(uname -s) == Darwin ]] && export PATH=/Volumes/WII/bin:$PATH || export PATH=/media/WII/bin:$PATH
 
 #########
 ## RVM ##
@@ -372,7 +365,7 @@ fi
 ## NODEJS ##
 ############
 
-if osx && which npm &> /dev/null
+if [[ $(uname -s) == Darwin ]] && which npm &> /dev/null
 then
     # get the Homebrew installation path
     homebrew_path=$(brew --config 2> /dev/null | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')
@@ -423,7 +416,7 @@ function man()
         fi
         
         # open the page
-        if osx
+        if [[ $(uname -s) == Darwin ]]
         then
             # on Mac OSX/Darwin
             open https://developer.apple.com/library/mac/#documentation/darwin/reference/manpages/${category}/${page}
@@ -472,7 +465,7 @@ fi
 ####################
 
 ## Mac OSX
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
 
     ## do not write useless trash to samba shares
@@ -527,7 +520,7 @@ export FAT32_MAX_FILE_SIZE="$((2**32 - 1))"
 export WII_ISO_SIZE="4699979776"
 
 ## Enable colors on directory listing
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
     alias ls='ls -G'
 else
@@ -615,7 +608,7 @@ which transmission-remote &> /dev/null && function tdr()
 #- automatically unmount the inserted disc, without ejecting it
 #- automatically determine the disc device
 #- skip cddb query
-osx && which abcde &> /dev/null && function rip()
+[[ $(uname -s) == Darwin ]] && which abcde &> /dev/null && function rip()
 {
     dev="$(mount | \grep cddafs | cut -d' ' -f1)"
     
@@ -682,13 +675,13 @@ function archive_file_for_FAT32()
 }
 
 ## Shortcut for editing text files
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
     alias edit='open -a TextMate'
 fi
 
 ## Desktop notification
-if osx
+if [[ $(uname -s) == Darwin ]]
 then
     if which growlnotify &> /dev/null
     then
@@ -699,10 +692,3 @@ then
         export -f notify
     fi
 fi
-
-#######################
-## CLEAN ENVIRONMENT ##
-#######################
-
-unalias osx linux
-
