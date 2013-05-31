@@ -166,7 +166,7 @@ PS1_svn_status='$(
                     [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
                 fi
                 
-                rev="$(svn status -u | sed -n "$ s/Status against revision:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
+                rev="$(svn status -u | sed -n "$ s/[[:alnum:][:space:]]\+:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
                 echo -n "${rev}";
             else
                 echo -ne "$([[ $(uname -s) == Darwin ]] && echo -ne "${YELLOW}" || echo -ne "${BYELLOW}")svn:unknown";
@@ -346,6 +346,8 @@ then
     git config --global color.status.added "green $(linux && echo bold)"
     git config --global color.status.changed "yellow $(linux && echo bold)"
     git config --global color.status.untracked "red $(linux && echo bold)"
+    git config --global color.diff.meta "yellow $(linux && echo bold)"
+    git config --global color.diff.old "red $(linux && echo black)"
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
 fi 
@@ -447,11 +449,11 @@ function man()
 if which dpkg &> /dev/null
 then
     alias search='apt-cache search --names-only'
-    alias add='[[ $UID == 0 ]] && sudo apt-get install || apt-get install'
+    alias add='[[ $UID == 0 ]] && apt-get install || sudo apt-get install'
     alias show='apt-cache show'
-    alias purge='[[ $UID == 0 ]] && sudo apt-get autoremove || apt-get autoremove'
-    alias dist-upgrade='[[ $UID == 0 ]] && sudo apt-get dist-upgrade || apt-get dist-upgrade'
-    alias dist-sync='[[ $UID == 0 ]] && sudo apt-get update || apt-get update'
+    alias purge='[[ $UID == 0 ]] && apt-get autoremove || sudo apt-get autoremove'
+    alias dist-upgrade='[[ $UID == 0 ]] && apt-get dist-upgrade || sudo apt-get dist-upgrade'
+    alias dist-sync='[[ $UID == 0 ]] && apt-get update || sudo apt-get update'
     alias list='dpkg -L'
 ## rpm-based distros using yum package manager functions
 elif which yum &> /dev/null
