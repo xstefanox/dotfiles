@@ -138,7 +138,7 @@ PS1_git_status='$(
 
 # generate a colored string describing the status of the Subversion working copy in the current directory
 PS1_svn_status='$(
-    if which svn &> /dev/null && [[ -d .svn ]];
+    if which svn &> /dev/null && svn info &> /dev/null;
     then
         url=$(svn info | sed -n "/^URL/ s/URL:[[:space:]]*// p");
         
@@ -151,15 +151,17 @@ PS1_svn_status='$(
             
             if ping -c1 -W1 "${host}" &> /dev/null;
             then
-        
-                if [[ -z "$(svn status)" ]];
+
+                status="$(svn status -u)"
+
+                if [[ -z "$(echo "${status}" | sed "$ d")" ]];
                 then
                     [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
                 else
                     [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
                 fi
                 
-                rev="$(svn status -u | sed -n "$ s/[[:alnum:][:space:]]\+:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
+                rev="$(echo "${status}" | sed -n "$ s/[[:alnum:][:space:]]\+:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
                 echo -n "${rev}";
             else
                 echo -ne "$([[ $(uname -s) == Darwin ]] && echo -ne "${YELLOW}" || echo -ne "${BYELLOW}")svn:unknown";
