@@ -152,7 +152,7 @@ PS1_svn_status='$(
             if ping -c1 -W1 "${host}" &> /dev/null;
             then
 
-                status="$(svn status -u)"
+                status="$(svn status -u | \grep ^[^[:space:]])"
 
                 if [[ -z "$(echo "${status}" | sed "$ d")" ]];
                 then
