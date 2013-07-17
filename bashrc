@@ -233,9 +233,10 @@ if [[ $(uname -s) == Darwin ]]
 then
     if which brew &> /dev/null
     then
-        source $(brew --prefix)/etc/bash_completion
-        source $(brew --prefix)/Library/Contributions/brew_bash_completion.sh
-        :
+        brew_prefix=$(brew --prefix)
+        source "${brew_prefix}/etc/bash_completion"
+        source "${brew_prefix}/Library/Contributions/brew_bash_completion.sh"
+        unset brew_prefix
     fi
 else
     [[ -z "$BASH_COMPLETION" && -f /etc/bash_completion ]] && export BASH_COMPLETION=/etc/bash_completion
@@ -374,10 +375,10 @@ fi
 ## NODEJS ##
 ############
 
-if [[ $(uname -s) == Darwin ]] && which npm &> /dev/null
+if [[ $(uname -s) == Darwin ]] && which brew &> /dev/null && which npm &> /dev/null
 then
     # get the Homebrew installation path
-    homebrew_path=$(brew --config 2> /dev/null | sed -n '/HOMEBREW_PREFIX/ s/.*: // p')
+    homebrew_path=$(brew --prefix)
     
     # add the NodeJS binaries installed by Homebrew to the path
     PATH=${homebrew_path}/share/npm/bin:$PATH
@@ -500,6 +501,9 @@ then
     
     ## disable the Dashboard
     defaults write com.apple.dashboard mcx-disabled -bool true
+	
+	## disable previews in Mail attachments
+	defaults write com.apple.mail DisableInlineAttachmentViewing -bool yes
 
 ## Linux
 else
