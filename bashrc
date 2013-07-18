@@ -474,8 +474,8 @@ fi
 ## SERVICE MANAGEMENT ##
 ########################
 
-## Mac OSX
-if [[ $(uname -s) == lINUX ]]
+## Linux
+if [[ $(uname -s) == Linux ]]
 then
     
     which service &> /dev/null && alias service='[[ $UID == 0 ]] && service || sudo service'
@@ -608,11 +608,6 @@ alias open-ports='nc -vz localhost 1-65535 2>&1 | $(which grep) -i succeeded'
 
 ## Baobab
 which baobab &> /dev/null || alias baobab='find . -maxdepth 1 -type d -and -not -wholename . -print0 | sort -z | xargs -0 du -sh'
-
-## MySQL
-which mysql &> /dev/null && alias mysql='mysql --host=localhost --user=root --password=root'
-which mysqldump &> /dev/null && alias mysqldump='mysqldump --host=localhost --user=root --password=root'
-which mysqlimport &> /dev/null && alias mysqlimport='mysqlimport --host=localhost --user=root --password=root'
 
 ## Transmission
 which transmission-remote &> /dev/null && alias tda='transmission-remote --add'
