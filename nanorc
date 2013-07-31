@@ -1,0 +1,23 @@
+# use smooth scrolling
+set smooth
+
+# use the blank line below the titlebar as extra editing space
+set morespace
+
+# convert tabs to spaces
+set tabstospaces
+
+# use this tab size
+set tabsize 4
+
+# don't wrap text
+set nowrap
+
+# constantly display the cursor position in the statusbar
+set const
+
+# enable mouse support
+set mouse
+
+# make the home key smarter
+set smarthome

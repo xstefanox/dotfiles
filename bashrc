@@ -318,14 +318,14 @@ then
     # make pip use the default paths and install every egg into the user home
     which pip &> /dev/null && function pip()
     {
-	    pip=$(which pip)
+        pip=$(which pip)
 
-    	if [[ $1 == install ]]
-	    then
-		    $pip $@ --install-option="--install-purelib=$PYTHONPATH27" --install-option="--install-platlib=$PYTHONPATH27" --install-option="--prefix=$PYTHONPATH27"
-    	else
-	    	$pip $@
-    	fi
+        if [[ $1 == install ]]
+        then
+            $pip $@ --install-option="--install-purelib=$PYTHONPATH27" --install-option="--install-platlib=$PYTHONPATH27" --install-option="--prefix=$PYTHONPATH27"
+        else
+            $pip $@
+        fi
     } && export -f pip
 fi
 
@@ -500,9 +500,9 @@ then
     
     ## disable the Dashboard
     defaults write com.apple.dashboard mcx-disabled -bool true
-	
-	## disable previews in Mail attachments
-	defaults write com.apple.mail DisableInlineAttachmentViewing -bool yes
+    
+    ## disable previews in Mail attachments
+    defaults write com.apple.mail DisableInlineAttachmentViewing -bool yes
 
 ## Linux
 else
@@ -564,15 +564,6 @@ alias df='df -h'
 ## grep:
 #- colored output
 alias grep='grep --color -n'
-
-## nano
-#- smooth scrolling
-#- use the first line to show text
-#- use spaces instead of tabs
-#- don't wrap long lines
-#- always show cursor position
-#- use tabs instead of spaces
-alias nano='nano --smooth --morespace --tabsize=4 --nowrap --const --tabstospaces'
 
 ## diff
 #- always show patch output style
@@ -683,22 +674,22 @@ function archive_file_for_FAT32()
     ! which rar &> /dev/null && echo "Error: rar not installed" && return 1
     
     # exit if no arguments given
-	[[ $# == 0 ]] && echo "Usage: archive-file-for-FAT32 <filename>" && return 1
+    [[ $# == 0 ]] && echo "Usage: archive-file-for-FAT32 <filename>" && return 1
 
-	# check if file exists
-	local arg=$@
-	[[ ! -f "${arg}" ]] && echo "File not found" && return 1
+    # check if file exists
+    local arg=$@
+    [[ ! -f "${arg}" ]] && echo "File not found" && return 1
 
-	# compress the file
-	gzip -v -c -f "${arg}" > "${arg}.gz"
-	arg="${arg}.gz"
+    # compress the file
+    gzip -v -c -f "${arg}" > "${arg}.gz"
+    arg="${arg}.gz"
 
-	# split the file if needed
-	local size="$(stat -c %s "$arg")"
-	if is_FAT32_compliant "${arg}"
-	then
-		rar a -m0 -v${FAT32_MAX_FILE_SIZE}b "${arg}.rar" "${arg}"
-	fi
+    # split the file if needed
+    local size="$(stat -c %s "$arg")"
+    if is_FAT32_compliant "${arg}"
+    then
+        rar a -m0 -v${FAT32_MAX_FILE_SIZE}b "${arg}.rar" "${arg}"
+    fi
 }
 
 ## Shortcut for editing text files
