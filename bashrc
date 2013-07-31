@@ -333,8 +333,8 @@ fi
 ## PHP ##
 #########
 
-alias pear='[[ $UID == 0 ]] && pear || sudo pear'
-alias pecl='[[ $UID == 0 ]] && pecl || sudo pecl'
+[[ $UID != 0 ]] && alias pear='sudo pear'
+[[ $UID != 0 ]] && alias pecl='sudo pecl'
 
 #########
 ## GIT ##
@@ -451,22 +451,22 @@ function man()
 ## dpkg-based distros package manager functions
 if which dpkg &> /dev/null
 then
+    [[ $UID == 0 ]] && alias add='apt-get install' || alias add='sudo apt-get install'
+    [[ $UID == 0 ]] && alias purge='apt-get autoremove' || alias purge='sudo apt-get autoremove'
+    [[ $UID == 0 ]] && alias dist-upgrade='apt-get dist-upgrade' || alias dist-upgrade='sudo apt-get dist-upgrade'
+    [[ $UID == 0 ]] && alias dist-sync='apt-get update' || alias dist-sync='sudo apt-get update'
     alias search='apt-cache search --names-only'
-    alias add='[[ $UID == 0 ]] && apt-get install || sudo apt-get install'
     alias show='apt-cache show'
-    alias purge='[[ $UID == 0 ]] && apt-get autoremove || sudo apt-get autoremove'
-    alias dist-upgrade='[[ $UID == 0 ]] && apt-get dist-upgrade || sudo apt-get dist-upgrade'
-    alias dist-sync='[[ $UID == 0 ]] && apt-get update || sudo apt-get update'
     alias list='dpkg -L'
 ## rpm-based distros using yum package manager functions
 elif which yum &> /dev/null
 then
-    alias search='yum search'
-    alias add='[[ $UID == 0 ]] && yum install || sudo yum install'
-    alias show='yum info'
-    alias purge='[[ $UID == 0 ]] && yum erase || sudo yum erase'
-    alias dist-upgrade='[[ $UID == 0 ]] && yum upgrade || sudo yum upgrade'
+    [[ $UID == 0 ]] && alias add='yum install' || alias add='sudo yum install'
+    [[ $UID == 0 ]] && alias purge='yum erase' || alias purge='sudo yum erase'
+    [[ $UID == 0 ]] && alias dist-upgrade='yum upgrade' || alias dist-upgrade='sudo yum upgrade'
     alias dist-sync='yum check-update'
+    alias search='yum search'
+    alias show='yum info'
     alias list='repoquery --list'
 fi
 
@@ -475,10 +475,9 @@ fi
 ########################
 
 ## Linux
-if [[ $(uname -s) == Linux ]]
+if [[ $(uname -s) == Linux ]] && which service &> /dev/null
 then
-    
-    which service &> /dev/null && alias service='[[ $UID == 0 ]] && service || sudo service'
+    [[ $UID != 0 ]] && alias service='sudo service'
 fi
 
 ####################
@@ -605,6 +604,15 @@ alias screen='screen -RD'
 
 ## List all the open TCP or UDP ports on the machine
 alias open-ports='nc -vz localhost 1-65535 2>&1 | $(which grep) -i succeeded'
+
+## A shortcut to open a file or a directory
+if [[ $(uname -s) == Darwin ]]
+then
+    alias o='open'
+else
+    # on other Unices, check for an active X11 session
+    [[ $(uname -s) == Linux ]] && [[ -n "$DISPLAY" ]] && alias o='xdg-open' || alias o='$EDITOR'
+fi
 
 ## Baobab
 which baobab &> /dev/null || alias baobab='find . -maxdepth 1 -type d -and -not -wholename . -print0 | sort -z | xargs -0 du -sh'
