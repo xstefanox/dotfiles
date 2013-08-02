@@ -116,7 +116,7 @@ PS1_return_value='$(
 
 # generate a colored string describing the status of the Git working copy in the current directory
 PS1_git_status='$(
-    if which git &> /dev/null && git status &> /dev/null;
+    if [[ -z "${PS1_git_status_off}" ]] && which git &> /dev/null && git status &> /dev/null;
     then
         echo -ne "${NO_COLOR}{";
         
@@ -138,7 +138,7 @@ PS1_git_status='$(
 
 # generate a colored string describing the status of the Subversion working copy in the current directory
 PS1_svn_status='$(
-    if which svn &> /dev/null && svn info &> /dev/null;
+    if [[ -z "${PS1_svn_status_off}" ]] && which svn &> /dev/null && svn info &> /dev/null;
     then
         url=$(svn info | sed -n "/^URL/ s/URL:[[:space:]]*// p");
         
