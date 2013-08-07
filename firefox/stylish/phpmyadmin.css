@@ -1,0 +1,45 @@
+@namespace url(http://www.w3.org/1999/xhtml);
+
+@-moz-document domain("db.contactlab.it")
+{
+
+    .CodeMirror-scroll
+    {
+        min-height: 300px;
+    }
+    
+    code.sql
+    {
+        max-height: inherit !important;
+    }
+    
+    /* Tango theme for SQL code */
+    
+    .cm-keyword,
+    .cm-statement-verb
+    {
+        color: #204a87 !important;
+    }
+    
+    .cm-number
+    {
+        color: #4E9A06 !important;
+    }
+    
+    .cm-mysql-string
+    {
+        color: #ce5c00 !important;
+    }
+    
+    .cm-operator,
+    .cm-builtin,
+    .cm-separator
+    {
+        color: inherit !important;
+    }
+    
+    .cm-comment
+    {
+        color: #c00 !important;
+    }
+}

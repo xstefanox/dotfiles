@@ -1,0 +1,11 @@
+@namespace url(http://www.w3.org/1999/xhtml);
+
+@-moz-document url("https://www.google.com/calendar/render?tab=mc") {
+
+    .st-bg:last-child, .st-dtitle:last-child,                 /* monday */
+    .st-bg:nth-last-child(2), .st-dtitle:nth-last-child(2),   /* saturday */
+    .tg-weekend                                               /* monday and saturday in the week view */
+    {
+        background-color: #F7F7F7 !important;
+    }
+}

@@ -1,0 +1,25 @@
+@namespace url(http://www.w3.org/1999/xhtml);
+
+@-moz-document domain("tw.contactlab.it") {
+
+    .linkEnabled
+    {
+        /*height: 360px;*/
+    }
+    
+    /* hide the tags box */
+    #div_tabset_taskTabSetgeneralTab > table.table > tbody > tr:first-child > td:first-child > table:first-child,
+    /* hide the other boxes */
+    #div_tabset_taskTabSetgeneralTab > table.table > tbody > tr:first-child > td:nth-child(2),
+    #div_tabset_taskTabSetgeneralTab > table.table > tbody > tr:first-child > td:nth-child(3),
+    #div_tabset_taskTabSetgeneralTab > table.table > tbody > tr:last-child
+    {
+        /*display: none;*/
+    }
+    
+    /* hide the popups */
+    .mbContainer
+    {
+        display: none;
+    }
+}
