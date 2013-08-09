@@ -101,22 +101,30 @@ ON_IWHITE='\033[0;107m'   # WHITE
 ## PROMPT ##
 ############
 
+# save the list of return error strings supported by the OS libc and the geatest error number
+OS_MAXERR=133
+IFS=$'\n' OS_ERRNO=( $(python -c 'from __future__ import print_function; import sys; import os; [ print(os.strerror(e)) for e in range(0, int(sys.argv[1]) + 1) ]' ${OS_MAXERR}) )
+
 # save the return value of the last executed process
 PROMPT_COMMAND='PS1_return_value=$?;'
 
 # translate the saved return value in a colored string containing the error description
 PS1_return_value='$(
+    echo -ne "${NO_COLOR}(";
+    
     if [[ "${PS1_return_value}" == 0 ]];
     then
-        echo -ne "${NO_COLOR}($([[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}")${PS1_return_value}${NO_COLOR})";
+        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}")${PS1_return_value}";
     else
-        echo -ne "${NO_COLOR}($([[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}")${PS1_return_value}:$(python -c "import os; print(os.strerror(${PS1_return_value}))")${NO_COLOR})";
+        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}")${PS1_return_value}:$([[ ${PS1_return_value} -gt ${OS_MAXERR} ]] && echo "Unknown error" || echo "${OS_ERRNO[${PS1_return_value}]}")";
     fi
+    
+    echo -ne "${NO_COLOR})";
 )'
 
 # generate a colored string describing the status of the Git working copy in the current directory
 PS1_git_status='$(
-    if [[ -z "${PS1_git_status_off}" ]] && which git &> /dev/null && git status &> /dev/null;
+    if which git &> /dev/null && git status &> /dev/null;
     then
         echo -ne "${NO_COLOR}{";
         
@@ -127,18 +135,36 @@ PS1_git_status='$(
             [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
         fi;
         
-        echo -n "git:";
-        
-        branch="$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
-        echo -n "${branch}";
+        echo -n "git:$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
         
         echo -ne "${NO_COLOR}}";
     fi
 )'
 
-# generate a colored string describing the status of the Subversion working copy in the current directory
+# generate a colored string describing the status of the Mercurial working copy in the current directory
+PS1_hg_status='$(
+    if which hg &> /dev/null && hg status &> /dev/null;
+    then
+        echo -ne "${NO_COLOR}{";
+        
+        if [[ -z "$(hg status)" ]];
+        then
+            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
+        else
+            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
+        fi;
+        
+        echo -n "hg:$(hg branch)";
+        
+        echo -ne "${NO_COLOR}}";
+    fi
+)'
+
+# generate a colored string describing the status of the Subversion working copy in the current directory;
+# this must be enabled on demand setting the environment variable PS1_svn_status_on, because it performs a
+# client/server communication that could lead to a slow prompt
 PS1_svn_status='$(
-    if [[ -z "${PS1_svn_status_off}" ]] && which svn &> /dev/null && svn info &> /dev/null;
+    if [[ -n "${PS1_svn_status_on}" ]] && which svn &> /dev/null && svn info &> /dev/null;
     then
         url=$(svn info | sed -n "/^URL/ s/URL:[[:space:]]*// p");
         
@@ -173,7 +199,7 @@ PS1_svn_status='$(
 )'
 
 # generate the final source code management status description string
-PS1_scm_status="${PS1_git_status}${PS1_svn_status}"
+PS1_scm_status="${PS1_git_status}${PS1_hg_status}${PS1_svn_status}"
 
 # color the username depending on user being root or not
 user_color="$(
@@ -277,7 +303,13 @@ then
     fi
 elif [[ -n "$DISPLAY" ]]
 then
-    export EDITOR=gedit
+    if which geany &> /dev/null
+    then
+        export EDITOR=geany
+    elif which gedit &> /dev/null
+    then
+        export EDITOR=gedit
+    fi
 else
     export EDITOR=nano
 fi
