@@ -2,14 +2,14 @@
 
 
 # get a reference to the repository path
-declare -r REPO_PATH=$(dirname $0)
+declare -r REPO_PATH="$(dirname $0)"
 
 # get a reference to this script
-declare -r BOOTSTRAP=$(basename $0)
+declare -r BOOTSTRAP="$(basename $0)"
 
 # find the installable files, discarding bootstrap itself, any readme files and executable files;
 # the result should be a reasonable set of dotfiles
-dotfiles=$(find $REPO_PATH -maxdepth 1 -type f -not -name $BOOTSTRAP -not -name 'README*' -not -perm /111 -exec basename {} \;)
+dotfiles=$(find "${REPO_PATH}" -maxdepth 1 -type f -not -name "${BOOTSTRAP}" -not -name 'README*' -not -perm +0111 -exec basename {} \;)
 
 # report the list of dotfiles
 echo
@@ -32,6 +32,11 @@ function do_symlink()
     echo -n " * Installing ${d}..."
     rm -rf "${symlink_name}" && ln -s -f "${symlink_target}" "${symlink_name}"
     echo "Done"
+}
+
+function readlink()
+{
+    [[ $(uname -s) == Darwin ]] && which greadlink &> /dev/null && greadlink $@ || readlink $@
 }
 
 for d in $dotfiles
