@@ -394,6 +394,7 @@ fi
 if which git &> /dev/null
 then
     git config --global user.name "Stefano Varesi"
+    git config --global user.email "stefano.varesi@gmail.com"
     # disabled: this creates a daemon and a warning is always raised when closing the window in Mac OSX
     #git config --global credential.helper cache
     git config --global color.ui true
