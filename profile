@@ -33,7 +33,7 @@ then
     [[ ! -d "$profile_modules_dir" ]] && mkdir -p "$profile_modules_dir"
 
     ## execute each bashrc script
-    run-parts --regex '\.sh$' "$profile_modules_dir"
+    which run-parts &> /dev/null && run-parts --regex '\.sh$' "$profile_modules_dir"
 
     ## cleanup
     unset profile_modules_dir

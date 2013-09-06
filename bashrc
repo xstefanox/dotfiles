@@ -259,7 +259,7 @@ bashrc_modules_dir="$HOME/.bashrc.d"
 [[ ! -d "$bashrc_modules_dir" ]] && mkdir -p "$bashrc_modules_dir"
 
 ## execute each bashrc script
-run-parts --regex '\.sh$' "$bashrc_modules_dir"
+which run-parts &> /dev/null && run-parts --regex '\.sh$' "$bashrc_modules_dir"
 
 ## cleanup
 unset bashrc_modules_dir
