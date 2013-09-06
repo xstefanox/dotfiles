@@ -24,78 +24,80 @@ shopt -s no_empty_cmd_completion
 ## COLORS ##
 ############
 
+# @see http://misc.flogisoft.com/bash/tip_colors_and_formatting
+
 # Reset
-NO_COLOR='\033[0m'        # Text Reset
+NO_COLOR='\033[0m'            # Text Reset
 
 # Regular Colors
-BLACK='\033[0;30m'        # BLACK
-RED='\033[0;31m'          # RED
-GREEN='\033[0;32m'        # GREEN
-YELLOW='\033[0;33m'       # YELLOW
-BLUE='\033[0;34m'         # BLUE
-PURPLE='\033[0;35m'       # PURPLE
-CYAN='\033[0;36m'         # CYAN
-WHITE='\033[0;37m'        # WHITE
+BLACK='\033[0;30m'            # BLACK
+RED='\033[0;31m'              # RED
+GREEN='\033[0;32m'            # GREEN
+YELLOW='\033[0;33m'           # YELLOW
+BLUE='\033[0;34m'             # BLUE
+PURPLE='\033[0;35m'           # PURPLE
+CYAN='\033[0;36m'             # CYAN
+LIGHT_GRAY='\033[0;37m'       # LIGHT_GRAY
 
 # Bold
-BBLACK='\033[1;30m'       # BLACK
-BRED='\033[1;31m'         # RED
-BGREEN='\033[1;32m'       # GREEN
-BYELLOW='\033[1;33m'      # YELLOW
-BBLUE='\033[1;34m'        # BLUE
-BPURPLE='\033[1;35m'      # PURPLE
-BCYAN='\033[1;36m'        # CYAN
-BWHITE='\033[1;37m'       # WHITE
+BBLACK='\033[1;30m'           # BLACK
+BRED='\033[1;31m'             # RED
+BGREEN='\033[1;32m'           # GREEN
+BYELLOW='\033[1;33m'          # YELLOW
+BBLUE='\033[1;34m'            # BLUE
+BPURPLE='\033[1;35m'          # PURPLE
+BCYAN='\033[1;36m'            # CYAN
+BLIGHT_GRAY='\033[1;37m'      # LIGHT_GRAY
 
 # Underline
-UBLACK='\033[4;30m'       # BLACK
-URED='\033[4;31m'         # RED
-UGREEN='\033[4;32m'       # GREEN
-UYELLOW='\033[4;33m'      # YELLOW
-UBLUE='\033[4;34m'        # BLUE
-UPURPLE='\033[4;35m'      # PURPLE
-UCYAN='\033[4;36m'        # CYAN
-UWHITE='\033[4;37m'       # WHITE
+UBLACK='\033[4;30m'           # BLACK
+URED='\033[4;31m'             # RED
+UGREEN='\033[4;32m'           # GREEN
+UYELLOW='\033[4;33m'          # YELLOW
+UBLUE='\033[4;34m'            # BLUE
+UPURPLE='\033[4;35m'          # PURPLE
+UCYAN='\033[4;36m'            # CYAN
+ULIGHT_GRAY='\033[4;37m'      # LIGHT_GRAY
 
 # Background
-ON_BLACK='\033[40m'       # BLACK
-ON_RED='\033[41m'         # RED
-ON_GREEN='\033[42m'       # GREEN
-ON_YELLOW='\033[43m'      # YELLOW
-ON_BLUE='\033[44m'        # BLUE
-ON_PURPLE='\033[45m'      # PURPLE
-ON_CYAN='\033[46m'        # CYAN
-ON_WHITE='\033[47m'       # WHITE
+ON_BLACK='\033[40m'           # BLACK
+ON_RED='\033[41m'             # RED
+ON_GREEN='\033[42m'           # GREEN
+ON_YELLOW='\033[43m'          # YELLOW
+ON_BLUE='\033[44m'            # BLUE
+ON_PURPLE='\033[45m'          # PURPLE
+ON_CYAN='\033[46m'            # CYAN
+ON_LIGHT_GRAY='\033[47m'      # LIGHT_GRAY
 
 # High Intensty
-IBLACK='\033[0;90m'       # BLACK
-IRED='\033[0;91m'         # RED
-IGREEN='\033[0;92m'       # GREEN
-IYELLOW='\033[0;93m'      # YELLOW
-IBLUE='\033[0;94m'        # BLUE
-IPURPLE='\033[0;95m'      # PURPLE
-ICYAN='\033[0;96m'        # CYAN
-IWHITE='\033[0;97m'       # WHITE
+IBLACK='\033[0;90m'           # BLACK
+IRED='\033[0;91m'             # RED
+IGREEN='\033[0;92m'           # GREEN
+IYELLOW='\033[0;93m'          # YELLOW
+IBLUE='\033[0;94m'            # BLUE
+IPURPLE='\033[0;95m'          # PURPLE
+ICYAN='\033[0;96m'            # CYAN
+ILIGHT_GRAY='\033[0;97m'      # LIGHT_GRAY
 
 # Bold High Intensty
-BIBLACK='\033[1;90m'      # BLACK
-BIRED='\033[1;91m'        # RED
-BIGREEN='\033[1;92m'      # GREEN
-BIYELLOW='\033[1;93m'     # YELLOW
-BIBLUE='\033[1;94m'       # BLUE
-BIPURPLE='\033[1;95m'     # PURPLE
-BICYAN='\033[1;96m'       # CYAN
-BIWHITE='\033[1;97m'      # WHITE
+BIBLACK='\033[1;90m'          # BLACK
+BIRED='\033[1;91m'            # RED
+BIGREEN='\033[1;92m'          # GREEN
+BIYELLOW='\033[1;93m'         # YELLOW
+BIBLUE='\033[1;94m'           # BLUE
+BIPURPLE='\033[1;95m'         # PURPLE
+BICYAN='\033[1;96m'           # CYAN
+BILIGHT_GRAY='\033[1;97m'     # LIGHT_GRAY
 
 # High Intensty backgrounds
-ON_IBLACK='\033[0;100m'   # BLACK
-ON_IRED='\033[0;101m'     # RED
-ON_IGREEN='\033[0;102m'   # GREEN
-ON_IYELLOW='\033[0;103m'  # YELLOW
-ON_IBLUE='\033[0;104m'    # BLUE
-ON_IPURPLE='\033[10;95m'  # PURPLE
-ON_ICYAN='\033[0;106m'    # CYAN
-ON_IWHITE='\033[0;107m'   # WHITE
+ON_IBLACK='\033[0;100m'       # BLACK
+ON_IRED='\033[0;101m'         # RED
+ON_IGREEN='\033[0;102m'       # GREEN
+ON_IYELLOW='\033[0;103m'      # YELLOW
+ON_IBLUE='\033[0;104m'        # BLUE
+ON_IPURPLE='\033[10;95m'      # PURPLE
+ON_ICYAN='\033[0;106m'        # CYAN
+ON_ILIGHT_GRAY='\033[0;107m'  # LIGHT_GRAY
 
 ############
 ## PROMPT ##
@@ -202,7 +204,7 @@ PS1_svn_status='$(
 PS1_scm_status="${PS1_git_status}${PS1_hg_status}${PS1_svn_status}"
 
 # color the username depending on user being root or not
-user_color="$(
+PS1_user_color="$(
     if [[ $UID == 0 ]]
     then
         [[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}"
@@ -211,11 +213,14 @@ user_color="$(
     fi
 )"
 
+# set an SSH descriptive string in case of a remote connection
+PS1_ssh_status=$([[ -n "${SSH_CLIENT}" ]] && echo "$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")ssh:${NO_COLOR}")
+
 ## PS1: Default prompt
-PS1="[${user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_scm_status}\n\$ "
+PS1="${NO_COLOR}[${PS1_ssh_status}${PS1_user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_scm_status}\n\$ "
 
 # clean the environment
-unset PS1_return_value PS1_git_status PS1_svn_status PS1_scm_status user_color
+unset PS1_return_value PS1_git_status PS1_svn_status PS1_scm_status PS1_ssh_status PS1_user_color
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
 
@@ -613,7 +618,7 @@ export FAT32_MAX_FILE_SIZE="$((2**32 - 1))"
 export WII_ISO_SIZE="4699979776"
 
 ## Enable colors on directory listing
-if [[ $(uname -s) == Darwin ]]
+if [[ $(uname -s) == Darwin || $(uname -s) == FreeBSD ]]
 then
     alias ls='ls -G'
 else
