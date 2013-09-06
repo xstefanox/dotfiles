@@ -1,8 +1,12 @@
 @namespace url(http://www.w3.org/1999/xhtml);
 
-@-moz-document domain("db.contactlab.it")
+@-moz-document domain("db.contactlab.it"), domain(manage.famp5-55.tomatowin.local), domain("localhost")
 {
-
+    a[target=mysql_doc]
+    {
+        border-bottom-style: none !important;
+    }
+    
     .CodeMirror-scroll
     {
         min-height: 300px;
@@ -16,29 +20,34 @@
     /* Tango theme for SQL code */
     
     .cm-keyword,
-    .cm-statement-verb
+    .cm-statement-verb,
+    .syntax_alpha_reservedWord
     {
         color: #204a87 !important;
     }
     
-    .cm-number
+    .cm-number,
+    .syntax_digit
     {
         color: #4E9A06 !important;
     }
     
-    .cm-mysql-string
+    .cm-mysql-string,
+    .syntax_quote
     {
         color: #ce5c00 !important;
     }
     
     .cm-operator,
     .cm-builtin,
-    .cm-separator
+    .cm-separator,
+    .syntax_punct
     {
         color: inherit !important;
     }
     
-    .cm-comment
+    .cm-comment,
+    .syntax_comment
     {
         color: #c00 !important;
     }

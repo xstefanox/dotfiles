@@ -16,8 +16,5 @@ set nowrap
 # constantly display the cursor position in the statusbar
 set const
 
-# enable mouse support
-set mouse
-
 # make the home key smarter
 set smarthome
