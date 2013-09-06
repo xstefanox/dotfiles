@@ -226,19 +226,38 @@ PS4='$0, Line $LINENO: '
 ## HOME BIN ##
 ##############
 
-## Path to the user binaries
+## define the path to the user binaries
 if [[ $(uname -s) == Darwin ]]
 then
-    export HOME_BIN="$HOME/Library/bin"
+    export home_bin="$HOME/Library/bin"
 else
-    export HOME_BIN="$HOME/.local/bin"
+    export home_bin="$HOME/.local/bin"
 fi
 
-## Ensure HOME_BIN exists
-[[ ! -d "$HOME_BIN" ]] && mkdir -p "$HOME_BIN"
+## ensure home_bin exists
+[[ ! -d "$home_bin" ]] && mkdir -p "$home_bin"
 
-## Add HOME_BIN to the PATH
-export PATH="$HOME_BIN:$PATH"
+## add home_bin to the PATH
+export PATH="$home_bin:$PATH"
+
+## cleanup
+unset home_bin
+
+####################
+## BASHRC MODULES ##
+####################
+
+## define the path to the bashrc modules directory
+bashrc_modules_dir="$HOME/.bashrc.d"
+
+## ensure bashrc_modules_dir exists
+[[ ! -d "$bashrc_modules_dir" ]] && mkdir -p "$bashrc_modules_dir"
+
+## execute each bashrc script
+run-parts --regex '\.sh$' "$bashrc_modules_dir"
+
+## cleanup
+unset bashrc_modules_dir
 
 ##############
 ## HOMEBREW ##
@@ -381,6 +400,7 @@ then
     git config --global color.status.added "green $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.status.changed "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.status.untracked "red $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.status.unmerged "red $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.meta "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.old "red $([[ $(uname -s) == Linux ]] && echo black)"
     git config --global core.excludesfile "~/.gitignore.global"
@@ -563,6 +583,23 @@ else
     fi
 
 fi
+
+# Firefox preferences
+#if [[ -e "${HOME}/.mozilla/firefox/" ]]
+#then
+#    for item in $(find ${HOME}/.mozilla/firefox/ -maxdepth 1 -type d -name '*.default')
+#    do
+#        sed -i '/browser.display.focus_ring_width/ s:1:0:' "${item}/prefs.js"
+#        sed -i '/browser.display.focus_ring_on_anything/ s:false:true:' "${item}/prefs.js"
+#        
+#        if grep --quiet extensions.blocklist.enabled "${item}/prefs.js"
+#        then
+#            sed -i '/extensions.blocklist.enabled/ s:false:true:' "${item}/prefs.js"
+#        else
+#            sed -i '$ a user_pref("extensions.blocklist.enabled", true);' "${item}/prefs.js"
+#        fi
+#    done
+#fi
 
 ##########
 ## MISC ##
