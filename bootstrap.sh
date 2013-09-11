@@ -18,10 +18,15 @@ function do_symlink()
     echo "Done"
 }
 
-#function readlink()
-#{
-#    [[ $(uname -s) == Darwin ]] && which greadlink &> /dev/null && greadlink $@ || readlink $@
-#}
+function readlink()
+{
+    if [[ $(uname -s) == Darwin ]] && which greadlink &> /dev/null
+    then
+        greadlink $@
+     else
+        $(which readlink) $@
+    fi
+}
 
 function bootstrap_dir()
 {
