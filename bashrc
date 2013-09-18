@@ -216,11 +216,13 @@ PS1_user_color="$(
 # set an SSH descriptive string in case of a remote connection
 PS1_ssh_status=$([[ -n "${SSH_CLIENT}" ]] && echo "$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")ssh:${NO_COLOR}")
 
+PS1_screen_status="$([[ -n "${STY}" ]] && echo "[screen:$(echo "${STY#*.}" | sed -e "s:.${HOSTNAME}::")]")"
+
 ## PS1: Default prompt
-PS1="${NO_COLOR}[${PS1_ssh_status}${PS1_user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_scm_status}\n\$ "
+PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_scm_status}\n\$ "
 
 # clean the environment
-unset PS1_return_value PS1_git_status PS1_svn_status PS1_scm_status PS1_ssh_status PS1_user_color
+unset PS1_return_value PS1_git_status PS1_svn_status PS1_scm_status PS1_ssh_status PS1_screen_status PS1_user_color
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
 

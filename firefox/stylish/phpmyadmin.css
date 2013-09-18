@@ -1,6 +1,6 @@
 @namespace url(http://www.w3.org/1999/xhtml);
 
-@-moz-document domain("db.contactlab.it"), domain(manage.famp5-55.tomatowin.local), domain("localhost")
+@-moz-document domain("db.contactlab.it"), domain("manage.famp5-55.tomatowin.local"), domain("manage.staging1.housing.tomato.it"), domain("localhost")
 {
     a[target=mysql_doc]
     {
