@@ -236,9 +236,9 @@ PS4='$0, Line $LINENO: '
 ## define the path to the user binaries
 if [[ $(uname -s) == Darwin ]]
 then
-    export home_bin="$HOME/Library/bin"
+    home_bin="$HOME/Library/bin"
 else
-    export home_bin="$HOME/.local/bin"
+    home_bin="$HOME/.local/bin"
 fi
 
 ## ensure home_bin exists

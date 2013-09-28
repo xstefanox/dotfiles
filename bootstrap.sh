@@ -31,14 +31,30 @@ function readlink()
 function bootstrap_dir()
 {
     local base_path=$1
+    local symlink_name_path="$([[ -n $2 ]] && echo $2 || echo $1)"
     
-    # find the installable files, discarding bootstrap itself, any readme files and executable files;
+    # find the installable files, discarding bootstrap itself, any readme files;
     # the result should be a reasonable set of dotfiles
-    local dotfiles=$(find "${base_path}" -maxdepth 1 -type f -not -name "${BOOTSTRAP}" -not -name 'README*' -not -perm +0111 -exec basename {} \;)
+    local dotfiles=$(find "${base_path}" -maxdepth 1 -type f -not -name "${BOOTSTRAP}" -not -name 'README*' -exec basename {} \;)
+    
+    # determine the symlink name base path
+    
+    if [[ "${symlink_name_path}" != "${base_path}" ]]
+    then
+        # if custom symlink name path given
+        symlink_name_path="${symlink_name_path}/"
+    elif [[ "${symlink_name_path}" != "${REPO_PATH}" ]]
+    then
+        # if symlink name path is a subdir of user home dir
+        symlink_name_path="${HOME}/.${symlink_name_path/.\//}/"
+    else
+        # symlink in use home dir
+        symlink_name_path="${HOME}/."
+    fi
     
     # report the list of dotfiles
     echo
-    echo "The following dotfiles will be installed through a symlink to the repository (${base_path}):"
+    echo "The following dotfiles will be installed into '${symlink_name_path}' through a symlink to the repository (${base_path}):"
     echo
     echo "${dotfiles}" | sed 's:.*: * &:'
     echo
@@ -47,6 +63,13 @@ function bootstrap_dir()
     read proceed
 
     [[ "${proceed}" != Y && "${proceed}" != "" ]] && exit 0
+
+    # create the symlink directory if not found
+    if [[ "${symlink_name_path}" != "${HOME}/." ]] && [[ ! -d "${symlink_name_path}" ]]
+    then
+        echo " * Base path not found, creating..."
+        mkdir "${symlink_name_path}" || exit 1
+    fi
     
     for d in $dotfiles
     do
@@ -54,7 +77,7 @@ function bootstrap_dir()
         symlink_target="$(readlink -e "${base_path}/${d}")"
         
         # determine the symlink name
-        symlink_name="${HOME}/$([[ "${base_path}" == "${REPO_PATH}" ]] && echo . || echo ".${base_path/.\//}/")${d}"
+        symlink_name="${symlink_name_path}${d}"
         
         # check if the current file is a symlink
         is_link="$([[ -L "${symlink_name}" ]] && echo true || echo false)"
@@ -117,3 +140,11 @@ function bootstrap_dir()
 bootstrap_dir "${REPO_PATH}"
 bootstrap_dir "${REPO_PATH}/js"
 
+if [[ $(uname -s) == Darwin ]]
+then
+    home_bin="$HOME/Library/bin"
+else
+    home_bin="$HOME/.local/bin"
+fi
+
+bootstrap_dir "${REPO_PATH}/bin" "${home_bin}"
