@@ -1,0 +1,133 @@
+## Override the standard os prompt.
+## This prompt adds:
+## - colored info about the username, the hostname and the current path
+## - the last command return value and, in case of error, the corresponding error string as defined in the libc
+## - if the current path is under version control, info about the current commit/branch/local modifications (currently supported vcs: Git, SVN, HG)
+## - notification about GNU screen session
+## - notification about SSH session
+
+# save the list of return error strings supported by the OS libc and the geatest error number
+PS1_os_maxerr=133
+IFS=$'\n' PS1_os_errno=( $(python -c 'from __future__ import print_function; import sys; import os; [ print(os.strerror(e)) for e in range(0, int(sys.argv[1]) + 1) ]' ${PS1_os_maxerr}) )
+
+# save the return value of the last executed process
+PROMPT_COMMAND='PS1_return_value=$?;'
+
+# translate the saved return value in a colored string containing the error description
+PS1_return_value='$(
+    echo -ne "${NO_COLOR}(";
+    
+    if [[ "${PS1_return_value}" == 0 ]];
+    then
+        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}")${PS1_return_value}";
+    else
+        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}")${PS1_return_value}:$([[ ${PS1_return_value} -gt ${PS1_os_maxerr} ]] && echo "Unknown error" || echo "${PS1_os_errno[${PS1_return_value}]}")";
+    fi
+    
+    echo -ne "${NO_COLOR})";
+)'
+
+# generate a colored string describing the status of the Git working copy in the current directory
+PS1_git_status='$(
+    if which git &> /dev/null && git status &> /dev/null;
+    then
+        echo -ne "${NO_COLOR}{";
+        
+        if [[ -z "$(git status -s)" ]];
+        then
+            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
+        else
+            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
+        fi;
+        
+        echo -n "git:$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
+        
+        echo -ne "${NO_COLOR}}";
+    fi
+)'
+
+# generate a colored string describing the status of the Mercurial working copy in the current directory
+PS1_hg_status='$(
+    if which hg &> /dev/null && hg status &> /dev/null;
+    then
+        echo -ne "${NO_COLOR}{";
+        
+        if [[ -z "$(hg status)" ]];
+        then
+            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
+        else
+            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
+        fi;
+        
+        echo -n "hg:$(hg branch)";
+        
+        echo -ne "${NO_COLOR}}";
+    fi
+)'
+
+# generate a colored string describing the status of the Subversion working copy in the current directory;
+# this must be enabled on demand setting the environment variable PS1_svn_status_on, because it performs a
+# client/server communication that could lead to a slow prompt
+PS1_svn_status='$(
+    if [[ -n "${PS1_svn_status_on}" ]] && which svn &> /dev/null && svn info &> /dev/null;
+    then
+        url=$(svn info | sed -n "/^URL/ s/URL:[[:space:]]*// p");
+        
+        if [[ "${url/:*/}" != "file" ]];
+        then
+            host="${url/*:\/\//}";
+            host="${host/\/*/}";
+            
+            echo -ne "${NO_COLOR}{";
+            
+            if ping -c1 -W1 "${host}" &> /dev/null;
+            then
+
+                status="$(svn status -u | \grep ^[^[:space:]])"
+
+                if [[ -z "$(echo "${status}" | sed "$ d")" ]];
+                then
+                    [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
+                else
+                    [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
+                fi
+                
+                rev="$(echo "${status}" | sed -n "$ s/[[:alnum:][:space:]]\+:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
+                echo -n "${rev}";
+            else
+                echo -ne "$([[ $(uname -s) == Darwin ]] && echo -ne "${YELLOW}" || echo -ne "${BYELLOW}")svn:unknown";
+            fi;
+            
+            echo -ne "${NO_COLOR}}";
+        fi
+    fi
+)'
+
+# generate the final version control system status description string
+PS1_vcs_status="${PS1_git_status}${PS1_hg_status}${PS1_svn_status}"
+
+# color the username depending on user being root or not
+PS1_user_color="$(
+    if [[ $UID == 0 ]]
+    then
+        [[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}"
+    else
+        [[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}"
+    fi
+)"
+
+# set an SSH descriptive string in case of a remote connection
+PS1_ssh_status=$([[ -n "${SSH_CLIENT}" ]] && echo "$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")ssh:${NO_COLOR}")
+
+PS1_screen_status="$([[ -n "${STY}" ]] && echo "[screen:$(echo "${STY#*.}" | sed -e "s:.${HOSTNAME}::")]")"
+
+## PS1: Default prompt
+PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_vcs_status}\n\$ "
+
+# clean the environment
+unset PS1_return_value PS1_git_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_user_color
+
+## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
+
+## PS4: Debug prompt
+PS4='$0, Line $LINENO: '
