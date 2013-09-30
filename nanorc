@@ -18,3 +18,27 @@ set const
 
 # make the home key smarter
 set smarthome
+
+#######################
+## SYNTAX HIGHLITING ##
+#######################
+
+# ini highlighting
+# subversion servers file
+syntax "ini" "\.ini(\.old|~)?|servers|config$"
+
+# values
+color brightred "=.*$"
+# equal sign
+color green "="
+# numbers
+color brightblue "-?[0-9\.]+\s*($|;)"
+# ON/OFF
+color brightmagenta "ON|OFF|On|Off|on|off\s*($|;)"
+# sections
+color brightcyan "^\s*\[.*\]"
+# keys
+color cyan "^\s*[a-zA-Z0-9_\.]+"
+# comments
+color brightyellow "(;|#).*$"
+
