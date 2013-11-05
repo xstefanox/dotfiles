@@ -76,3 +76,169 @@ ON_IBLUE='\033[0;104m'        # BLUE
 ON_IPURPLE='\033[10;95m'      # PURPLE
 ON_ICYAN='\033[0;106m'        # CYAN
 ON_ILIGHT_GRAY='\033[0;107m'  # LIGHT_GRAY
+
+## load the colors from the cache or generate is if not found
+
+# prepare the color codes
+
+unset _COLOR_FORMATTING _COLOR_FOREGROUND _COLOR_BACKGROUND
+
+declare -A _COLOR_FORMATTING
+_COLOR_FORMATTING[DEFAULT]=0
+_COLOR_FORMATTING[BOLD]=1
+_COLOR_FORMATTING[DIM]=2
+_COLOR_FORMATTING[UNDERLINED]=4
+_COLOR_FORMATTING[BLINK]=5
+_COLOR_FORMATTING[REVERSE]=7
+_COLOR_FORMATTING[HIDDEN]=8
+
+declare -A _COLOR_FOREGROUND
+_COLOR_FOREGROUND[DEFAULT]=39
+_COLOR_FOREGROUND[BLACK]=30
+_COLOR_FOREGROUND[RED]=31
+_COLOR_FOREGROUND[GREEN]=32
+_COLOR_FOREGROUND[YELLOW]=33
+_COLOR_FOREGROUND[BLUE]=34
+_COLOR_FOREGROUND[MAGENTA]=35
+_COLOR_FOREGROUND[CYAN]=36
+_COLOR_FOREGROUND[LIGHT_GRAY]=37
+_COLOR_FOREGROUND[DARK_GRAY]=90
+_COLOR_FOREGROUND[LIGHT_RED]=91
+_COLOR_FOREGROUND[LIGHT_GREEN]=92
+_COLOR_FOREGROUND[LIGHT_YELLOW]=93
+_COLOR_FOREGROUND[LIGHT_BLUE]=94
+_COLOR_FOREGROUND[LIGHT_MAGENTA]=95
+_COLOR_FOREGROUND[LIGHT_CYAN]=96
+_COLOR_FOREGROUND[WHITE]=97
+
+declare -A _COLOR_BACKGROUND
+_COLOR_BACKGROUND[DEFAULT]=49
+_COLOR_BACKGROUND[BLACK]=40
+_COLOR_BACKGROUND[RED]=41
+_COLOR_BACKGROUND[GREEN]=42
+_COLOR_BACKGROUND[YELLOW]=43
+_COLOR_BACKGROUND[BLUE]=44
+_COLOR_BACKGROUND[MAGENTA]=45
+_COLOR_BACKGROUND[CYAN]=46
+_COLOR_BACKGROUND[LIGHT_GRAY]=47
+_COLOR_BACKGROUND[DARK_GRAY]=100
+_COLOR_BACKGROUND[LIGHT_RED]=101
+_COLOR_BACKGROUND[LIGHT_GREEN]=102
+_COLOR_BACKGROUND[LIGHT_YELLOW]=103
+_COLOR_BACKGROUND[LIGHT_BLUE]=104
+_COLOR_BACKGROUND[LIGHT_MAGENTA]=105
+_COLOR_BACKGROUND[LIGHT_CYAN]=106
+_COLOR_BACKGROUND[WHITE]=107
+
+cache_file="${HOME}/.bash_colors.cache"
+
+if [[ -e "${cache_file}" ]]
+then
+    # the colors definition is already cached
+    source "${cache_file}"
+else
+    # define all possible formatting/foreground/background color codes
+    
+    for bg in ${!_COLOR_BACKGROUND[@]}
+    do
+        # define the background-only color code
+        echo "COLOR_ON_${bg}='\e[${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
+        
+        for fg in ${!_COLOR_FOREGROUND[@]}
+        do
+            # define the foreground/background color code
+            echo "COLOR_${fg}_ON_${bg}='\e[${_COLOR_FOREGROUND[${fg}]};${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
+            
+            for fmt in ${!_COLOR_FORMATTING[@]}
+            do
+                # define the formatting/foreground/background color code
+                if [[ "${fmt}" == DEFAULT && "${fg}" == DEFAULT && "${bg}" == DEFAULT ]]
+                then
+                    # rename the all-default color code to COLOR_DEFAULT
+                    echo "COLOR_DEFAULT='\e[${_COLOR_FORMATTING[DEFAULT]};${_COLOR_FOREGROUND[DEFAULT]};${_COLOR_BACKGROUND[DEFAULT]}m'" >> "${cache_file}"
+                    :
+                else
+                    echo "COLOR_${fmt}_${fg}_ON_${bg}='\e[${_COLOR_FORMATTING[${fmt}]};${_COLOR_FOREGROUND[${fg}]};${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
+                fi
+            done
+        done
+    done
+
+    for fg in ${!_COLOR_FOREGROUND[@]}
+    do
+        # define the foreground-only color code
+        echo "COLOR_${fg}='\e[${_COLOR_FOREGROUND[${fg}]}m'" >> "${cache_file}"
+        
+        for fmt in ${!_COLOR_FORMATTING[@]}
+        do
+            # define the formatting/foreground color code
+            echo "COLOR_${fmt}_${fg}='\e[${_COLOR_FORMATTING[${fmt}]};${_COLOR_FOREGROUND[${fg}]}m'" >> "${cache_file}"
+        done
+    done
+    
+    for fmt in ${!_COLOR_FORMATTING[@]}
+    do
+        # define the formatting-only color-code
+        echo "COLOR_${fmt}='\e[${_COLOR_FORMATTING[${fmt}]}m'" >> "${cache_file}"
+        
+        for bg in ${!_COLOR_BACKGROUND[@]}
+        do
+            # define the formatting/background color code
+            echo "COLOR_${fmt}_ON_${bg}='\e[${_COLOR_FORMATTING[${fmt}]};${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
+        done
+    done
+    
+    source "${cache_file}"
+    
+    unset fg bg fmt
+fi
+
+unset cache_file
+
+function bash_colors
+{
+    local fg
+    local bg
+    local fmt
+    local color_name
+    local max_fg_length
+    local bg_idx
+    local bg_label
+    
+    # calculate the max length of the color names for the padding
+    max_fg_length=0
+    for fg in ${!_COLOR_FOREGROUND[@]}
+    do
+        [[ "${#fg}" -gt "${max_fg_length}" ]] && max_fg_length="${#fg}"
+    done
+
+    for bg in ${!_COLOR_BACKGROUND[@]}
+    do
+        bg_idx=0
+        bg_label="${bg/_/ }"
+        bg_label="$(printf "%0$((${#_COLOR_FOREGROUND[@]} / 2 + $((${#bg_label} + 1)) / 2))s " "${bg_label}")"
+        
+        for fg in ${!_COLOR_FOREGROUND[@]}
+        do
+            printf "%0${max_fg_length}s " "${fg}"
+            
+            # define the color variable for the colors without a formatting modifier
+            color_name="COLOR_${fg}_ON_${bg}"
+            
+            echo -ne "$(eval echo "\$${color_name}") NORMAL ${COLOR_DEFAULT}"
+            
+            # for each formatting modifier
+            for fmt in ${!_COLOR_FORMATTING[@]}
+            do
+                # define the color variable
+                color_name="COLOR_${fmt}_${fg}_ON_${bg}"
+                
+                echo -ne "$(eval echo "\$${color_name}") ${fmt} ${COLOR_DEFAULT}"
+            done
+            
+            echo "  ${bg_label:${bg_idx}:1}"
+            
+            let bg_idx++
+        done
+    done
+}

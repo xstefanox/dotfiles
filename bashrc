@@ -213,8 +213,54 @@ fi
 ## PHP ##
 #########
 
+# Pear
 [[ $UID != 0 ]] && alias pear='sudo pear'
 [[ $UID != 0 ]] && alias pecl='sudo pecl'
+
+# Composer
+function composer()
+{
+    local composer
+    
+    # use the project composer if exists
+    if [[ -f composer.phar ]]
+    then
+        composer="./composer.phar"
+    elif [[ -f composer ]]
+    then
+        composer="./composer"
+    # use the system composer if exists
+    elif which composer &> /dev/null
+    then
+        composer="$(which composer)"
+    fi
+    
+    # run composer if found
+    if [[ -n "${composer}" ]]
+    then
+        php -d memory_limit=750M $composer $@
+    else
+        # ask for installation
+        echo "Composer not installed"
+        echo -n "Do you want to install Composer in the local directory? [yN] "
+        while read install
+        do
+            if [[ "${install}" == N ]] || [[ -z "${install}" ]]
+            then
+                break
+            elif [[ "${install}" == y ]]
+            then
+                curl -sS https://getcomposer.org/installer | php  -- --install-dir=.
+                break
+            else
+                echo "Not recognized: ${install}"
+                echo -n "Do you want to install Composer in the local directory? [yN] "
+            fi
+        done
+    fi
+}
+
+export -f composer
 
 #########
 ## GIT ##
