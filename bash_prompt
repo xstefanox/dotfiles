@@ -10,8 +10,8 @@
 PS1_os_maxerr=133
 IFS=$'\n' PS1_os_errno=( $(python -c 'from __future__ import print_function; import sys; import os; [ print(os.strerror(e)) for e in range(0, int(sys.argv[1]) + 1) ]' ${PS1_os_maxerr}) )
 
-# save the return value of the last executed process
-PROMPT_COMMAND='PS1_return_value=$?;'
+# save the return value of the last executed process and the write permission on the current working directory
+PROMPT_COMMAND='PS1_return_value=$?;[[ -w "${PWD}" ]];PS1_cwd_perm=$?'
 
 # translate the saved return value in a colored string containing the error description
 PS1_return_value='$(
@@ -107,27 +107,57 @@ PS1_svn_status='$(
 PS1_vcs_status="${PS1_git_status}${PS1_hg_status}${PS1_svn_status}"
 
 # color the username depending on user being root or not
-PS1_user_color="$(
-    if [[ $UID == 0 ]]
-    then
-        [[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}"
-    else
-        [[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}"
-    fi
-)"
+PS1_username='$(
+    #if [[ -n "${SSH_CLIENT}" ]] || [[ ${USER} != "$(logname 2>/dev/null)" ]]
+    #then
+        if [[ $UID == 0 ]]
+        then
+            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}"
+        else
+            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}"
+        fi
+        
+        echo -ne ${USER}${NO_COLOR}
+    #fi
+)'
+
+# [[ ${USER} != "$(logname 2>/dev/null)" ]]
+
+PS1_hostname='$(
+    #if [[ -n "${SSH_CLIENT}" ]]
+    #then
+        [[ $(uname -s) == Darwin ]] && echo -ne "${YELLOW}" || echo -ne "${BYELLOW}"
+        echo -ne "@$(hostname)${NO_COLOR}"
+    #fi
+)'
 
 # set an SSH descriptive string in case of a remote connection
-PS1_ssh_status=$([[ -n "${SSH_CLIENT}" ]] && echo "$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")ssh:${NO_COLOR}")
+PS1_ssh_status="$([[ -n "${SSH_CLIENT}" ]] && echo "$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")ssh:${NO_COLOR}")"
 
+# set the screen status
 PS1_screen_status="$([[ -n "${STY}" ]] && echo "[screen:$(echo "${STY#*.}" | sed -e "s:.${HOSTNAME}::")]")"
 
-## PS1: Default prompt
-PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_vcs_status}\n\$ "
+# set a colored colon depending on the write permissions on the current working directory
+PS1_cwd_perm='$(
+    echo -ne "${NO_COLOR}";
+    
+    if [[ "${PS1_cwd_perm}" == 0 ]];
+    then
+        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}")";
+    else
+        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}")";
+    fi
+    
+    echo -ne ":${NO_COLOR}";
+)'
 
-# clean the environment
-unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_user_color
+## PS1: Default prompt
+PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_username}${PS1_hostname}${PS1_cwd_perm}$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_vcs_status}\n\$ "
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
 
 ## PS4: Debug prompt
 PS4='$0, Line $LINENO: '
+
+# clean the environment
+unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_username PS1_hostname PS1_cwd_perm
