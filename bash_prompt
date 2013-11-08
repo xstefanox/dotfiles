@@ -145,10 +145,19 @@ PS1_hashtag='$([[ -n "${PS1_tag}" ]] && echo -e " ${CYAN}#${PS1_tag}${NO_COLOR}"
 # set the CPU load warning string
 PS1_cpu_load='$(
 
+    if [[ $(uname -s) == Darwin ]]
+    then
+        cpu_load="$(sysctl -n vm.loadavg | awk "{ print \$2 }")"
+        cpu_count="$(( $(sysctl -n hw.physicalcpu_max) * $(sysctl -n hw.logicalcpu_max) ))"
+    else
+        cpu_load="$(cat /proc/loadavg | cut -d" " -f1)"
+        cpu_count="$(grep "model name" /proc/cpuinfo | wc -l)"
+    fi
+
     load_percent="$(
         awk \
-            -v cpu_load="$(sysctl -n vm.loadavg | awk "{ print \$2 }")" \
-            -v cpu_count="$(( $(sysctl -n hw.physicalcpu_max) * $(sysctl -n hw.logicalcpu_max) ))" \
+            -v cpu_load="${cpu_load}" \
+            -v cpu_count="${cpu_count}" \
             "BEGIN {
                 load_percent = 100 * cpu_load / cpu_count;
                 load_percent = (load_percent == int(load_percent)) ? load_percent : int(load_percent) + 1;
