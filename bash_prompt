@@ -33,7 +33,9 @@ PS1_git_status='$(
     then
         echo -ne "${NO_COLOR}{";
         
-        if [[ -z "$(git status -s)" ]];
+        status="$(git status --porcelain)"
+        
+        if [[ -z "${status}" ]];
         then
             [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
         else
@@ -42,7 +44,24 @@ PS1_git_status='$(
         
         echo -n "git:$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
         
-        echo -ne "${NO_COLOR}}";
+        
+        if [[ -n "${status}" ]];
+        then
+            declare -a status_info;
+            added_count=$(echo "${status}" | grep "^A" | wc -l);
+            deleted_count=$(echo "${status}" | grep "^\(D \| D\|D\) " | wc -l);
+            modified_count=$(echo "${status}" | grep "^\(M \| M\|MM\) " | wc -l);
+            untracked_count=$(echo "${status}" | grep "^??" | wc -l);
+            [[ "${added_count}" -gt 0 ]] && status_info[0]="$(echo "${added_count}" | sed "s:[[:space:]]*:+:")";
+            [[ "${deleted_count}" -gt 0 ]] && status_info[1]="$(echo "${deleted_count}" | sed "s:[[:space:]]*:-:")";
+            [[ "${modified_count}" -gt 0 ]] && status_info[2]="$(echo "${modified_count}" | sed "s:[[:space:]]*:±:")";
+            [[ "${untracked_count}" -gt 0 ]] && status_info[3]="$(echo "${untracked_count}" | sed "s:[[:space:]]*:?:")";
+            echo -n "($(printf "%s/" "${status_info[@]}" | cut -d "/" -f 1-${#status_info[@]}))";
+        fi;
+        
+        echo -ne "${NO_COLOR}";
+        
+        echo -n "}"
     fi
 )'
 
@@ -69,37 +88,36 @@ PS1_hg_status='$(
 # this must be enabled on demand setting the environment variable PS1_svn_status_on, because it performs a
 # client/server communication that could lead to a slow prompt
 PS1_svn_status='$(
-    if [[ -n "${PS1_svn_status_on}" ]] && which svn &> /dev/null && svn info &> /dev/null;
+    if which svn &> /dev/null && svn info &> /dev/null;
     then
-        url=$(svn info | sed -n "/^URL/ s/URL:[[:space:]]*// p");
+        rev="$(svn info | sed -n "/^Revision/ s/.*:[[:space:]]*// p")"
+        status="$(svn status)"
         
-        if [[ "${url/:*/}" != "file" ]];
+        echo -ne "${NO_COLOR}{";
+        
+        if [[ -n "${status}" ]];
         then
-            host="${url/*:\/\//}";
-            host="${host/\/*/}";
+            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
             
-            echo -ne "${NO_COLOR}{";
+            echo -n "svn:${rev}";
             
-            if ping -c1 -W1 "${host}" &> /dev/null;
-            then
-
-                status="$(svn status -u | \grep ^[^[:space:]])"
-
-                if [[ -z "$(echo "${status}" | sed "$ d")" ]];
-                then
-                    [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
-                else
-                    [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
-                fi
-                
-                rev="$(echo "${status}" | sed -n "$ s/[[:alnum:][:space:]]\+:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
-                echo -n "${rev}";
-            else
-                echo -ne "$([[ $(uname -s) == Darwin ]] && echo -ne "${YELLOW}" || echo -ne "${BYELLOW}")svn:unknown";
-            fi;
+            declare -a status_info;
+            added_count=$(echo "${status}" | grep "^A" | wc -l);
+            deleted_count=$(echo "${status}" | grep "^D" | wc -l);
+            modified_count=$(echo "${status}" | grep "^M" | wc -l);
+            untracked_count=$(echo "${status}" | grep "^?" | wc -l);
+            [[ "${added_count}" -gt 0 ]] && status_info[0]="$(echo "${added_count}" | sed "s:[[:space:]]*:+:")";
+            [[ "${deleted_count}" -gt 0 ]] && status_info[1]="$(echo "${deleted_count}" | sed "s:[[:space:]]*:-:")";
+            [[ "${modified_count}" -gt 0 ]] && status_info[2]="$(echo "${modified_count}" | sed "s:[[:space:]]*:±:")";
+            [[ "${untracked_count}" -gt 0 ]] && status_info[3]="$(echo "${untracked_count}" | sed "s:[[:space:]]*:?:")";
+            echo -n "($(printf "%s/" "${status_info[@]}" | cut -d "/" -f 1-${#status_info[@]}))";
+        else
+            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
             
-            echo -ne "${NO_COLOR}}";
-        fi
+            echo -n "svn:${rev}";
+        fi;
+        
+        echo -ne "${NO_COLOR}}";
     fi
 )'
 
@@ -121,13 +139,80 @@ PS1_ssh_status=$([[ -n "${SSH_CLIENT}" ]] && echo "$([[ $(uname -s) == Darwin ]]
 
 PS1_screen_status="$([[ -n "${STY}" ]] && echo "[screen:$(echo "${STY#*.}" | sed -e "s:.${HOSTNAME}::")]")"
 
+# set the shell tag
+PS1_hashtag='$([[ -n "${PS1_tag}" ]] && echo -e " ${CYAN}#${PS1_tag}${NO_COLOR}")'
+
+# set the CPU load warning string
+PS1_cpu_load='$(
+
+    load_percent="$(
+        awk \
+            -v cpu_load="$(sysctl -n vm.loadavg | awk "{ print \$2 }")" \
+            -v cpu_count="$(( $(sysctl -n hw.physicalcpu_max) * $(sysctl -n hw.logicalcpu_max) ))" \
+            "BEGIN {
+                load_percent = 100 * cpu_load / cpu_count;
+                load_percent = (load_percent == int(load_percent)) ? load_percent : int(load_percent) + 1;
+                load_percent = (load_percent > 100) ? 100 : load_percent;
+                print load_percent;
+            }")"
+    
+    if [[ "${load_percent}" -ge 90 ]]
+    then
+        echo -ne " $([[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}")⌂${load_percent}%${NO_COLOR}"
+    elif [[ "${load_percent}" -ge 60 ]]
+    then
+        echo -ne " $([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")⌂${load_percent}%${NO_COLOR}"
+    fi
+)'
+
+# set a descriptive string about jobs
+PS1_jobs='$(
+
+    running="$(( $(jobs -r | wc -l) ))"
+    stopped="$(( $(jobs -s | wc -l) ))"
+    detached="$(which screen &> /dev/null && { screen -ls 2> /dev/null | grep -c Detach; true; } || echo 0)"
+    ret=""
+
+    if [[ $detached != "0" ]]
+    then
+        ret="${ret}${YELLOW}${detached}d${NO_COLOR}"
+    fi
+
+    if [[ $running != "0" ]]
+    then
+        if [[ $ret != "" ]]
+        then
+            ret="${ret}/"
+        fi
+        ret="${ret}${YELLOW}${running}&${NO_COLOR}"
+    fi
+
+    if [[ $stopped != "0" ]]
+    then
+        if [[ $ret != "" ]]
+        then
+            ret="${ret}/"
+        fi
+        ret="${ret}${YELLOW}${stopped}z${NO_COLOR}"
+    fi
+
+    [[ -n "${ret}" ]] && echo -ne " ${ret}"
+)'
+
 ## PS1: Default prompt
-PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_vcs_status}\n\$ "
+PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_user_color}\u$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")@\h${NO_COLOR}:$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_vcs_status}${PS1_jobs}${PS1_hashtag}${PS1_cpu_load}\n\$ "
 
 # clean the environment
-unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_user_color
+unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_user_color PS1_hashtag PS1_cpu_load PS1_jobs
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
 
 ## PS4: Debug prompt
 PS4='$0, Line $LINENO: '
+
+# set/unset the tag string
+function prompt_tag()
+{
+    local IFS=
+    export PS1_tag="$@"
+}

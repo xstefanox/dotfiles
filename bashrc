@@ -91,7 +91,6 @@ then
     if which brew &> /dev/null
     then
         brew_prefix=$(brew --prefix)
-        source "${brew_prefix}/etc/bash_completion"
         source "${brew_prefix}/Library/Contributions/brew_bash_completion.sh"
         unset brew_prefix
     fi
