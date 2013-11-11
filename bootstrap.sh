@@ -62,7 +62,7 @@ function bootstrap_dir()
 
     read proceed
 
-    [[ "${proceed}" != Y && "${proceed}" != "" ]] && exit 0
+    [[ "${proceed}" != Y && "${proceed}" != "" ]] && return 0
 
     # create the symlink directory if not found
     if [[ "${symlink_name_path}" != "${HOME}/." ]] && [[ ! -d "${symlink_name_path}" ]]
