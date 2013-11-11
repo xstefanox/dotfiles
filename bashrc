@@ -217,7 +217,9 @@ fi
 [[ $UID != 0 ]] && alias pear='sudo pear'
 [[ $UID != 0 ]] && alias pecl='sudo pecl'
 
-# Composer
+# Composer: define a wrapper that automatically invokes the project composer if it exists,
+# falls back on the system compoer if it exists or asks for installation in the current directory
+# if no composer is found on your system
 function composer()
 {
     local composer
@@ -230,6 +232,9 @@ function composer()
     then
         composer="./composer"
     # use the system composer if exists
+    elif which composer.phar &> /dev/null
+    then
+        composer="$(which composer.phar)"
     elif which composer &> /dev/null
     then
         composer="$(which composer)"
@@ -258,9 +263,10 @@ function composer()
             fi
         done
     fi
-}
+} && export -f composer
 
-export -f composer
+# import PhpBrew invironment if found
+[[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 #########
 ## GIT ##
