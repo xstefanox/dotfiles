@@ -84,41 +84,38 @@ PS1_hg_status='$(
     fi
 )'
 
-# generate a colored string describing the status of the Subversion working copy in the current directory;
-# this must be enabled on demand setting the environment variable PS1_svn_status_on, because it performs a
-# client/server communication that could lead to a slow prompt
+# generate a colored string describing the status of the Subversion working copy in the current directory
 PS1_svn_status='$(
-    if [[ -n "${PS1_svn_status_on}" ]] && which svn &> /dev/null && svn info &> /dev/null;
+    if which svn &> /dev/null && svn info &> /dev/null;
     then
-        url=$(svn info | sed -n "/^URL/ s/URL:[[:space:]]*// p");
+        rev="$(LC_ALL=C svn info | sed -n "/^Revision:/ s/.*:[[:space:]]*// p")"
+        status="$(svn status)"
         
-        if [[ "${url/:*/}" != "file" ]];
+        echo -ne "${NO_COLOR}{";
+        
+        if [[ -n "${status}" ]];
         then
-            host="${url/*:\/\//}";
-            host="${host/\/*/}";
+            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
             
-            echo -ne "${NO_COLOR}{";
+            echo -n "svn:${rev}";
             
-            if ping -c1 -W1 "${host}" &> /dev/null;
-            then
-
-                status="$(svn status -u | \grep ^[^[:space:]])"
-
-                if [[ -z "$(echo "${status}" | sed "$ d")" ]];
-                then
-                    [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
-                else
-                    [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
-                fi
-                
-                rev="$(echo "${status}" | sed -n "$ s/[[:alnum:][:space:]]\+:[[:space:]]*\([[:digit:]]*\)/svn:rev\1/ p")";
-                echo -n "${rev}";
-            else
-                echo -ne "$([[ $(uname -s) == Darwin ]] && echo -ne "${YELLOW}" || echo -ne "${BYELLOW}")svn:unknown";
-            fi;
+            declare -a status_info;
+            added_count=$(echo "${status}" | grep "^A" | wc -l);
+            deleted_count=$(echo "${status}" | grep "^D" | wc -l);
+            modified_count=$(echo "${status}" | grep "^M" | wc -l);
+            untracked_count=$(echo "${status}" | grep "^?" | wc -l);
+            [[ "${added_count}" -gt 0 ]] && status_info[0]="$(echo "${added_count}" | sed "s:[[:space:]]*:+:")";
+            [[ "${deleted_count}" -gt 0 ]] && status_info[1]="$(echo "${deleted_count}" | sed "s:[[:space:]]*:-:")";
+            [[ "${modified_count}" -gt 0 ]] && status_info[2]="$(echo "${modified_count}" | sed "s:[[:space:]]*:±:")";
+            [[ "${untracked_count}" -gt 0 ]] && status_info[3]="$(echo "${untracked_count}" | sed "s:[[:space:]]*:?:")";
+            echo -n "($(printf "%s/" "${status_info[@]}" | cut -d "/" -f 1-${#status_info[@]}))";
+        else
+            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
             
-            echo -ne "${NO_COLOR}}";
-        fi
+            echo -n "svn:${rev}";
+        fi;
+        
+        echo -ne "${NO_COLOR}}";
     fi
 )'
 

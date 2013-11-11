@@ -221,7 +221,7 @@ fi
 # if no composer is found on your system
 function composer()
 {
-    local composer
+    local composer args cmd_args item
     
     # use the project composer if exists
     if [[ -f composer.phar ]]
@@ -242,7 +242,25 @@ function composer()
     # run composer if found
     if [[ -n "${composer}" ]]
     then
-        php -d memory_limit=750M $composer $@
+        # check if installation of custom repository has been required
+        
+        cmd_args="$@"
+        
+        declare -a args
+        
+        # strip --* arguments from $@
+        for item in $@
+        do
+            [[ "${item}" != --* ]] && args+=( "${item}" )
+        done
+        
+        # if the selected command is create-project and the selected project is our custom project
+        if [[ "${args[0]}" == 'create-project' ]] && [[ "${args[1]}" == 'symfony/framework-contactlab-edition' ]]
+        then
+            cmd_args+=" --repository-url='http://svn.tomatowin.local/projects'"
+        fi
+        
+        eval php -d memory_limit=750M $composer $cmd_args
     else
         # ask for installation
         echo "Composer not installed"
