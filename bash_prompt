@@ -89,7 +89,8 @@ PS1_svn_status='$(
     if which svn &> /dev/null && svn info &> /dev/null;
     then
         rev="$(LC_ALL=C svn info | sed -n "/^Revision:/ s/.*:[[:space:]]*// p")"
-        status="$(svn status)"
+        root="$(LC_ALL=C svn info | sed -n "/^Working Copy Root Path:/ s/.*:[[:space:]]*// p")"
+        status="$(svn status "${root}")"
         
         echo -ne "${NO_COLOR}{";
         
