@@ -307,6 +307,15 @@ then
 fi 
 
 #########
+## SVN ##
+#########
+
+if which svn &> /dev/null
+then
+    alias svn-ignore='EDITOR="nano" svn propedit svn:ignore'
+fi
+
+#########
 ## WII ##
 #########
 

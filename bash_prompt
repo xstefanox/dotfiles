@@ -103,12 +103,14 @@ PS1_svn_status='$(
             declare -a status_info;
             added_count=$(echo "${status}" | grep "^A" | wc -l);
             deleted_count=$(echo "${status}" | grep "^D" | wc -l);
-            modified_count=$(echo "${status}" | grep "^M" | wc -l);
+            modified_count=$(echo "${status}" | grep "^\(M \| M\) " | wc -l);
             untracked_count=$(echo "${status}" | grep "^?" | wc -l);
-            [[ "${added_count}" -gt 0 ]] && status_info[0]="$(echo "${added_count}" | sed "s:[[:space:]]*:+:")";
-            [[ "${deleted_count}" -gt 0 ]] && status_info[1]="$(echo "${deleted_count}" | sed "s:[[:space:]]*:-:")";
-            [[ "${modified_count}" -gt 0 ]] && status_info[2]="$(echo "${modified_count}" | sed "s:[[:space:]]*:±:")";
-            [[ "${untracked_count}" -gt 0 ]] && status_info[3]="$(echo "${untracked_count}" | sed "s:[[:space:]]*:?:")";
+            not_found_count=$(echo "${status}" | grep "!" | wc -l);
+            [[ "${added_count}" -gt 0 ]] && status_info[0]="+${added_count}";
+            [[ "${deleted_count}" -gt 0 ]] && status_info[1]="-${deleted_count}";
+            [[ "${modified_count}" -gt 0 ]] && status_info[2]="±${modified_count}";
+            [[ "${untracked_count}" -gt 0 ]] && status_info[3]="?${untracked_count}";
+            [[ "${not_found_count}" -gt 0 ]] && status_info[4]="!${not_found_count}";
             echo -n "($(printf "%s/" "${status_info[@]}" | cut -d "/" -f 1-${#status_info[@]}))";
         else
             [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
