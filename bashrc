@@ -321,6 +321,17 @@ fi
 
 [[ $(uname -s) == Darwin ]] && export PATH=/Volumes/WII/bin:$PATH || export PATH=/media/WII/bin:$PATH
 
+##########
+## RUBY ##
+##########
+
+# install gems in user home
+if which gem &> /dev/null
+then
+    export GEM_HOME="${HOME}/.gem"
+    export PATH="${PATH}:${HOME}/.gem/bin"
+fi
+
 #########
 ## RVM ##
 #########
