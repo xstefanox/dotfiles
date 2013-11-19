@@ -242,28 +242,10 @@ function composer()
     # run composer if found
     if [[ -n "${composer}" ]]
     then
-        # check if installation of custom repository has been required
-        
-        cmd_args="$@"
-        
-        declare -a args
-        
-        # strip --* arguments from $@
-        for item in $@
-        do
-            [[ "${item}" != --* ]] && args+=( "${item}" )
-        done
-        
-        # if the selected command is create-project and the selected project is our custom project
-        if [[ "${args[0]}" == 'create-project' ]] && [[ "${args[1]}" == 'symfony/framework-contactlab-edition' ]]
-        then
-            cmd_args+=" --repository-url='http://svn.tomatowin.local/projects'"
-        fi
-        
-        eval php -d memory_limit=750M $composer $cmd_args
+        php -d memory_limit=750M $composer $@
     else
         # ask for installation
-        echo "Composer not installed"
+        echo "Composer not found!"
         echo -n "Do you want to install Composer in the local directory? [yN] "
         while read install
         do
@@ -446,9 +428,22 @@ fi
 ########################
 
 ## Linux
-if [[ $(uname -s) == Linux ]] && which service &> /dev/null
+if [[ $(uname -s) == Linux ]]
 then
-    [[ $UID != 0 ]] && alias service='sudo service'
+    # define a wrapper arount service and start/restart/stop commands
+    function _service_vs_upstart()
+    {
+        if [[ $UID != 0 ]]
+        then
+            _upstart_jobs | grep --silent $2 && sudo $1 $2 || sudo service $2 $1
+        else
+            _upstart_jobs | grep --silent $2 && $1 $2 || service $2 $1
+        fi
+    }
+    
+    alias start='_service_vs_upstart start'
+    alias restart='_service_vs_upstart restart'
+    alias stop='_service_vs_upstart stop'
 fi
 
 ####################
