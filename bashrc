@@ -216,54 +216,6 @@ fi
 [[ $UID != 0 ]] && alias pear='sudo pear'
 [[ $UID != 0 ]] && alias pecl='sudo pecl'
 
-# Composer: define a wrapper that automatically invokes the project composer if it exists,
-# falls back on the system compoer if it exists or asks for installation in the current directory
-# if no composer is found on your system
-function composer()
-{
-    local composer args cmd_args item
-    
-    # use the project composer if exists
-    if [[ -f composer.phar ]]
-    then
-        composer="./composer.phar"
-    elif [[ -f composer ]]
-    then
-        composer="./composer"
-    # use the system composer if exists
-    elif which composer.phar &> /dev/null
-    then
-        composer="$(which composer.phar)"
-    elif which composer &> /dev/null
-    then
-        composer="$(which composer)"
-    fi
-    
-    # run composer if found
-    if [[ -n "${composer}" ]]
-    then
-        php -d memory_limit=750M $composer $@
-    else
-        # ask for installation
-        echo "Composer not found!"
-        echo -n "Do you want to install Composer in the local directory? [yN] "
-        while read install
-        do
-            if [[ "${install}" == N ]] || [[ -z "${install}" ]]
-            then
-                break
-            elif [[ "${install}" == y ]]
-            then
-                curl -sS https://getcomposer.org/installer | php  -- --install-dir=.
-                break
-            else
-                echo "Not recognized: ${install}"
-                echo -n "Do you want to install Composer in the local directory? [yN] "
-            fi
-        done
-    fi
-} && export -f composer
-
 # import PhpBrew invironment if found
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 

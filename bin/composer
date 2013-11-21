@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Composer: define a wrapper that automatically invokes the project composer if it exists,
+# or asks for installation in the project if no composer is found in the current directory
+
+declare composer args cmd_args item
+
+# use the project composer if exists
+if [[ -f composer.phar ]]
+then
+    composer="./composer.phar"
+elif [[ -f composer ]]
+then
+    composer="./composer"
+fi
+
+# run composer if found
+if [[ -n "${composer}" ]]
+then
+    php -d memory_limit=750M $composer $@
+else
+    # ask for installation
+    echo -e  "\033[0;33mComposer not found!"
+    echo -ne "\033[0;32mDo you want to install Composer in the local directory? \033[0;33m[yN]\033[0m: "
+    while read install
+    do
+        if [[ "${install}" == N ]] || [[ -z "${install}" ]]
+        then
+            break
+        elif [[ "${install}" == y ]]
+        then
+            curl -sS https://getcomposer.org/installer | php  -- --install-dir=.
+            break
+        else
+            echo "Not recognized: ${install}"
+            echo -n "Do you want to install Composer in the local directory? [yN] "
+        fi
+    done
+fi
