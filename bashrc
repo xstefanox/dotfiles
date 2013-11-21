@@ -394,8 +394,23 @@ then
     }
     
     alias start='_service_vs_upstart start'
-    alias restart='_service_vs_upstart restart'
     alias stop='_service_vs_upstart stop'
+    alias restart='_service_vs_upstart restart'
+    alias reload='_service_vs_upstart reload'
+fi
+
+############
+## APACHE ##
+############
+
+if which apache2ctl &> /dev/null
+then
+    [[ $UID != 0 ]] && alias a2enmod='sudo a2enmod'
+    [[ $UID != 0 ]] && alias a2ensite='sudo a2ensite'
+    [[ $UID != 0 ]] && alias a2dismod='sudo a2dismod'
+    [[ $UID != 0 ]] && alias a2dissite='sudo a2dissite'
+    [[ $UID == 0 ]] && alias a2vhosts='apache2ctl -t -D DUMP_VHOSTS' || alias a2vhosts='sudo apache2ctl -t -D DUMP_VHOSTS'
+    [[ $UID == 0 ]] && alias a2modules='apache2ctl -t -D DUMP_MODULES' || alias a2modules='sudo apache2ctl -t -D DUMP_MODULES'
 fi
 
 ####################
