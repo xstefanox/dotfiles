@@ -1,4 +1,6 @@
-// autologin
+/*global $ */
+/*jshint browser: true */
+
 $(function()
 {
     if (/^\/login/.test(window.location.pathname) && window.contactlab)

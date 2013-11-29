@@ -219,6 +219,46 @@ fi
 # import PhpBrew invironment if found
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
+##!/bin/bash
+#
+## Composer: define a wrapper that automatically invokes the project composer if it exists,
+## or asks for installation in the project if no composer is found in the current directory
+#
+#declare composer args cmd_args item
+#
+## use the project composer if exists
+#if [[ -f composer.phar ]]
+#then
+#    composer="./composer.phar"
+#elif [[ -f composer ]]
+#then
+#    composer="./composer"
+#fi
+#
+## run composer if found
+#if [[ -n "${composer}" ]]
+#then
+#    php -d memory_limit=750M $composer $@
+#else
+#    # ask for installation
+#    echo -e  "\033[0;33mComposer not found!"
+#    echo -ne "\033[0;32mDo you want to install Composer in the local directory? \033[0;33m[yN]\033[0m: "
+#    while read install
+#    do
+#        if [[ "${install}" == N ]] || [[ -z "${install}" ]]
+#        then
+#            break
+#        elif [[ "${install}" == y ]]
+#        then
+#            curl -sS https://getcomposer.org/installer | php  -- --install-dir=.
+#            break
+#        else
+#            echo "Not recognized: ${install}"
+#            echo -n "Do you want to install Composer in the local directory? [yN] "
+#        fi
+#    done
+#fi
+
 #########
 ## GIT ##
 #########
@@ -280,18 +320,82 @@ fi
 ## NODEJS ##
 ############
 
-if [[ $(uname -s) == Darwin ]] && which brew &> /dev/null && which npm &> /dev/null
+if which npm &> /dev/null
 then
-    # get the Homebrew installation path
-    homebrew_path=$(brew --prefix)
+    if [[ $(uname -s) == Darwin ]] && which brew &> /dev/null
+    then
+        # get the Homebrew installation path
+        homebrew_path=$(brew --prefix)
+        
+        # add the NodeJS binaries installed by Homebrew to the path
+        PATH=${homebrew_path}/share/npm/bin:$PATH
+        
+        # add the NodeJS modules installation paths
+        export NODE_PATH=${homebrew_path}/share/npm/lib/node_modules:${homebrew_path}/lib/node_modules/npm/node_modules:$NODE_PATH
+        
+        unset homebrew_path
+        
+    elif [[ $(uname -s) == Linux ]]
+    then
+        # set the correct paths to install global npm modules in user home
+        npm config set prefix ~/.npm
+        npm config set cache ~/.npm/cache
+        
+        # add the npm binary path to the PATH
+        PATH=$HOME/.npm/bin:$PATH
+    fi
+fi
+
+################
+## CAPISTRANO ##
+################
+
+if which cap &> /dev/null
+then
+    function _cap()
+    {
+        local cur prev opts
+        
+        # avoid using : to split words
+        _get_comp_words_by_ref -n : cur prev
+        
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        opts="$(cap --tasks | sed -n '/^cap/ s/^cap \([[:alnum:]:-]\+\)[[:space:]]*# .*$/\1/ p')"
+
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        
+        __ltrim_colon_completions "$cur"
+    }
     
-    # add the NodeJS binaries installed by Homebrew to the path
-    PATH=${homebrew_path}/share/npm/bin:$PATH
+    complete -F _cap cap
+fi
+
+#############
+## SYMFONY ##
+#############
+
+if which php &> /dev/null
+then
+    function _symfony_console()
+    {
+        local cur prev opts
+        
+        # avoid using : to split words
+        _get_comp_words_by_ref -n : cur prev
+        
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        opts="$(app/console list | sed -n '/^Available commands:/,$ s/^  \([[:alnum:]:-]\+\)[[:space:]]*.*$/\1/ p')"
+
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        
+        __ltrim_colon_completions "$cur"
+    }
     
-    # add the NodeJS modules installation paths
-    export NODE_PATH=${homebrew_path}/share/npm/lib/node_modules:${homebrew_path}/lib/node_modules/npm/node_modules:$NODE_PATH
-    
-    unset homebrew_path
+    complete -F _symfony_console console
 fi
 
 #########
