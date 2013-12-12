@@ -192,7 +192,7 @@ function prompt_tag()
     # set the window title
     case "${TERM}" in
         xterm*)
-            echo -ne "\033]0;#${PS1_tag}\007"
+            [[ -n "${PS1_tag}" ]] && echo -ne "\033]0;#${PS1_tag}\007" || echo -ne "\033]0;Terminal\007"
             ;;
     esac
 }

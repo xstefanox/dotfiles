@@ -66,7 +66,8 @@ bashrc_modules_dir="$HOME/.bashrc.d"
 [[ ! -d "$bashrc_modules_dir" ]] && mkdir -p "$bashrc_modules_dir"
 
 ## execute each bashrc script
-which run-parts &> /dev/null && run-parts --regex '\.sh$' "$bashrc_modules_dir"
+#. $(find $HOME/.bashrc.d -type f | sort)
+#which run-parts &> /dev/null && run-parts --regex '\.sh$' "$bashrc_modules_dir"
 
 ## cleanup
 unset bashrc_modules_dir
@@ -216,8 +217,16 @@ fi
 [[ $UID != 0 ]] && alias pear='sudo pear'
 [[ $UID != 0 ]] && alias pecl='sudo pecl'
 
+# Composer: add user packages bin directory to the PATH
+PATH=$HOME/.composer/vendor/bin:$PATH
+
 # import PhpBrew invironment if found
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
+
+# XDebug
+
+alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
+alias xdebug-off='export XDEBUG_CONFIG="remote_enable=0"'
 
 ##!/bin/bash
 #
@@ -460,6 +469,7 @@ function man()
 ## dpkg-based distros package manager functions
 if which dpkg &> /dev/null
 then
+
     [[ $UID == 0 ]] && alias add='apt-get install' || alias add='sudo apt-get install'
     [[ $UID == 0 ]] && alias purge='apt-get autoremove' || alias purge='sudo apt-get autoremove'
     [[ $UID == 0 ]] && alias dist-upgrade='apt-get dist-upgrade' || alias dist-upgrade='sudo apt-get dist-upgrade'
@@ -467,6 +477,12 @@ then
     alias search='apt-cache search --names-only'
     alias show='apt-cache show'
     alias list='dpkg -L'
+    
+    function apt-list-from-repository()
+    {
+        eval "aptitude search '~S ~i (~O"$1")'"
+    }
+    
 ## rpm-based distros using yum package manager functions
 elif which yum &> /dev/null
 then
@@ -515,6 +531,50 @@ then
     [[ $UID != 0 ]] && alias a2dissite='sudo a2dissite'
     [[ $UID == 0 ]] && alias a2vhosts='apache2ctl -t -D DUMP_VHOSTS' || alias a2vhosts='sudo apache2ctl -t -D DUMP_VHOSTS'
     [[ $UID == 0 ]] && alias a2modules='apache2ctl -t -D DUMP_MODULES' || alias a2modules='sudo apache2ctl -t -D DUMP_MODULES'
+    
+    # an utility function to generate virtual hosts configuration files
+    function a2genvhost()
+    {
+        local server_name=$1
+        local document_root=$2
+        local force=$3
+        
+        [[ -z "${server_name}" || -z "${document_root}" ]] && echo "Usage: ${FUNCNAME} <server_name> <document_root> [--force]" && return 1
+        
+        vhosts_path="/etc/apache2/sites-available"
+        
+        [[ -e "${vhosts_path}/${server_name}" && "${force}" != "--force" ]] && echo "VirtualHost ${server_name} already exists" && exit 1
+        
+        groupname="$(groups | awk '{ print $1 }')"
+        
+        vhost_content="$(cat << __EOT__
+<VirtualHost *:80>
+
+    DocumentRoot ${document_root}
+    ServerName ${server_name}.localhost
+
+    <Directory ${document_root}>
+        Options Indexes FollowSymlinks MultiViews
+        AllowOverride all
+        Order allow,deny
+        Allow from all
+        AssignUserID ${USER} ${groupname}
+    </Directory>
+
+</VirtualHost>
+
+__EOT__
+)"
+
+        if [[ $UID != 0 ]]
+        then
+            echo "${vhost_content}" | sudo tee "${vhosts_path}/${server_name}" &> /dev/null
+        else
+            echo "${vhost_content}" > "${vhosts_path}/${server_name}"
+        fi
+        
+        echo "VirtualHost configured, reload Apache to enable"
+    }
 fi
 
 ####################
@@ -565,6 +625,13 @@ else
             ## disable the Unity scrollbar
             export LIBOVERLAY_SCROLLBAR=0
         fi
+        
+        # desktop preferences
+        gsettings set org.mate.caja.desktop home-icon-visible false
+        gsettings set org.mate.caja.desktop computer-icon-visible false
+        gsettings set org.mate.caja.desktop volumes-visible false
+        gsettings set org.mate.caja.preferences default-folder-viewer list-view
+        gsettings set org.mate.caja.list-view default-zoom-level smallest
     fi
 
 fi
@@ -744,6 +811,20 @@ function archive_file_for_FAT32()
     then
         rar a -m0 -v${FAT32_MAX_FILE_SIZE}b "${arg}.rar" "${arg}"
     fi
+}
+
+## Remove the BOM from a file
+function remove-bom()
+{
+    local f=$1
+    
+    if [[ ! -f ${f} ]]
+    then
+        echo 'No file given'
+        return
+    fi
+    
+    sed -i -e '1 s/^\xEF\xBB\xBF//' "${f}"
 }
 
 ## Shortcut for editing text files
