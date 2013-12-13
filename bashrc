@@ -224,9 +224,15 @@ PATH=$HOME/.composer/vendor/bin:$PATH
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 # XDebug
-
 alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
 alias xdebug-off='export XDEBUG_CONFIG="remote_enable=0"'
+
+# modules
+if [[ $UID != 0 ]]
+then
+    alias php5enmod='sudo php5enmod'
+    alias php5dismod='sudo php5dismod'
+fi
 
 ##!/bin/bash
 #
@@ -627,11 +633,14 @@ else
         fi
         
         # desktop preferences
-        gsettings set org.mate.caja.desktop home-icon-visible false
-        gsettings set org.mate.caja.desktop computer-icon-visible false
-        gsettings set org.mate.caja.desktop volumes-visible false
-        gsettings set org.mate.caja.preferences default-folder-viewer list-view
-        gsettings set org.mate.caja.list-view default-zoom-level smallest
+        if gsettings list-schemas | grep org.mate.caja &> /dev/null
+        then
+            gsettings set org.mate.caja.desktop home-icon-visible false
+            gsettings set org.mate.caja.desktop computer-icon-visible false
+            gsettings set org.mate.caja.desktop volumes-visible false
+            gsettings set org.mate.caja.preferences default-folder-viewer list-view
+            gsettings set org.mate.caja.list-view default-zoom-level smallest
+        fi
     fi
 
 fi
