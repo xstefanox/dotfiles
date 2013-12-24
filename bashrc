@@ -318,7 +318,7 @@ fi
 if which gem &> /dev/null
 then
     export GEM_HOME="${HOME}/.gem"
-    export PATH="${PATH}:${HOME}/.gem/bin"
+    export PATH="${HOME}/.gem/bin:${PATH}"
 fi
 
 #########
@@ -544,12 +544,17 @@ then
         local server_name=$1
         local document_root=$2
         local force=$3
+        local vhosts_path="/etc/apache2/sites-available"
+        local file_ext
         
         [[ -z "${server_name}" || -z "${document_root}" ]] && echo "Usage: ${FUNCNAME} <server_name> <document_root> [--force]" && return 1
+
+        if [[ $(apache2 -v | sed -n '/Server version/ s:.*/[[:digit:]]\+\.\([[:digit:]]\+\).*:\1: p') -ge 4 ]]
+        then
+            file_ext=".conf"
+        fi
         
-        vhosts_path="/etc/apache2/sites-available"
-        
-        [[ -e "${vhosts_path}/${server_name}" && "${force}" != "--force" ]] && echo "VirtualHost ${server_name} already exists" && exit 1
+        [[ -e "${vhosts_path}/${server_name}${file_ext}" && "${force}" != "--force" ]] && echo "VirtualHost ${server_name} already exists" && return 1
         
         groupname="$(groups | awk '{ print $1 }')"
         
@@ -562,21 +567,26 @@ then
     <Directory ${document_root}>
         Options Indexes FollowSymlinks MultiViews
         AllowOverride all
-        Order allow,deny
-        Allow from all
         AssignUserID ${USER} ${groupname}
+        
+        ## Apache 2.4
+        Require all granted
+        
+        ## Apache 2.2
+        #Order allow,deny
+        #Allow from all
     </Directory>
 
 </VirtualHost>
 
 __EOT__
 )"
-
+        
         if [[ $UID != 0 ]]
         then
-            echo "${vhost_content}" | sudo tee "${vhosts_path}/${server_name}" &> /dev/null
+            echo "${vhost_content}" | sudo tee "${vhosts_path}/${server_name}${file_ext}" &> /dev/null
         else
-            echo "${vhost_content}" > "${vhosts_path}/${server_name}"
+            echo "${vhost_content}" > "${vhosts_path}/${server_name}${file_ext}"
         fi
         
         echo "VirtualHost configured, reload Apache to enable"
