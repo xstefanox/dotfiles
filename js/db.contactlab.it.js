@@ -28,5 +28,5 @@ $(function()
     setCredentials();
     
     // set the credentials for the db selected on combobox select
-    $('#select_server').on('change', function() { setCredentials(); });
+    $('#select_server').on('change', setCredentials);
 });

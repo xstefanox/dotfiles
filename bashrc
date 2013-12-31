@@ -220,8 +220,12 @@ fi
 # Composer: add user packages bin directory to the PATH
 PATH=$HOME/.composer/vendor/bin:$PATH
 
-# import PhpBrew invironment if found
-[[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
+# import phpenv invironment if found
+if [[ -e ~/.phpenv ]]
+then
+    PATH="${HOME}/.phpenv/bin:${PATH}"
+    eval "$(phpenv init -)"
+fi
 
 # XDebug
 alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
