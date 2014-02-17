@@ -1,0 +1,6 @@
+Google Calendar sync
+====================
+
+- Use CalDav protocol
+- URL = https://www.google.com/calendar/dav/CALENDAR_ID/events
+- CALENDAR_ID = use 'src' parameter value from the calendar HTML url
