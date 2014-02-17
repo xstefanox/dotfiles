@@ -66,11 +66,13 @@ bashrc_modules_dir="$HOME/.bashrc.d"
 [[ ! -d "$bashrc_modules_dir" ]] && mkdir -p "$bashrc_modules_dir"
 
 ## execute each bashrc script
-#. $(find $HOME/.bashrc.d -type f | sort)
-#which run-parts &> /dev/null && run-parts --regex '\.sh$' "$bashrc_modules_dir"
+for item in $(find $HOME/.bashrc.d -type f -regex '.*\.sh$' | sort)
+do
+    source "${item}"
+done
 
 ## cleanup
-unset bashrc_modules_dir
+unset bashrc_modules_dir item
 
 ##############
 ## HOMEBREW ##
@@ -220,16 +222,23 @@ fi
 # Composer: add user packages bin directory to the PATH
 PATH=$HOME/.composer/vendor/bin:$PATH
 
-# import phpenv invironment if found
+# import phpenv environment if found
 if [[ -e ~/.phpenv ]]
 then
-    PATH="${HOME}/.phpenv/bin:${PATH}"
-    eval "$(phpenv init -)"
+    alias phpenv-on='echo "${PATH}" | grep -q .phpenv || { PATH="${HOME}/.phpenv/bin:${PATH}"; eval "$(phpenv init -)"; }'
+    #export PATH="$HOME/.phpenv/bin:$PATH"
+    #eval "$(phpenv init -)"
 fi
 
 # XDebug
 alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
 alias xdebug-off='export XDEBUG_CONFIG="remote_enable=0"'
+
+#export PHP_IDE_CONFIG="serverName={SERVER NAME IN PHP STORM}"
+#export XDEBUG_CONFIG="remote_host={YOUR_IP} idekey=PHPSTORM"
+
+# default is disabled
+xdebug-off
 
 # modules
 if [[ $UID != 0 ]]
@@ -306,6 +315,65 @@ fi
 if which svn &> /dev/null
 then
     alias svn-ignore='EDITOR="nano" svn propedit svn:ignore'
+
+    #git add -A && git commit -m 'Versione 1.3' && git svn dcommit && git svn tag 1.3
+
+    function svn-release()
+    {
+        local tag=$1
+        local current_tag
+        local trunk_list
+        local current_tag_list
+        local files_diff
+
+        # check if we are in a svn working copy with a standard layout
+        dirs="$(find . -mindepth 1 -maxdepth 1 -type d -not -name .svn)"
+        [[ -z "$(echo "$dirs" | grep \./trunk)" || -z "$(echo "$dirs" | grep \./branches)" || -z "$(echo "$dirs" | grep \./tags)" ]] && echo "The current directory is not a Subversion working copy with a standard layout" && return 1
+        unset dirs
+
+        # check if trunk has local modifications
+        [[ -n "$(svn status trunk)" ]] && echo "Trunk has local modifications, commit or revert them before releasing" && return 1
+        
+        # ensure tag is not empty
+        [[ -z "${tag}" ]] && echo "Empty tag" && return 1
+
+        # check if the given tag is a valid semver tag
+        [[ -z "$(echo "${tag}" | grep "^[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+$")" ]] && echo "Invalid semver tag: ${tag}" && return 1
+
+        current_tag="$(find tags -mindepth 1 -maxdepth 1 | sort | sed -n '$ s:tags/:: p')"
+        
+        # if this is a first release
+        if [[ -z "${current_tag}" ]]
+        then
+        
+            svn copy trunk "tags/${tag}" && svn commit -m "Version ${tag}"
+            
+        else
+        
+            # check if the given tag is greater than the last existing tag
+            [[ "${tag}" < "${current_tag}" ]] && echo "You must provide a tag greater than the current on (${current_tag})" && return 1
+            
+            # check if the given tag already exists
+            [[ "${tag}" == "${current_tag}" ]] && echo "Tag ${current_tag} already exists" && return 1
+            
+            # check if there are actually differences between the current version and trunk
+            
+            trunk_list="$(mktemp -t svn-release.XXXXXXXXXX)"
+            current_tag_list="$(mktemp -t svn-release.XXXXXXXXXX)"
+            
+            find trunk -mindepth 1 | sed 's:^trunk/::' > "${trunk_list}"
+            find "tags/${current_tag}" -mindepth 1 | sed 's:tags/'${current_tag}'/::' > "${current_tag_list}"
+            files_diff="$(diff "${trunk_list}" "${current_tag_list}")"
+            rm "${trunk_list}" "${current_tag_list}"
+
+            if [[ -z "$(diff -r trunk "tags/${current_tag}")" ]] && [[ -z "${files_diff}" ]]
+            then
+                echo "No differences between trunk and the current release, refusing to release a useless version" && return 1
+            fi
+            
+            svn copy "tags/${current_tag}" "tags/${tag}" && svn rm tags/${tag}/* && cp -r trunk/* "tags/${tag}/" && svn add tags/${tag}/* && svn commit -m "Version ${tag}"
+        fi
+    }
 fi
 
 #########
@@ -739,6 +807,13 @@ alias screen='screen -RD'
 
 ## List all the open TCP or UDP ports on the machine
 alias open-ports='nc -vz localhost 1-65535 2>&1 | $(which grep) -i succeeded'
+alias connections='netstat -tulanp'
+
+## show mounted silesystems in a human readable format
+alias mounted='mount | column -t'
+
+## show the current PATH in a human readable format
+alias path='echo -e ${PATH//:/\\n}'
 
 ## A shortcut to open a file or a directory
 if [[ $(uname -s) == Darwin ]]

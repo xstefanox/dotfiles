@@ -1,2 +1,4 @@
-- Hide local folders
+- Enhanced Desktop Notifications
+- Google Contacts
+- Lighting
 - MinimizeToTray revived
