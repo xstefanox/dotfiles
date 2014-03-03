@@ -325,21 +325,26 @@ then
         local trunk_list
         local current_tag_list
         local files_diff
-
-        # check if we are in a svn working copy with a standard layout
-        dirs="$(find . -mindepth 1 -maxdepth 1 -type d -not -name .svn)"
-        [[ -z "$(echo "$dirs" | grep \./trunk)" || -z "$(echo "$dirs" | grep \./branches)" || -z "$(echo "$dirs" | grep \./tags)" ]] && echo "The current directory is not a Subversion working copy with a standard layout" && return 1
-        unset dirs
-
-        # check if trunk has local modifications
-        [[ -n "$(svn status trunk)" ]] && echo "Trunk has local modifications, commit or revert them before releasing" && return 1
         
         # ensure tag is not empty
-        [[ -z "${tag}" ]] && echo "Empty tag" && return 1
+        [[ -z "${tag}" ]] && echo "Usage: svn-release <tag>" && return 1
+
+        # check if we are in a svn working copy with a standard layout
+        dirs="$(find . -mindepth 1 -maxdepth 1 -not -name .svn)"
+        [[ -z "$(echo "$dirs" | grep \./trunk)" || -z "$(echo "$dirs" | grep \./branches)" || -z "$(echo "$dirs" | grep \./tags)" ]] && echo "The current directory is not a Subversion working copy with a standard layout" && return 1
+        [[ "$(echo "${dirs}" | wc -l)" -gt 3 ]] && echo "Unknown files or directories in the current directory, unable to proceed" && return 1
+        unset dirs
+        
+        # check if trunk has local modifications
+        [[ -n "$(svn status trunk)" ]] && echo "Trunk has local modifications, commit or revert them before releasing" && return 1
 
         # check if the given tag is a valid semver tag
         [[ -z "$(echo "${tag}" | grep "^[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+$")" ]] && echo "Invalid semver tag: ${tag}" && return 1
 
+        # ensure ^/tags/ is updated
+        svn update tags
+
+        # read the last released version
         current_tag="$(find tags -mindepth 1 -maxdepth 1 | sort | sed -n '$ s:tags/:: p')"
         
         # if this is a first release
@@ -351,7 +356,7 @@ then
         else
         
             # check if the given tag is greater than the last existing tag
-            [[ "${tag}" < "${current_tag}" ]] && echo "You must provide a tag greater than the current on (${current_tag})" && return 1
+            [[ "${tag}" < "${current_tag}" ]] && echo "You must provide a tag greater than ${current_tag}" && return 1
             
             # check if the given tag already exists
             [[ "${tag}" == "${current_tag}" ]] && echo "Tag ${current_tag} already exists" && return 1
@@ -362,7 +367,7 @@ then
             current_tag_list="$(mktemp -t svn-release.XXXXXXXXXX)"
             
             find trunk -mindepth 1 | sed 's:^trunk/::' > "${trunk_list}"
-            find "tags/${current_tag}" -mindepth 1 | sed 's:tags/'${current_tag}'/::' > "${current_tag_list}"
+            find "tags/${current_tag}" -mindepth 1 | sed 's:tags/'${current_tag}'/::' >     "${current_tag_list}"
             files_diff="$(diff "${trunk_list}" "${current_tag_list}")"
             rm "${trunk_list}" "${current_tag_list}"
 
