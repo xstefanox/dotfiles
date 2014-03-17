@@ -8,7 +8,18 @@
 
 # save the list of return error strings supported by the OS libc and the geatest error number
 PS1_os_maxerr=133
-IFS=$'\n' PS1_os_errno=( $(python -c 'from __future__ import print_function; import sys; import os; [ print(os.strerror(e)) for e in range(0, int(sys.argv[1]) + 1) ]' ${PS1_os_maxerr}) )
+
+IFS=$'\n' PS1_os_errno=( $(cat << EOT | python - ${PS1_os_maxerr}
+import sys
+import os
+
+for errno in [ os.strerror(e) for e in range(0, int(sys.argv[1]) + 1) ]:
+    if sys.version_info < (2, 6):
+        print errno
+    else:
+        print(errno)
+EOT
+) )
 
 # save the return value of the last executed process and the write permission on the current working directory
 PROMPT_COMMAND='PS1_return_value=$?;[[ -w "${PWD}" ]];PS1_cwd_perm=$?'
