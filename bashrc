@@ -136,7 +136,10 @@ then
     fi
 elif [[ -n "$DISPLAY" ]]
 then
-    if which geany &> /dev/null
+    if which subl &> /dev/null
+    then
+        export EDITOR=subl
+    elif which geany &> /dev/null
     then
         export EDITOR=geany
     elif which gedit &> /dev/null
@@ -216,19 +219,14 @@ fi
 #########
 
 # Pear
-[[ $UID != 0 ]] && alias pear='sudo pear'
-[[ $UID != 0 ]] && alias pecl='sudo pecl'
+#[[ $UID != 0 ]] && alias pear='sudo pear'
+#[[ $UID != 0 ]] && alias pecl='sudo pecl'
 
 # Composer: add user packages bin directory to the PATH
 PATH=$HOME/.composer/vendor/bin:$PATH
 
-# import phpenv environment if found
-if [[ -e ~/.phpenv ]]
-then
-    alias phpenv-on='echo "${PATH}" | grep -q .phpenv || { PATH="${HOME}/.phpenv/bin:${PATH}"; eval "$(phpenv init -)"; }'
-    #export PATH="$HOME/.phpenv/bin:$PATH"
-    #eval "$(phpenv init -)"
-fi
+# phpbrew
+[[ -e ~/.phpbrew ]] && source ~/.phpbrew/bashrc
 
 # XDebug
 alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
