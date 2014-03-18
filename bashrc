@@ -808,6 +808,10 @@ which free &> /dev/null && alias free='free -m'
 ## screen
 alias screen='screen -RD'
 
+## jobs
+# -always show PIDs
+alias jobs='jobs -pl'
+
 ## List all the open TCP or UDP ports on the machine
 alias open-ports='nc -vz localhost 1-65535 2>&1 | $(which grep) -i succeeded'
 alias connections='netstat -tulanp'

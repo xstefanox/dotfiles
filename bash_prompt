@@ -6,6 +6,20 @@
 ## - notification about GNU screen session
 ## - notification about SSH session
 
+# prepare the color codes for the current platform
+if [[ $(uname -s) == Darwin ]]
+then
+    P_GREEN="${GREEN}"
+    P_RED="${RED}"
+    P_YELLOW="${YELLOW}"
+    P_BLUE="${BLUE}"
+else
+    P_GREEN="${BGREEN}"
+    P_RED="${BRED}"
+    P_YELLOW="${BYELLOW}"
+    P_BLUE="${BBLUE}"
+fi
+
 # save the list of return error strings supported by the OS libc and the geatest error number
 PS1_os_maxerr=133
 
@@ -30,9 +44,9 @@ PS1_return_value='$(
     
     if [[ "${PS1_return_value}" == 0 ]];
     then
-        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}")${PS1_return_value}";
+        echo -ne "${P_GREEN}${PS1_return_value}";
     else
-        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}")${PS1_return_value}:$([[ ${PS1_return_value} -gt ${PS1_os_maxerr} ]] && echo "Unknown error" || echo "${PS1_os_errno[${PS1_return_value}]}")";
+        echo -ne "${P_RED}${PS1_return_value}:$([[ ${PS1_return_value} -gt ${PS1_os_maxerr} ]] && echo "Unknown error" || echo "${PS1_os_errno[${PS1_return_value}]}")";
     fi
     
     echo -ne "${NO_COLOR})";
@@ -48,9 +62,9 @@ PS1_git_status='$(
         
         if [[ -z "${status}" ]];
         then
-            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
+            echo -ne "${P_GREEN}";
         else
-            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
+            echo -ne "${P_RED}";
         fi;
         
         echo -n "git:$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
@@ -84,9 +98,9 @@ PS1_hg_status='$(
         
         if [[ -z "$(hg status)" ]];
         then
-            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
+            echo -ne "${P_GREEN}";
         else
-            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
+            echo -ne "${P_RED}";
         fi;
         
         echo -n "hg:$(hg branch)";
@@ -106,9 +120,7 @@ PS1_svn_status='$(
         
         if [[ -n "${status}" ]];
         then
-            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}";
-            
-            echo -n "svn:${rev}";
+            echo -ne "${P_RED}svn:${rev}";
             
             declare -a status_info;
             added_count=$(echo "${status}" | grep "^A" | wc -l);
@@ -123,7 +135,7 @@ PS1_svn_status='$(
             [[ "${not_found_count}" -gt 0 ]] && status_info[4]="!${not_found_count}";
             echo -n "($(printf "%s/" "${status_info[@]}" | cut -d "/" -f 1-${#status_info[@]}))";
         else
-            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}";
+            echo -ne "${P_GREEN}";
             
             echo -n "svn:${rev}";
         fi;
@@ -141,9 +153,9 @@ PS1_username='$(
     #then
         if [[ $UID == 0 ]]
         then
-            [[ $(uname -s) == Darwin ]] && echo -ne "${RED}" || echo -ne "${BRED}"
+            echo -ne "${P_RED}";
         else
-            [[ $(uname -s) == Darwin ]] && echo -ne "${GREEN}" || echo -ne "${BGREEN}"
+            echo -ne "${P_GREEN}";
         fi
         
         echo -ne ${USER}${NO_COLOR}
@@ -151,18 +163,17 @@ PS1_username='$(
 )'
 
 PS1_hostname='$(
-    #if [[ -n "${SSH_CLIENT}" ]]
-    #then
-        [[ $(uname -s) == Darwin ]] && echo -ne "${YELLOW}" || echo -ne "${BYELLOW}"
-        echo -ne "@$(hostname)${NO_COLOR}"
-    #fi
+    if [[ -n "${SSH_CLIENT}" || "${PS1_hostname_on}" == 1 ]]
+    then
+        echo -ne "${P_YELLOW}@${HOSTNAME}${NO_COLOR}"
+    fi
 )'
 
 # set an SSH descriptive string in case of a remote connection
-PS1_ssh_status="$([[ -n "${SSH_CLIENT}" ]] && echo "$([[ $(uname -s) == Darwin ]] && echo "${YELLOW}" || echo "${BYELLOW}")ssh:${NO_COLOR}")"
+PS1_ssh_status="$([[ -n "${SSH_CLIENT}" ]] && echo "${P_YELLOW}ssh:${NO_COLOR}")"
 
 # set the screen status
-PS1_screen_status="$([[ -n "${STY}" ]] && echo "[screen:$(echo "${STY#*.}" | sed -e "s:.${HOSTNAME}::")]")"
+PS1_screen_status="$([[ -n "${STY}" ]] && echo "[${P_YELLOW}screen:${P_BLUE}$(echo "${STY#*.}" | sed -e "s:.${HOSTNAME}::")${NO_COLOR}]")"
 
 # set the shell tag
 PS1_hashtag='$([[ -n "${PS1_tag}" ]] && echo -e " ${CYAN}#${PS1_tag}${NO_COLOR}")'
@@ -173,19 +184,55 @@ PS1_cwd_perm='$(
     
     if [[ "${PS1_cwd_perm}" == 0 ]];
     then
-        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${GREEN}" || echo "${BGREEN}")";
+        echo -ne "${P_GREEN}";
     else
-        echo -ne "$([[ $(uname -s) == Darwin ]] && echo "${RED}" || echo "${BRED}")";
+        echo -ne "${P_RED}";
     fi
     
     echo -ne ":${NO_COLOR}";
 )'
 
+# set a descriptive string about jobs
+PS1_jobs='$(
+
+    running="$(( $(jobs -r | wc -l) ))"
+    stopped="$(( $(jobs -s | wc -l) ))"
+    detached="$(which screen &> /dev/null && { screen -ls 2> /dev/null | grep -c Detach; true; } || echo 0)"
+    ret=""
+
+    if [[ $detached != "0" ]]
+    then
+        ret="${ret}${YELLOW}${detached}d${NO_COLOR}"
+    fi
+
+    if [[ $running != "0" ]]
+    then
+        if [[ $ret != "" ]]
+        then
+            ret="${ret}/"
+        fi
+        ret="${ret}${YELLOW}${running}&${NO_COLOR}"
+    fi
+
+    if [[ $stopped != "0" ]]
+    then
+        if [[ $ret != "" ]]
+        then
+            ret="${ret}/"
+        fi
+        ret="${ret}${YELLOW}${stopped}z${NO_COLOR}"
+    fi
+
+    [[ -n "${ret}" ]] && echo -ne " ${ret}"
+)'
+
+PS1_cwd="${P_BLUE}${PWD}${NO_COLOR}"
+
 ## PS1: Default prompt
-PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_username}${PS1_hostname}${PS1_cwd_perm}$([[ $(uname -s) == Darwin ]] && echo "${BLUE}" || echo "${BBLUE}")\w${NO_COLOR}]${PS1_return_value}${PS1_vcs_status}${PS1_jobs}${PS1_hashtag}${PS1_cpu_load}\n\$ "
+PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_username}${PS1_hostname}${PS1_cwd_perm}${PS1_cwd}]${PS1_return_value}${PS1_vcs_status}${PS1_jobs}${PS1_hashtag}${PS1_cpu_load}\n\$ "
 
 # clean the environment
-unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_username PS1_hostname PS1_cwd_perm PS1_hashtag PS1_cpu_load PS1_jobs
+unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_username PS1_hostname PS1_cwd_perm PS1_hashtag PS1_cpu_load PS1_jobs PS1_cwd
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
 
