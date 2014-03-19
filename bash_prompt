@@ -226,7 +226,7 @@ PS1_jobs='$(
     [[ -n "${ret}" ]] && echo -ne " ${ret}"
 )'
 
-PS1_cwd="${P_BLUE}${PWD}${NO_COLOR}"
+PS1_cwd="${P_BLUE}\w${NO_COLOR}"
 
 ## PS1: Default prompt
 PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_username}${PS1_hostname}${PS1_cwd_perm}${PS1_cwd}]${PS1_return_value}${PS1_vcs_status}${PS1_jobs}${PS1_hashtag}${PS1_cpu_load}\n\$ "
