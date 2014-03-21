@@ -296,12 +296,14 @@ then
     # disabled: this creates a daemon and a warning is always raised when closing the window in Mac OSX
     #git config --global credential.helper cache
     git config --global color.ui true
-    git config --global color.status.added "green $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.status.changed "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.status.added     "green $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.status.changed   "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.status.untracked "red $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.status.unmerged "red $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.status.unmerged  "red $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.meta "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.diff.old "red $([[ $(uname -s) == Linux ]] && echo black)"
+    git config --global color.diff.frag "magenta $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.diff.old  "red $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.diff.new  "blue $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
 
@@ -310,7 +312,7 @@ then
 
     if which diff-highlight &> /dev/null
     then
-        git config --global pager.log 'diff-highlight | less'
+        git config --global pager.log  'diff-highlight | less'
         git config --global pager.show 'diff-highlight | less'
         git config --global pager.diff 'diff-highlight | less'
     fi
