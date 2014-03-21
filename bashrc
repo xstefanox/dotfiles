@@ -304,6 +304,16 @@ then
     git config --global color.diff.old "red $([[ $(uname -s) == Linux ]] && echo black)"
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
+
+    # @see https://gist.github.com/unphased/5303697
+    git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+
+    if which diff-highlight &> /dev/null
+    then
+        git config --global pager.log 'diff-highlight | less'
+        git config --global pager.show 'diff-highlight | less'
+        git config --global pager.diff 'diff-highlight | less'
+    fi
 fi 
 
 #########
@@ -668,6 +678,42 @@ __EOT__
     }
 fi
 
+###########
+## SKYPE ##
+###########
+
+# remember to install the following packages to fix the theme on 64bit machines
+# gtk2-engines-murrine:i386 gtk2-engines-pixbuf:i386
+
+#########
+## SSH ##
+#########
+
+# wrap the ssh command to automatically restore the window title on exit
+which ssh &> /dev/null && function ssh()
+{
+    local ssh="'$(which ssh)'"
+    local item
+    local retval
+
+    # quote each argument
+    for item in $@
+    do
+        ssh+=" '${item}'"
+    done
+
+    # execute the command
+    eval "${ssh}"
+
+    # save the return value
+    retval=$?
+
+    # restore the window title
+    echo -ne "\033]0;Terminal\007"
+
+    return $retval
+}
+
 ####################
 ## OS PREFERENCES ##
 ####################
@@ -788,12 +834,32 @@ which colordiff &> /dev/null && alias colordiff='colordiff -Nur'
 
 function diff()
 {
+    local cmd
+    local item
+
+    # check if we can use colored output
     if which colordiff &> /dev/null
     then
-        colordiff $@
+        cmd="colordiff -Nur"
     else
-        diff -Nur
+        cmd="diff -Nur"
     fi
+
+    # append the quoted arguments to the command
+    for item in $@
+    do
+        cmd+=" '${item}'"
+    done
+
+    # show word diff if diff-highlight (from Git) is installed
+    # @see https://raw.github.com/git/git/master/contrib/diff-highlight/diff-highlight
+    if which diff-highlight &> /dev/null
+    then
+        cmd+=" | diff-highlight"
+    fi
+
+    # execute the diff
+    eval "$cmd"
 }
 
 ## tail

@@ -240,7 +240,7 @@ unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_statu
 PS4='$0, Line $LINENO: '
 
 # set/unset the tag string
-function prompt_tag()
+function prompt-tag()
 {
     local IFS=
     
@@ -253,4 +253,19 @@ function prompt_tag()
             [[ -n "${PS1_tag}" ]] && echo -ne "\033]0;#${PS1_tag}\007" || echo -ne "\033]0;Terminal\007"
             ;;
     esac
+}
+
+# prompt self-updater
+function prompt-self-update()
+{
+    local prompt_file_path="${HOME}/${BASH_SOURCE}"
+
+    # if the prompt file is a symlink, do nothing
+    [[ -L "${prompt_file_path}" ]] && echo "${BASH_SOURCE} is a symlink, skipping..." && return 0
+
+    # update the prompt file
+    wget --no-check-certificate "https://raw.github.com/xstefanox/dotfiles/master/bash_prompt" -O "${prompt_file_path}"
+
+    # reload the prompt
+    source "${prompt_file_path}"
 }
