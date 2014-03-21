@@ -258,13 +258,13 @@ function prompt-tag()
 # prompt self-updater
 function prompt-self-update()
 {
-    local prompt_file_path="${HOME}/${BASH_SOURCE}"
+    local prompt_file_path="${BASH_SOURCE}"
 
     # if the prompt file is a symlink, do nothing
-    [[ -L "${prompt_file_path}" ]] && echo "${BASH_SOURCE} is a symlink, skipping..." && return 0
+    [[ -L "${prompt_file_path}" ]] && echo "${prompt_file_path} is a symlink, skipping..." && return 0
 
     # update the prompt file
-    wget --no-check-certificate "https://raw.github.com/xstefanox/dotfiles/master/bash_prompt" -O "${prompt_file_path}"
+    wget --quiet --no-check-certificate "https://raw.github.com/xstefanox/dotfiles/master/bash_prompt" -O "${prompt_file_path}"
 
     # reload the prompt
     source "${prompt_file_path}"
