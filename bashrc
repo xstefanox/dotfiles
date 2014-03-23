@@ -236,7 +236,7 @@ alias xdebug-off='export XDEBUG_CONFIG="remote_enable=0"'
 #export XDEBUG_CONFIG="remote_host={YOUR_IP} idekey=PHPSTORM"
 
 # default is disabled
-xdebug-off
+export XDEBUG_CONFIG="remote_enable=0"
 
 # modules
 if [[ $UID != 0 ]]
