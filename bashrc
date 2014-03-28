@@ -655,13 +655,18 @@ then
         Options Indexes FollowSymlinks MultiViews
         AllowOverride all
         AssignUserID ${USER} ${groupname}
-        
+
         ## Apache 2.4
-        Require all granted
-        
+        <IfModule mod_authz_core.c>
+            Require all granted
+        </IfModule>
+
         ## Apache 2.2
-        #Order allow,deny
-        #Allow from all
+        <IfModule !mod_authz_core.c>
+            Order allow,deny
+            Allow from all
+        </IfModule>
+
     </Directory>
 
 </VirtualHost>
