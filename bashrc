@@ -52,9 +52,6 @@ fi
 ## add home_bin to the PATH
 export PATH="$home_bin:$PATH"
 
-## cleanup
-unset home_bin
-
 ####################
 ## BASHRC MODULES ##
 ####################
@@ -309,6 +306,10 @@ then
 
     # @see https://gist.github.com/unphased/5303697
     git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+
+    # install diff-highlight from git distribution
+    cp /usr/share/doc/git/contrib/diff-highlight/diff-highlight "${home_bin}/"
+    chmod +x "${home_bin}/diff-highlight"
 
     if which diff-highlight &> /dev/null
     then
@@ -782,7 +783,7 @@ else
             export LIBOVERLAY_SCROLLBAR=0
         fi
         
-        # desktop preferences
+        # desktop preferences: MATE
         if gsettings list-schemas | grep org.mate.caja &> /dev/null
         then
             gsettings set org.mate.caja.desktop home-icon-visible false
@@ -790,6 +791,14 @@ else
             gsettings set org.mate.caja.desktop volumes-visible false
             gsettings set org.mate.caja.preferences default-folder-viewer list-view
             gsettings set org.mate.caja.list-view default-zoom-level smallest
+        fi
+
+        # desktop preferences: Cinnamon
+        if gsettings list-schemas | grep org.nemo.desktop &> /dev/null
+        then
+            gsettings set org.nemo.desktop     show-desktop-icons    false
+            gsettings set org.nemo.preferences default-folder-viewer list-view
+            gsettings set org.nemo.list-view   default-zoom-level    smallest
         fi
     fi
 
@@ -1035,3 +1044,10 @@ then
         export -f notify
     fi
 fi
+
+#############
+## CLEANUP ##
+#############
+
+unset home_bin
+
