@@ -780,7 +780,17 @@ else
         if which lsb_release &> /dev/null && [[ "$(lsb_release --id | sed 's/.*:[[:space:]]*\(.*\)/\1/')" == Ubuntu ]]
         then
             ## disable the Unity scrollbar
-            export LIBOVERLAY_SCROLLBAR=0
+            if [[ "$(lsb_release --release | awk '{ print $2 }')" > '12.04' ]]
+            then
+                # on current Ubuntu release
+                gsettings set com.canonical.desktop.interface scrollbar-mode normal
+            else
+                # on 12.04 or older releases
+                gsettings set org.gnome.desktop.interface ubuntu-overlay-scrollbars false
+            fi
+            
+            #export LIBOVERLAY_SCROLLBAR=0
+            #echo 'export LIBOVERLAY_SCROLLBAR=0' >> ~/.xprofile
         fi
         
         # desktop preferences: MATE
