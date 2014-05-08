@@ -802,26 +802,35 @@ else
         # desktop preferences: Cinnamon
         if gsettings list-schemas | grep org.nemo.desktop &> /dev/null
         then
-            gsettings set org.nemo.desktop     show-desktop-icons    true
-            gsettings set org.nemo.desktop     computer-icon-visible false
-            gsettings set org.nemo.desktop     home-icon-visible     false
-            gsettings set org.nemo.desktop     network-icon-visible  false
-            gsettings set org.nemo.desktop     trash-icon-visible    false
-            gsettings set org.nemo.desktop     volumes-visible       false
-            gsettings set org.nemo.preferences default-folder-viewer list-view
-            gsettings set org.nemo.list-view   default-zoom-level    smallest
-            # @fixme
-            #gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
-            #gsettings set org.gnome.desktop.interface    font-name             'Ubuntu 10'
+            gsettings set org.nemo.desktop               show-desktop-icons    true
+            gsettings set org.nemo.desktop               computer-icon-visible false
+            gsettings set org.nemo.desktop               home-icon-visible     false
+            gsettings set org.nemo.desktop               network-icon-visible  false
+            gsettings set org.nemo.desktop               trash-icon-visible    false
+            gsettings set org.nemo.desktop               volumes-visible       false
+            gsettings set org.nemo.preferences           default-folder-viewer list-view
+            gsettings set org.nemo.list-view             default-zoom-level    smallest
+            gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
+            gsettings set org.cinnamon.desktop.interface font-name             'Ubuntu 10'
             #gsettings set org.gnome.desktop.interface   document-font-name    'Sans 11'
-            #gsettings set org.gnome.nautilus.desktop    font                  ''
+            #gsettings set org.nemo.desktop              font                  ''
         fi
         
         # desktop preferences: Gnome/Unity
         if gsettings list-schemas | grep org.gnome.nautilus.preferences &> /dev/null
         then
-            gsettings set org.gnome.desktop.background   show-desktop-icons    true
-            gsettings set org.gnome.nautilus.desktop     computer-icon-visible false
+            # apply only if no Cinnamon session is running, othrwise it will also replace the desktop background image
+            if [[ -z "${CINNAMON_VERSION}" ]]
+            then
+                gsettings set org.gnome.desktop.background   show-desktop-icons    true
+            fi
+
+            # the key org.gnome.nautilus.desktop.computer-icon-visible may not exists on some systems
+            if gsettings get org.gnome.nautilus.desktop computer-icon-visible &> /dev/null
+            then
+                gsettings set org.gnome.nautilus.desktop     computer-icon-visible false
+            fi
+
             gsettings set org.gnome.nautilus.desktop     home-icon-visible     false
             gsettings set org.gnome.nautilus.desktop     network-icon-visible  false
             gsettings set org.gnome.nautilus.desktop     trash-icon-visible    false
