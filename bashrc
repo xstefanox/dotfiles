@@ -544,7 +544,7 @@ function man()
             open https://developer.apple.com/library/mac/#documentation/darwin/reference/manpages/${category}/${page}
         else
             # fallback on Ubuntu; try to select the release using lsb_release if possible
-            xdg-open http://manpages.ubuntu.com/manpages/$(which lsb_release &> /dev/null && lsb_release --codename | cut -d$'\t' -f2)/en/${category}/${page} 2> /dev/null
+            xdg-open http://manpages.ubuntu.com/manpages/$(which lsb_release &> /dev/null && lsb_release --codename --short)/en/${category}/${page} 2> /dev/null
         fi
         
     else
@@ -764,23 +764,11 @@ else
     ## Preferences requiring an active X11 session
     if [[ -n "$DISPLAY" ]]
     then
-        if which gsettings &> /dev/null
-        then
-            if gsettings list-schemas | grep --silent org.gnome.gedit.preferences.editor
-            then
-                gsettings set org.gnome.gedit.preferences.editor tabs-size 4
-                gsettings set org.gnome.gedit.preferences.editor insert-spaces true
-                gsettings set org.gnome.gedit.preferences.editor create-backup-copy false
-                gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
-                gsettings set org.gnome.gedit.preferences.editor auto-indent true
-            fi
-        fi
-        
-        ## if using Ubuntu
-        if which lsb_release &> /dev/null && [[ "$(lsb_release --id | sed 's/.*:[[:space:]]*\(.*\)/\1/')" == Ubuntu ]]
+        ## on Ubuntu
+        if which lsb_release &> /dev/null && [[ "$(lsb_release --id --short)" == Ubuntu ]]
         then
             ## disable the Unity scrollbar
-            if [[ "$(lsb_release --release | awk '{ print $2 }')" > '12.04' ]]
+            if [[ "$(lsb_release --release --short)" > '12.04' ]]
             then
                 # on current Ubuntu release
                 gsettings set com.canonical.desktop.interface scrollbar-mode normal
@@ -796,19 +784,64 @@ else
         # desktop preferences: MATE
         if gsettings list-schemas | grep org.mate.caja &> /dev/null
         then
-            gsettings set org.mate.caja.desktop home-icon-visible false
-            gsettings set org.mate.caja.desktop computer-icon-visible false
-            gsettings set org.mate.caja.desktop volumes-visible false
+            gsettings set org.mate.background       show-desktop-icons    true
+            gsettings set org.mate.caja.desktop     computer-icon-visible false
+            gsettings set org.mate.caja.desktop     home-icon-visible     false
+            gsettings set org.mate.caja.desktop     network-icon-visible  false
+            gsettings set org.mate.caja.desktop     trash-icon-visible    false
+            gsettings set org.mate.caja.desktop     volumes-visible       false
             gsettings set org.mate.caja.preferences default-folder-viewer list-view
-            gsettings set org.mate.caja.list-view default-zoom-level smallest
+            gsettings set org.mate.caja.list-view   default-zoom-level    smallest
+            # @fixme
+            #gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
+            #gsettings set org.gnome.desktop.interface    font-name             'Ubuntu 10'
+            #gsettings set org.gnome.desktop.interface   document-font-name    'Sans 11'
+            #gsettings set org.gnome.nautilus.desktop    font                  ''
         fi
 
         # desktop preferences: Cinnamon
         if gsettings list-schemas | grep org.nemo.desktop &> /dev/null
         then
-            gsettings set org.nemo.desktop     show-desktop-icons    false
+            gsettings set org.nemo.desktop     show-desktop-icons    true
+            gsettings set org.nemo.desktop     computer-icon-visible false
+            gsettings set org.nemo.desktop     home-icon-visible     false
+            gsettings set org.nemo.desktop     network-icon-visible  false
+            gsettings set org.nemo.desktop     trash-icon-visible    false
+            gsettings set org.nemo.desktop     volumes-visible       false
             gsettings set org.nemo.preferences default-folder-viewer list-view
             gsettings set org.nemo.list-view   default-zoom-level    smallest
+            # @fixme
+            #gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
+            #gsettings set org.gnome.desktop.interface    font-name             'Ubuntu 10'
+            #gsettings set org.gnome.desktop.interface   document-font-name    'Sans 11'
+            #gsettings set org.gnome.nautilus.desktop    font                  ''
+        fi
+        
+        # desktop preferences: Gnome/Unity
+        if gsettings list-schemas | grep org.gnome.nautilus.preferences &> /dev/null
+        then
+            gsettings set org.gnome.desktop.background   show-desktop-icons    true
+            gsettings set org.gnome.nautilus.desktop     computer-icon-visible false
+            gsettings set org.gnome.nautilus.desktop     home-icon-visible     false
+            gsettings set org.gnome.nautilus.desktop     network-icon-visible  false
+            gsettings set org.gnome.nautilus.desktop     trash-icon-visible    false
+            gsettings set org.gnome.nautilus.desktop     volumes-visible       false
+            gsettings set org.gnome.nautilus.preferences default-folder-viewer list-view
+            gsettings set org.gnome.nautilus.list-view   default-zoom-level    smallest
+            gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
+            gsettings set org.gnome.desktop.interface    font-name             'Ubuntu 10'
+            #gsettings set org.gnome.desktop.interface   document-font-name    'Sans 11'
+            #gsettings set org.gnome.nautilus.desktop    font                  ''
+        fi
+        
+        # gedit preferences
+        if gsettings list-schemas | grep org.gnome.gedit.preferences.editor &> /dev/null
+        then
+            gsettings set org.gnome.gedit.preferences.editor tabs-size 4
+            gsettings set org.gnome.gedit.preferences.editor insert-spaces true
+            gsettings set org.gnome.gedit.preferences.editor create-backup-copy false
+            gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
+            gsettings set org.gnome.gedit.preferences.editor auto-indent true
         fi
     fi
 
