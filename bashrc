@@ -304,6 +304,8 @@ then
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
 
+    git config --global alias.plog "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+    
     # @see https://gist.github.com/unphased/5303697
     git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 
@@ -782,11 +784,13 @@ else
         # gedit preferences
         if gsettings list-schemas | grep org.gnome.gedit.preferences.editor &> /dev/null
         then
-            gsettings set org.gnome.gedit.preferences.editor tabs-size 4
-            gsettings set org.gnome.gedit.preferences.editor insert-spaces true
-            gsettings set org.gnome.gedit.preferences.editor create-backup-copy false
+            gsettings set org.gnome.gedit.preferences.editor tabs-size            4
+            gsettings set org.gnome.gedit.preferences.editor insert-spaces        true
+            gsettings set org.gnome.gedit.preferences.editor create-backup-copy   false
             gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
-            gsettings set org.gnome.gedit.preferences.editor auto-indent true
+            gsettings set org.gnome.gedit.preferences.editor auto-indent          true
+            gsettings set org.gnome.gedit.preferences.editor wrap-mode            'none'
+            gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
         fi
     fi
 
