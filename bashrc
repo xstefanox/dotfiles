@@ -238,49 +238,9 @@ export XDEBUG_CONFIG="remote_enable=0"
 # modules
 if [[ $UID != 0 ]]
 then
-    alias php5enmod='sudo php5enmod'
-    alias php5dismod='sudo php5dismod'
+    which php5enmod &> /dev/null && alias php5enmod='sudo php5enmod'
+    which php5dismod &> /dev/null && alias php5dismod='sudo php5dismod'
 fi
-
-##!/bin/bash
-#
-## Composer: define a wrapper that automatically invokes the project composer if it exists,
-## or asks for installation in the project if no composer is found in the current directory
-#
-#declare composer args cmd_args item
-#
-## use the project composer if exists
-#if [[ -f composer.phar ]]
-#then
-#    composer="./composer.phar"
-#elif [[ -f composer ]]
-#then
-#    composer="./composer"
-#fi
-#
-## run composer if found
-#if [[ -n "${composer}" ]]
-#then
-#    php -d memory_limit=750M $composer $@
-#else
-#    # ask for installation
-#    echo -e  "\033[0;33mComposer not found!"
-#    echo -ne "\033[0;32mDo you want to install Composer in the local directory? \033[0;33m[yN]\033[0m: "
-#    while read install
-#    do
-#        if [[ "${install}" == N ]] || [[ -z "${install}" ]]
-#        then
-#            break
-#        elif [[ "${install}" == y ]]
-#        then
-#            curl -sS https://getcomposer.org/installer | php  -- --install-dir=.
-#            break
-#        else
-#            echo "Not recognized: ${install}"
-#            echo -n "Do you want to install Composer in the local directory? [yN] "
-#        fi
-#    done
-#fi
 
 #########
 ## GIT ##
@@ -506,9 +466,13 @@ then
     [[ $UID == 0 ]] && alias purge='apt-get autoremove' || alias purge='sudo apt-get autoremove'
     [[ $UID == 0 ]] && alias dist-upgrade='apt-get dist-upgrade' || alias dist-upgrade='sudo apt-get dist-upgrade'
     [[ $UID == 0 ]] && alias dist-sync='apt-get update' || alias dist-sync='sudo apt-get update'
-    alias search='apt-cache search --names-only'
     alias show='apt-cache show'
     alias list='dpkg -L'
+    
+    function search()
+    {
+        apt-cache search --names-only $@ | sort
+    }
     
     function apt-list-from-repository()
     {
@@ -791,6 +755,7 @@ else
             gsettings set org.gnome.gedit.preferences.editor auto-indent          true
             gsettings set org.gnome.gedit.preferences.editor wrap-mode            'none'
             gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
+            gsettings set org.gnome.gedit.preferences.editor scheme               'tango'
         fi
     fi
 
