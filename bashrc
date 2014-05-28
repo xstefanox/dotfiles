@@ -270,8 +270,11 @@ then
     git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 
     # install diff-highlight from git distribution
-    cp /usr/share/doc/git/contrib/diff-highlight/diff-highlight "${home_bin}/"
-    chmod +x "${home_bin}/diff-highlight"
+    if [[ -f /usr/share/doc/git/contrib/diff-highlight/diff-highlight ]]
+    then
+        cp /usr/share/doc/git/contrib/diff-highlight/diff-highlight "${home_bin}/"
+        chmod +x "${home_bin}/diff-highlight"
+    fi
 
     if which diff-highlight &> /dev/null
     then
