@@ -11,6 +11,9 @@ user_pref("mail.server.default.check_all_folders_for_new", true);
 user_pref("mailnews.send_default_charset", "UTF-8");
 user_pref("mailnews.view_default_charset", "UTF-8");
 user_pref("mailnews.reply_in_default_charset", true);
+
+// full name for html sign
+user_pref("mail.identity.id1.htmlSigText", "Stefano Varesi");
 __EOT__
 
 
