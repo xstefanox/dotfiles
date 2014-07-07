@@ -717,7 +717,7 @@ else
             gsettings set org.nemo.list-view             default-zoom-level    smallest
             gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
             gsettings set org.cinnamon.desktop.interface font-name             'Ubuntu 10'
-            #gsettings set org.gnome.desktop.interface   document-font-name    'Sans 11'
+            gsettings set org.gnome.desktop.interface    document-font-name    'Sans 9'
             #gsettings set org.nemo.desktop              font                  ''
         fi
         
@@ -744,8 +744,11 @@ else
             gsettings set org.gnome.nautilus.list-view   default-zoom-level    smallest
             gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
             gsettings set org.gnome.desktop.interface    font-name             'Ubuntu 10'
-            #gsettings set org.gnome.desktop.interface   document-font-name    'Sans 11'
+            gsettings set org.gnome.desktop.interface    document-font-name    'Sans 9'
             #gsettings set org.gnome.nautilus.desktop    font                  ''
+            
+            # move the window buttons to the right
+            gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
         fi
         
         # gedit preferences
