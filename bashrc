@@ -342,11 +342,14 @@ then
     elif [[ $(uname -s) == Linux ]]
     then
         # set the correct paths to install global npm modules in user home
-        npm config set prefix ~/.npm
+        npm config set prefix ~/.npm/packages
         npm config set cache ~/.npm/cache
         
         # add the npm binary path to the PATH
-        PATH=$HOME/.npm/bin:$PATH
+        PATH=$HOME/.npm/packages/bin:$PATH
+        
+        # @howto install: npm install -g --prefix=$(npm config get prefix) <package>
+        # @see https://github.com/npm/npm/issues/5459
     fi
 fi
 
@@ -572,7 +575,11 @@ then
     <Directory ${document_root}>
         Options Indexes FollowSymlinks MultiViews
         AllowOverride all
-        AssignUserID ${USER} ${groupname}
+        
+        ## drop rights if possible
+        <IfModule mpm_itk_module>
+            AssignUserId ${USER} ${groupname}
+        </IfModule>
 
         ## Apache 2.4
         <IfModule mod_authz_core.c>
