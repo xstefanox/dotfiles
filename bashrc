@@ -107,7 +107,7 @@ complete -cf sudo
 function _ssh()
 {
     local cur prev opts config
-    
+
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -165,7 +165,7 @@ fi
 
 export PYTHONSTARTUP=$HOME/.pythonrc
 export PYTHONHISTORY=$HOME/.python_history
-    
+
 # Mac OSX 10.7 Lion supports only Python 2.7
 if [[ $(uname -s) == Darwin ]]
 then
@@ -185,7 +185,7 @@ then
     alias easy_install-3.3='echo "!!! Deprecated"; false'
 
     # make pip use the default paths and install every egg into the user home
-    
+
     which pip &> /dev/null && function pip()
     {
         pip=$(which pip)
@@ -197,7 +197,7 @@ then
             $pip $@
         fi
     } && export -f pip
-    
+
     which pip3 &> /dev/null && function pip3()
     {
         pip3=$(which pip3)
@@ -265,7 +265,7 @@ then
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
 
     git config --global alias.plog "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
-    
+
     # @see https://gist.github.com/unphased/5303697
     git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 
@@ -282,7 +282,7 @@ then
         git config --global pager.show 'diff-highlight | less'
         git config --global pager.diff 'diff-highlight | less'
     fi
-fi 
+fi
 
 #########
 ## SVN ##
@@ -330,24 +330,24 @@ then
     then
         # get the Homebrew installation path
         homebrew_path=$(brew --prefix)
-        
+
         # add the NodeJS binaries installed by Homebrew to the path
         PATH=${homebrew_path}/share/npm/bin:$PATH
-        
+
         # add the NodeJS modules installation paths
         export NODE_PATH=${homebrew_path}/share/npm/lib/node_modules:${homebrew_path}/lib/node_modules/npm/node_modules:$NODE_PATH
-        
+
         unset homebrew_path
-        
+
     elif [[ $(uname -s) == Linux ]]
     then
         # set the correct paths to install global npm modules in user home
         npm config set prefix ~/.npm/packages
         npm config set cache ~/.npm/cache
-        
+
         # add the npm binary path to the PATH
         PATH=$HOME/.npm/packages/bin:$PATH
-        
+
         # @howto install: npm install -g --prefix=$(npm config get prefix) <package>
         # @see https://github.com/npm/npm/issues/5459
     fi
@@ -362,20 +362,20 @@ then
     function _cap()
     {
         local cur prev opts
-        
+
         # avoid using : to split words
         _get_comp_words_by_ref -n : cur prev
-        
+
         COMPREPLY=()
         cur="${COMP_WORDS[COMP_CWORD]}"
         prev="${COMP_WORDS[COMP_CWORD-1]}"
         opts="$(cap --tasks | sed -n '/^cap/ s/^cap \([[:alnum:]:-]\+\)[[:space:]]*# .*$/\1/ p')"
 
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        
+
         __ltrim_colon_completions "$cur"
     }
-    
+
     complete -F _cap cap
 fi
 
@@ -388,20 +388,20 @@ then
     function _symfony_console()
     {
         local cur prev opts
-        
+
         # avoid using : to split words
         _get_comp_words_by_ref -n : cur prev
-        
+
         COMPREPLY=()
         cur="${COMP_WORDS[COMP_CWORD]}"
         prev="${COMP_WORDS[COMP_CWORD-1]}"
         opts="$(app/console list | sed -n '/^Available commands:/,$ s/^  \([[:alnum:]:-]\+\)[[:space:]]*.*$/\1/ p')"
 
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        
+
         __ltrim_colon_completions "$cur"
     }
-    
+
     complete -F _symfony_console console
 fi
 
@@ -415,11 +415,11 @@ function man()
 {
     local page=$1
     local category=
-    
+
     # if a graphical session exists
     if [[ -n "$DISPLAY" ]]
     then
-    
+
         # determine the language
         local lang=
         if [[ -n "$LC_ALL" ]]
@@ -431,7 +431,7 @@ function man()
         else
             lang=en
         fi
-        
+
         # determine the page and category
         if [[ "${page%.*}" == "${page}" ]]
         then
@@ -440,7 +440,7 @@ function man()
         else
             category=man${page#*.}
         fi
-        
+
         # open the page
         if [[ $(uname -s) == Darwin ]]
         then
@@ -450,13 +450,13 @@ function man()
             # fallback on Ubuntu; try to select the release using lsb_release if possible
             xdg-open http://manpages.ubuntu.com/manpages/$(which lsb_release &> /dev/null && lsb_release --codename --short)/en/${category}/${page} 2> /dev/null
         fi
-        
+
     else
-    
+
         # use the man binary (usually /usr/bin/man) and the preferred pager, if any (checking the $PAGER environment variable),
         # otherwise fallback on most, if it is installed, or less, which is tipically installed on any Unix system
         $(which man) $([[ -z "$PAGER" ]] && echo --pager=$(which most &> /dev/null && echo most || echo less)) $page
-        
+
     fi
 }
 
@@ -474,17 +474,17 @@ then
     [[ $UID == 0 ]] && alias dist-sync='apt-get update' || alias dist-sync='sudo apt-get update'
     alias show='apt-cache show'
     alias list='dpkg -L'
-    
+
     function search()
     {
         apt-cache search --names-only $@ | sort
     }
-    
+
     function apt-list-from-repository()
     {
         eval "aptitude search '~S ~i (~O"$1")'"
     }
-    
+
 ## rpm-based distros using yum package manager functions
 elif which yum &> /dev/null
 then
@@ -526,7 +526,7 @@ then
             fi
         fi
     }
-    
+
     alias start='_service_manager start'
     alias stop='_service_manager stop'
     alias restart='_service_manager restart'
@@ -545,7 +545,7 @@ then
     [[ $UID != 0 ]] && alias a2dissite='sudo a2dissite'
     [[ $UID == 0 ]] && alias a2vhosts='apache2ctl -t -D DUMP_VHOSTS' || alias a2vhosts='sudo apache2ctl -t -D DUMP_VHOSTS'
     [[ $UID == 0 ]] && alias a2modules='apache2ctl -t -D DUMP_MODULES' || alias a2modules='sudo apache2ctl -t -D DUMP_MODULES'
-    
+
     # an utility function to generate virtual hosts configuration files
     function a2genvhost()
     {
@@ -554,32 +554,38 @@ then
         local force=$3
         local vhosts_path="/etc/apache2/sites-available"
         local file_ext
-        
+
         [[ -z "${server_name}" || -z "${document_root}" ]] && echo "Usage: ${FUNCNAME} <server_name> <document_root> [--force]" && return 1
 
         if [[ $(apache2 -v | sed -n '/Server version/ s:.*/[[:digit:]]\+\.\([[:digit:]]\+\).*:\1: p') -ge 4 ]]
         then
             file_ext=".conf"
         fi
-        
+
         [[ -e "${vhosts_path}/${server_name}${file_ext}" && "${force}" != "--force" ]] && echo "VirtualHost ${server_name} already exists" && return 1
-        
+
         groupname="$(groups | awk '{ print $1 }')"
-        
+
         vhost_content="$(cat << __EOT__
 <VirtualHost *:80>
 
-    DocumentRoot ${document_root}
     ServerName ${server_name}.localhost
+    DocumentRoot ${document_root}
 
+    ## drop rights if possible
+    <IfModule mpm_itk_module>
+        AssignUserId ${USER} ${groupname}
+    </IfModule>
+
+    ## configure logging
+    ErrorLog  \${APACHE_LOG_DIR}/${server_name}.localhost_error.log
+    CustomLog \${APACHE_LOG_DIR}/${server_name}.localhost_access.log combined
+
+    ## configure the document root
     <Directory ${document_root}>
+
         Options Indexes FollowSymlinks MultiViews
         AllowOverride all
-        
-        ## drop rights if possible
-        <IfModule mpm_itk_module>
-            AssignUserId ${USER} ${groupname}
-        </IfModule>
 
         ## Apache 2.4
         <IfModule mod_authz_core.c>
@@ -598,14 +604,14 @@ then
 
 __EOT__
 )"
-        
+
         if [[ $UID != 0 ]]
         then
             echo "${vhost_content}" | sudo tee "${vhosts_path}/${server_name}${file_ext}" &> /dev/null
         else
             echo "${vhost_content}" > "${vhosts_path}/${server_name}${file_ext}"
         fi
-        
+
         echo "VirtualHost configured, reload Apache to enable"
     }
 fi
@@ -663,10 +669,10 @@ then
     ## don't run anything on X11/XQuartz opening
     defaults write org.x.X11 app_to_run /usr/bin/true
     defaults write org.macosforge.xquartz.X11 app_to_run /usr/bin/true
-    
+
     ## disable the Dashboard
     defaults write com.apple.dashboard mcx-disabled -bool true
-    
+
     ## disable previews in Mail attachments
     defaults write com.apple.mail DisableInlineAttachmentViewing -bool yes
 
@@ -688,11 +694,11 @@ else
                 # on 12.04 or older releases
                 gsettings set org.gnome.desktop.interface ubuntu-overlay-scrollbars false
             fi
-            
+
             #export LIBOVERLAY_SCROLLBAR=0
             #echo 'export LIBOVERLAY_SCROLLBAR=0' >> ~/.xprofile
         fi
-        
+
         # desktop preferences: MATE
         if gsettings list-schemas | grep org.mate.caja &> /dev/null
         then
@@ -727,7 +733,7 @@ else
             gsettings set org.gnome.desktop.interface    document-font-name    'Sans 9'
             #gsettings set org.nemo.desktop              font                  ''
         fi
-        
+
         # desktop preferences: Gnome/Unity
         if gsettings list-schemas | grep org.gnome.nautilus.preferences &> /dev/null
         then
@@ -753,11 +759,11 @@ else
             gsettings set org.gnome.desktop.interface    font-name             'Ubuntu 10'
             gsettings set org.gnome.desktop.interface    document-font-name    'Sans 9'
             #gsettings set org.gnome.nautilus.desktop    font                  ''
-            
+
             # move the window buttons to the right
             gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
         fi
-        
+
         # gedit preferences
         if gsettings list-schemas | grep org.gnome.gedit.preferences.editor &> /dev/null
         then
@@ -781,7 +787,7 @@ fi
 #    do
 #        sed -i '/browser.display.focus_ring_width/ s:1:0:' "${item}/prefs.js"
 #        sed -i '/browser.display.focus_ring_on_anything/ s:false:true:' "${item}/prefs.js"
-#        
+#
 #        if grep --quiet extensions.blocklist.enabled "${item}/prefs.js"
 #        then
 #            sed -i '/extensions.blocklist.enabled/ s:false:true:' "${item}/prefs.js"
@@ -919,7 +925,7 @@ which transmission-remote &> /dev/null && function tdr()
 [[ $(uname -s) == Darwin ]] && which abcde &> /dev/null && function rip()
 {
     dev="$(mount | \grep cddafs | cut -d' ' -f1)"
-    
+
     if [[ -n "$dev" ]]
     then
         # unmount the disc
@@ -932,7 +938,7 @@ function genpasswd()
 {
     # exit if pwgen is not installed
     ! which pwgen &> /dev/null && echo "Error: pwgen not installed" && return 1
-    
+
     # generate only one password, 8 character long, containing only lowercase chars
     pwgen --no-capitalize --numerals 8 1
 }
@@ -962,7 +968,7 @@ function archive_file_for_FAT32()
 {
     # exit if rar is not installed
     ! which rar &> /dev/null && echo "Error: rar not installed" && return 1
-    
+
     # exit if no arguments given
     [[ $# == 0 ]] && echo "Usage: archive-file-for-FAT32 <filename>" && return 1
 
@@ -986,13 +992,13 @@ function archive_file_for_FAT32()
 function remove-bom()
 {
     local f=$1
-    
+
     if [[ ! -f ${f} ]]
     then
         echo 'No file given'
         return
     fi
-    
+
     sed -i -e '1 s/^\xEF\xBB\xBF//' "${f}"
 }
 
@@ -1020,4 +1026,3 @@ fi
 #############
 
 unset home_bin
-
