@@ -691,18 +691,19 @@ else
         ## on Ubuntu
         if which lsb_release &> /dev/null && [[ "$(lsb_release --id --short)" == Ubuntu ]]
         then
-            ## disable the Unity scrollbar
+            # on current Ubuntu releases
             if [[ "$(lsb_release --release --short)" > '12.04' ]]
             then
-                # on current Ubuntu release
+                
+                # disable the Unity scrollbar
                 gsettings set com.canonical.desktop.interface scrollbar-mode normal
+                
+            # on 12.04 or older releases
             else
-                # on 12.04 or older releases
+                
+                # disable the Unity scrollbar
                 gsettings set org.gnome.desktop.interface ubuntu-overlay-scrollbars false
             fi
-
-            #export LIBOVERLAY_SCROLLBAR=0
-            #echo 'export LIBOVERLAY_SCROLLBAR=0' >> ~/.xprofile
         fi
 
         # desktop preferences: MATE
@@ -768,6 +769,10 @@ else
 
             # move the window buttons to the right
             gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
+            
+            # set only one workspace
+            gsettings set org.gnome.desktop.wm.preferences num-workspaces 1
+            
         fi
 
         # gedit preferences
@@ -1032,3 +1037,4 @@ fi
 #############
 
 unset home_bin
+
