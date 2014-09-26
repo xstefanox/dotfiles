@@ -303,11 +303,17 @@ fi
 ## RUBY ##
 ##########
 
-# install gems in user home
+# add the path to the user gems binaries to the PATH
 if which gem &> /dev/null
 then
-    export GEM_HOME="${HOME}/.gem"
-    export PATH="${HOME}/.gem/bin:${PATH}"
+    case "$(uname -s)" in
+        Linux)
+            export PATH="${HOME}/.gem/ruby/1.9.1/bin:${PATH}"
+            ;;
+        Darwin)
+            export PATH="${HOME}/.gem/ruby/1.8/bin:${PATH}"
+            ;;
+    esac
 fi
 
 #########
