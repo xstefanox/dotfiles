@@ -303,11 +303,10 @@ fi
 ## RUBY ##
 ##########
 
-# install gems in user home
+# add user home installed gems binary path to the PATH
 if which gem &> /dev/null
 then
-    export GEM_HOME="${HOME}/.gem"
-    export PATH="${HOME}/.gem/bin:${PATH}"
+    export PATH="$(gem env | sed -n '/GEM PATHS/,/GEM/ p' | grep "${HOME}" | sed "s:.*\(${HOME}.*\):\1:")/bin:${PATH}"
 fi
 
 #########
