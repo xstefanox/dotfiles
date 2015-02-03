@@ -261,6 +261,8 @@ then
     git config --global color.diff.frag "magenta $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.old  "red $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.new  "blue $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.branch.current  "green $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.branch.remote   "red $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
 
@@ -268,6 +270,8 @@ then
 
     # @see https://gist.github.com/unphased/5303697
     git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+
+    git config --global tag.sort version:refname
 
     # install diff-highlight from git distribution
     if [[ -f /usr/share/doc/git/contrib/diff-highlight/diff-highlight ]]
