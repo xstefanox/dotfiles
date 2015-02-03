@@ -356,6 +356,15 @@ then
     fi
 fi
 
+############
+## HEROKU ##
+############
+
+if [[ -d "/usr/local/heroku" ]]
+then
+    PATH="/usr/local/heroku/bin:$PATH"
+fi
+
 ################
 ## CAPISTRANO ##
 ################

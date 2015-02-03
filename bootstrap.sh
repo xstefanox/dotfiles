@@ -35,7 +35,7 @@ function bootstrap_dir()
     
     # find the installable files, discarding bootstrap itself, any readme files;
     # the result should be a reasonable set of dotfiles
-    local dotfiles=$(find "${base_path}" -maxdepth 1 -type f -not -name "${BOOTSTRAP}" -not -name 'README*' -exec basename {} \;)
+    local dotfiles=$(find "${base_path}" -maxdepth 1 -type f -not -name "${BOOTSTRAP}" -not -name 'README*' -not -name apt.sources.list.sh -exec basename {} \;)
     
     # determine the symlink name base path
     
