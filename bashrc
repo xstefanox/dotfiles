@@ -307,17 +307,10 @@ fi
 ## RUBY ##
 ##########
 
-# add the path to the user gems binaries to the PATH
+# add user home installed gems binary path to the PATH
 if which gem &> /dev/null
 then
-    case "$(uname -s)" in
-        Linux)
-            export PATH="${HOME}/.gem/ruby/1.9.1/bin:${PATH}"
-            ;;
-        Darwin)
-            export PATH="${HOME}/.gem/ruby/1.8/bin:${PATH}"
-            ;;
-    esac
+    export PATH="$(gem env | sed -n '/GEM PATHS/,/GEM/ p' | grep "${HOME}" | sed "s:.*\(${HOME}.*\):\1:")/bin:${PATH}"
 fi
 
 #########
