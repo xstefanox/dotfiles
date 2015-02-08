@@ -80,6 +80,9 @@ if [[ $(uname -s) == Darwin && -d "$HOME/Library/Homebrew" ]]
 then
     export PATH=$HOME/Library/Homebrew/bin:$PATH
     export PATH=$HOME/Library/Homebrew/sbin:$PATH
+
+    # PHP 5.6 support
+    export PATH="$(brew --prefix homebrew/php/php56)/bin:$PATH"
 fi
 
 #####################
@@ -329,31 +332,12 @@ fi
 
 if which npm &> /dev/null
 then
-    if [[ $(uname -s) == Darwin ]] && which brew &> /dev/null
-    then
-        # get the Homebrew installation path
-        homebrew_path=$(brew --prefix)
+    # set the correct paths to install global npm modules in user home
+    npm config set prefix ~/.npm/packages
+    npm config set cache ~/.npm/cache
 
-        # add the NodeJS binaries installed by Homebrew to the path
-        PATH=${homebrew_path}/share/npm/bin:$PATH
-
-        # add the NodeJS modules installation paths
-        export NODE_PATH=${homebrew_path}/share/npm/lib/node_modules:${homebrew_path}/lib/node_modules/npm/node_modules:$NODE_PATH
-
-        unset homebrew_path
-
-    elif [[ $(uname -s) == Linux ]]
-    then
-        # set the correct paths to install global npm modules in user home
-        npm config set prefix ~/.npm/packages
-        npm config set cache ~/.npm/cache
-
-        # add the npm binary path to the PATH
-        PATH=$HOME/.npm/packages/bin:$PATH
-
-        # @howto install: npm install -g --prefix=$(npm config get prefix) <package>
-        # @see https://github.com/npm/npm/issues/5459
-    fi
+    # add the npm binary path to the PATH
+    PATH=$HOME/.npm/packages/bin:$PATH
 fi
 
 ############
