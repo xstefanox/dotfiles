@@ -226,14 +226,11 @@ fi
 PATH=$HOME/.composer/vendor/bin:$PATH
 
 # phpbrew
-[[ -e ~/.phpbrew ]] && source ~/.phpbrew/bashrc
+#[[ -e ~/.phpbrew ]] && source ~/.phpbrew/bashrc
 
 # XDebug
 alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
 alias xdebug-off='export XDEBUG_CONFIG="remote_enable=0"'
-
-#export PHP_IDE_CONFIG="serverName={SERVER NAME IN PHP STORM}"
-#export XDEBUG_CONFIG="remote_host={YOUR_IP} idekey=PHPSTORM"
 
 # default is disabled
 export XDEBUG_CONFIG="remote_enable=0"
