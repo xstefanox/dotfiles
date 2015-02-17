@@ -20,6 +20,129 @@ shopt -s cdspell
 # Don't attempt to search the PATH for possible completions when completion is attempted on an empty line
 shopt -s no_empty_cmd_completion
 
+###############
+## FUNCTIONS ##
+###############
+
+#
+# @see http://vpalos.com/537/uri-parsing-using-bash-built-in-features/
+#
+# URI parsing function
+#
+# The function creates global variables with the parsed results.
+# It returns 0 if parsing was successful or non-zero otherwise.
+#
+# [schema://][user[:password]@]host[:port][/path][?[arg1=val1]...][#fragment]
+#
+# @param $1 uri
+# @return array
+#
+function parse_uri()
+{
+    local pattern
+    local uri
+    local uri_schema
+    local uri_address
+    local uri_user
+    local uri_password
+    local uri_host
+    local uri_port
+    local uri_path
+    local uri_query
+    local uri_fragment
+    local count
+    local path
+
+    pattern='^(([a-z]{3,5})://)?((([^:\/]+)(:([^@\/]*))?@)?([^:\/?]+)(:([0-9]+))?)(\/[^?]*)?(\?[^#]*)?(#.*)?$'
+
+    # uri capture
+    uri="$@"
+
+    # safe escaping
+    uri="${uri//\`/%60}"
+    uri="${uri//\"/%22}"
+
+    # top level parsing
+    [[ "$uri" =~ $pattern ]] || return 1;
+
+    # component extraction
+    uri=${BASH_REMATCH[0]}
+    uri_schema=${BASH_REMATCH[2]}
+    uri_address=${BASH_REMATCH[3]}
+    uri_user=${BASH_REMATCH[5]}
+    uri_password=${BASH_REMATCH[7]}
+    uri_host=${BASH_REMATCH[8]}
+    uri_port=${BASH_REMATCH[10]}
+    uri_path=${BASH_REMATCH[11]}
+    uri_query=${BASH_REMATCH[12]}
+    uri_fragment=${BASH_REMATCH[13]}
+
+    # path parsing
+    count=0
+    path="$uri_path"
+    pattern='^/+([^/]+)'
+    while [[ $path =~ $pattern ]]; do
+        eval "uri_parts[$count]=\"${BASH_REMATCH[1]}\""
+        path="${path:${#BASH_REMATCH[0]}}"
+        let count++
+    done
+
+    # query parsing
+    count=0
+    query="$uri_query"
+    pattern='^[?&]+([^= ]+)(=([^&]*))?'
+    while [[ $query =~ $pattern ]]; do
+        eval "uri_args[$count]=\"${BASH_REMATCH[1]}\""
+        eval "uri_arg_${BASH_REMATCH[1]}=\"${BASH_REMATCH[3]}\""
+        query="${query:${#BASH_REMATCH[0]}}"
+        let count++
+    done
+
+    # main uri
+    echo "${uri}"
+
+    # mai uri components
+    echo "${uri_schema}"
+    echo "${uri_address}"
+    echo "${uri_user}"
+    echo "${uri_password}"
+    echo "${uri_host}"
+    echo "${uri_port}"
+    echo "${uri_path}"
+    echo "${uri_query}"
+    echo "${uri_fragment}"
+
+    # return success
+    return 0
+}
+
+#
+# @see http://www.linuxjournal.com/content/validating-ip-address-bash-script
+#
+# Test an IP address for validity:
+# Usage:
+#      valid_ip IP_ADDRESS
+#      if [[ $? -eq 0 ]]; then echo good; else echo bad; fi
+#   OR
+#      if valid_ip IP_ADDRESS; then echo good; else echo bad; fi
+#
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+
 ############
 ## COLORS ##
 ############
@@ -294,7 +417,54 @@ fi
 
 if which svn &> /dev/null
 then
-    alias svn-ignore='EDITOR="nano" svn propedit svn:ignore'
+    # create an alias to easy the svn:ignore property configuration
+    function svn-ignore()
+    {
+        local path="${1:-.}"
+
+        EDITOR="nano" svn propedit svn:ignore "${path}"
+    }
+
+    proxy=${HTTP_PROXY:-${http_proxy}}
+    noproxy=${NO_PROXY:-${no_proxy}}
+
+    # if a global proxy configuration exists
+    if [[ -n "${proxy}" ]]
+    then
+        # parse the proxy string
+        proxy=( `parse_uri "${proxy}"` )
+
+        # if proxy exceptions are configured
+        if [[ -n "${noproxy}" ]]
+        then
+
+            # split the noproxy string into an array
+            IFS=', ' read -a noproxy <<< "${noproxy}"
+
+            noproxy_svn=""
+
+            # create a comma separated string of exceptions, prepending hostnames with the * wildcard
+            for item in ${noproxy[@]}
+            do
+                if valid_ip "${item}"
+                then
+                    noproxy_svn+=" ${item},"
+                else
+                    noproxy_svn+=" *.${item},"
+                fi
+            done
+
+            noproxy="--config-option servers:global:http-proxy-exceptions='$noproxy_svn'"
+
+            unset item noproxy_svn
+        fi
+
+        # create the alias, appending proxy host, port and exceptions (authentication not supported)
+        alias svn="svn --config-option servers:global:http-proxy-host='${proxy[3]}' --config-option servers:global:http-proxy-port='${proxy[4]}' $noproxy"
+
+    fi
+
+    unset proxy noproxy
 fi
 
 #########
