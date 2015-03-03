@@ -295,6 +295,11 @@ fi
 if which svn &> /dev/null
 then
     alias svn-ignore='EDITOR="nano" svn propedit svn:ignore'
+
+    if which colorsvn &> /dev/null
+    then
+        alias svn='colorsvn'
+    fi
 fi
 
 #########
@@ -714,7 +719,8 @@ else
         # desktop preferences: Cinnamon
         if gsettings list-schemas | grep org.nemo.desktop &> /dev/null
         then
-            gsettings set org.nemo.desktop               show-desktop-icons    true
+            # the following setting make Cinnamon 2.4 crash
+            #gsettings set org.nemo.desktop               show-desktop-icons    true
             gsettings set org.nemo.desktop               computer-icon-visible false
             gsettings set org.nemo.desktop               home-icon-visible     false
             gsettings set org.nemo.desktop               network-icon-visible  false

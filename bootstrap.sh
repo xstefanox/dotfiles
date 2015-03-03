@@ -138,7 +138,6 @@ function bootstrap_dir()
 }
 
 bootstrap_dir "${REPO_PATH}"
-bootstrap_dir "${REPO_PATH}/js"
 
 if [[ $(uname -s) == Darwin ]]
 then
