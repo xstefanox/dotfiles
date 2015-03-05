@@ -425,6 +425,11 @@ then
         EDITOR="nano" svn propedit svn:ignore "${path}"
     }
 
+    if which colorsvn &> /dev/null
+    then
+        colorsvn=true
+    fi
+
     proxy=${HTTP_PROXY:-${http_proxy}}
     noproxy=${NO_PROXY:-${no_proxy}}
 
@@ -460,11 +465,16 @@ then
         fi
 
         # create the alias, appending proxy host, port and exceptions (authentication not supported)
-        alias svn="svn --config-option servers:global:http-proxy-host='${proxy[3]}' --config-option servers:global:http-proxy-port='${proxy[4]}' $noproxy"
+        alias svn="`[[ $colorsvn == true ]] && echo colorsvn || echo svn` --config-option servers:global:http-proxy-host='${proxy[3]}' --config-option servers:global:http-proxy-port='${proxy[4]}' $noproxy"
 
+    else
+        if [[ $colorsvn == true ]]
+        then
+            alias svn=colorsvn
+        fi
     fi
 
-    unset proxy noproxy
+    unset proxy noproxy colorsvn
 fi
 
 #########
@@ -851,13 +861,13 @@ else
             # on current Ubuntu releases
             if [[ "$(lsb_release --release --short)" > '12.04' ]]
             then
-                
+
                 # disable the Unity scrollbar
                 gsettings set com.canonical.desktop.interface scrollbar-mode normal
-                
+
             # on 12.04 or older releases
             else
-                
+
                 # disable the Unity scrollbar
                 gsettings set org.gnome.desktop.interface ubuntu-overlay-scrollbars false
             fi
@@ -884,7 +894,8 @@ else
         # desktop preferences: Cinnamon
         if gsettings list-schemas | grep org.nemo.desktop &> /dev/null
         then
-            gsettings set org.nemo.desktop               show-desktop-icons    true
+            # the following setting make Cinnamon 2.4 crash
+            #gsettings set org.nemo.desktop               show-desktop-icons    true
             gsettings set org.nemo.desktop               computer-icon-visible false
             gsettings set org.nemo.desktop               home-icon-visible     false
             gsettings set org.nemo.desktop               network-icon-visible  false
@@ -926,10 +937,10 @@ else
 
             # move the window buttons to the right
             gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
-            
+
             # set only one workspace
             gsettings set org.gnome.desktop.wm.preferences num-workspaces 1
-            
+
         fi
 
         # gedit preferences
@@ -1194,4 +1205,3 @@ fi
 #############
 
 unset home_bin
-
