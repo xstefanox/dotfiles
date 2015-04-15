@@ -37,3 +37,7 @@ echo 'deb http://vagrant-deb.linestarve.com/ any main' > /etc/apt/sources.list.d
 # git
 #apt-key adv --keyserver keyserver.ubuntu.com --recv-key E1DF1F24
 add-apt-repository ppa:git-core/ppa
+
+# docker
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+echo 'deb https://get.docker.com/ubuntu docker main' > /etc/apt/sources.list.d/docker.list

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-git log --graph --pretty=format:'%Cred%h%Creset%n' --abbrev-commit --date=relative --branches --all

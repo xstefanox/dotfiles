@@ -384,16 +384,14 @@ then
     git config --global color.diff.meta "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.frag "magenta $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.old  "red $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.diff.new  "blue $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.diff.new  "green $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.branch.current  "green $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.branch.remote   "red $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
 
-    git config --global alias.plog "log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
-
     # @see https://gist.github.com/unphased/5303697
-    git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+    git config --global alias.plog "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an <%ae>%Creset' --abbrev-commit --date=relative"
 
     git config --global tag.sort version:refname
 
@@ -516,6 +514,8 @@ then
 
     # add the npm binary path to the PATH
     PATH=$HOME/.npm/packages/bin:$PATH
+
+    NODE_PATH=$NODE_PATH:/home/xstefanox/.npm/packages/lib/node_modules
 fi
 
 ############
@@ -1071,6 +1071,9 @@ alias mounted='mount | column -t'
 
 ## show the current PATH in a human readable format
 alias path='echo -e ${PATH//:/\\n}'
+
+## a shortcut to purge directories
+alias rimraf='rm -rf'
 
 ## A shortcut to open a file or a directory
 if [[ $(uname -s) == Darwin ]]
