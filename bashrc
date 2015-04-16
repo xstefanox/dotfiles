@@ -826,6 +826,12 @@ which ssh &> /dev/null && function ssh()
     return $retval
 }
 
+############
+## PACKER ##
+############
+
+PATH="${HOME}/.local/opt/packer:${PATH}"
+
 ####################
 ## OS PREFERENCES ##
 ####################
