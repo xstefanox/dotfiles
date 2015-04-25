@@ -381,7 +381,7 @@ then
     git config --global color.status.changed   "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.status.untracked "red $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.status.unmerged  "red $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.diff.meta "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.diff.meta "blue $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.frag "magenta $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.old  "red $([[ $(uname -s) == Linux ]] && echo bold)"
     git config --global color.diff.new  "green $([[ $(uname -s) == Linux ]] && echo bold)"
@@ -396,7 +396,7 @@ then
     git config --global tag.sort version:refname
 
     # install diff-highlight from git distribution
-    if [[ -f /usr/share/doc/git/contrib/diff-highlight/diff-highlight ]]
+    if [[ -f /usr/share/doc/git/contrib/diff-highlight/diff-highlight && ! -f "${home_bin}/diff-highlight" ]]
     then
         cp /usr/share/doc/git/contrib/diff-highlight/diff-highlight "${home_bin}/"
         chmod +x "${home_bin}/diff-highlight"
@@ -962,6 +962,14 @@ else
             gsettings set org.gnome.gedit.preferences.editor display-line-numbers true
             gsettings set org.gnome.gedit.preferences.editor scheme               'tango'
         fi
+
+        # gnome-terminal preferences
+        gconftool --set /apps/gnome-terminal/profiles/Default/use_theme_colors    --type boolean false
+        gconftool --set /apps/gnome-terminal/profiles/Default/background_type     --type string  transparent
+        gconftool --set /apps/gnome-terminal/profiles/Default/background_darkness --type float   0.95
+        gconftool --set /apps/gnome-terminal/profiles/Default/background_color    --type string  "#0F4F199901B4"
+        gconftool --set /apps/gnome-terminal/profiles/Default/foreground_color    --type string  "#D3D3D7D7CFCF"
+
     fi
 
 fi
