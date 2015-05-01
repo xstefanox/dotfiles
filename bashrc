@@ -20,6 +20,9 @@ shopt -s cdspell
 # Don't attempt to search the PATH for possible completions when completion is attempted on an empty line
 shopt -s no_empty_cmd_completion
 
+# Append to the Bash history file, rather than overwriting it
+shopt -s histappend;
+
 ###############
 ## FUNCTIONS ##
 ###############
@@ -372,8 +375,6 @@ fi
 if which git &> /dev/null
 then
     git config --global user.name "Stefano Varesi"
-    # disabled: I can have different identities in different projects
-    #git config --global user.email "stefano.varesi@gmail.com"
     # disabled: this creates a daemon and a warning is always raised when closing the window in Mac OSX
     #git config --global credential.helper cache
     git config --global color.ui true

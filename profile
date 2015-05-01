@@ -22,21 +22,30 @@
 # ~/.bashrc
 #--------------------------------------
 
+# if not running interactively, don't do anything
+[[ -z "$PS1" ]] && return
+
 # if running Bash
 if [[ -n "$BASH" ]]
 then
 
-    ## define the path to the profile modules directory
+    # define the path to the profile modules directory
     profile_modules_dir=~/.profile.d
 
-    ## ensure profile_modules_dir exists
+    # ensure profile_modules_dir exists
     [[ ! -d "$profile_modules_dir" ]] && mkdir -p "$profile_modules_dir"
 
-    ## execute each bashrc script
-    which run-parts &> /dev/null && run-parts --regex '\.sh$' "$profile_modules_dir"
+    # execute each bashrc script
+    for profile_module in `find /home/xstefanox/.profile.d/ -type f -name '*.sh' | sort`
+    do
+        source "$profile_module"
+    done
 
-    ## cleanup
-    unset profile_modules_dir
+    # cleanup
+    unset profile_module profile_modules_dir
+
+    # determine the OS name
+    export OS=`uname -s`
 
     # include .bashrc if it exists
     if [[ -f ~/.bashrc ]]
@@ -44,4 +53,3 @@ then
         . ~/.bashrc
     fi
 fi
-
