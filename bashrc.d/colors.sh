@@ -4,241 +4,82 @@
 
 ## @see http://misc.flogisoft.com/bash/tip_colors_and_formatting
 
-# Reset
-NO_COLOR='\033[0m'            # Text Reset
+# reset
+NO_COLOR=`tput sgr0`
+RESET=`tput sgr0`
 
-# Regular Colors
-BLACK='\033[0;30m'            # BLACK
-RED='\033[0;31m'              # RED
-GREEN='\033[0;32m'            # GREEN
-YELLOW='\033[0;33m'           # YELLOW
-BLUE='\033[0;34m'             # BLUE
-PURPLE='\033[0;35m'           # PURPLE
-CYAN='\033[0;36m'             # CYAN
-LIGHT_GRAY='\033[0;37m'       # LIGHT_GRAY
+# standard ANSI colors
+BLACK=`tput setaf 0`
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+YELLOW=`tput setaf 3`
+BLUE=`tput setaf 4`
+PURPLE=`tput setaf 5`
+CYAN=`tput setaf 6`
+WHITE=`tput setaf 7`
 
-# Bold
-BBLACK='\033[1;30m'           # BLACK
-BRED='\033[1;31m'             # RED
-BGREEN='\033[1;32m'           # GREEN
-BYELLOW='\033[1;33m'          # YELLOW
-BBLUE='\033[1;34m'            # BLUE
-BPURPLE='\033[1;35m'          # PURPLE
-BCYAN='\033[1;36m'            # CYAN
-BLIGHT_GRAY='\033[1;37m'      # LIGHT_GRAY
+# bold
+BOLD=`tput bold`
 
-# Underline
-UBLACK='\033[4;30m'           # BLACK
-URED='\033[4;31m'             # RED
-UGREEN='\033[4;32m'           # GREEN
-UYELLOW='\033[4;33m'          # YELLOW
-UBLUE='\033[4;34m'            # BLUE
-UPURPLE='\033[4;35m'          # PURPLE
-UCYAN='\033[4;36m'            # CYAN
-ULIGHT_GRAY='\033[4;37m'      # LIGHT_GRAY
+BBLACK=$BOLD$BLACK
+BRED=$BOLD$RED
+BGREEN=$BOLD$GREEN
+BYELLOW=$BOLD$YELLOW
+BBLUE=$BOLD$BLUE
+BPURPLE=$BOLD$PURPLE
+BCYAN=$BOLD$CYAN
+BWHITE=$BOLD$WHITE
 
-# Background
-ON_BLACK='\033[40m'           # BLACK
-ON_RED='\033[41m'             # RED
-ON_GREEN='\033[42m'           # GREEN
-ON_YELLOW='\033[43m'          # YELLOW
-ON_BLUE='\033[44m'            # BLUE
-ON_PURPLE='\033[45m'          # PURPLE
-ON_CYAN='\033[46m'            # CYAN
-ON_LIGHT_GRAY='\033[47m'      # LIGHT_GRAY
+# underlined
+UNDERLINED=`tput smul`
+NOUNDERLINED=`tput rmul`
 
-# High Intensty
-IBLACK='\033[0;90m'           # BLACK
-IRED='\033[0;91m'             # RED
-IGREEN='\033[0;92m'           # GREEN
-IYELLOW='\033[0;93m'          # YELLOW
-IBLUE='\033[0;94m'            # BLUE
-IPURPLE='\033[0;95m'          # PURPLE
-ICYAN='\033[0;96m'            # CYAN
-ILIGHT_GRAY='\033[0;97m'      # LIGHT_GRAY
+UBLACK=$UNDERLINED$BLACK
+URED=$UNDERLINED$RED
+UGREEN=$UNDERLINED$GREEN
+UYELLOW=$UNDERLINED$YELLOW
+UBLUE=$UNDERLINED$BLUE
+UPURPLE=$UNDERLINED$PURPLE
+UCYAN=$UNDERLINED$CYAN
+UWHITE=$UNDERLINED$WHITE
 
-# Bold High Intensty
-BIBLACK='\033[1;90m'          # BLACK
-BIRED='\033[1;91m'            # RED
-BIGREEN='\033[1;92m'          # GREEN
-BIYELLOW='\033[1;93m'         # YELLOW
-BIBLUE='\033[1;94m'           # BLUE
-BIPURPLE='\033[1;95m'         # PURPLE
-BICYAN='\033[1;96m'           # CYAN
-BILIGHT_GRAY='\033[1;97m'     # LIGHT_GRAY
+# background
+BACKGROUND=$RESET$(tput rev)
 
-# High Intensty backgrounds
-ON_IBLACK='\033[0;100m'       # BLACK
-ON_IRED='\033[0;101m'         # RED
-ON_IGREEN='\033[0;102m'       # GREEN
-ON_IYELLOW='\033[0;103m'      # YELLOW
-ON_IBLUE='\033[0;104m'        # BLUE
-ON_IPURPLE='\033[10;95m'      # PURPLE
-ON_ICYAN='\033[0;106m'        # CYAN
-ON_ILIGHT_GRAY='\033[0;107m'  # LIGHT_GRAY
+BGBLACK=$BACKGROUND$BLACK
+BGRED=$BACKGROUND$RED
+BGGREEN=$BACKGROUND$GREEN
+BGYELLOW=$BACKGROUND$YELLOW
+BGBLUE=$BACKGROUND$BLUE
+BGPURPLE=$BACKGROUND$PURPLE
+BGCYAN=$BACKGROUND$CYAN
+BGWHITE=$BACKGROUND$WHITE
 
-## load the colors from the cache or generate is if not found
-
-# prepare the color codes
-
-unset _COLOR_FORMATTING _COLOR_FOREGROUND _COLOR_BACKGROUND
-
-declare -a _COLOR_FORMATTING
-# _COLOR_FORMATTING[DEFAULT]=0
-# _COLOR_FORMATTING[BOLD]=1
-# _COLOR_FORMATTING[DIM]=2
-# _COLOR_FORMATTING[UNDERLINED]=4
-# _COLOR_FORMATTING[BLINK]=5
-# _COLOR_FORMATTING[REVERSE]=7
-# _COLOR_FORMATTING[HIDDEN]=8
-
-declare -a _COLOR_FOREGROUND
-# _COLOR_FOREGROUND[DEFAULT]=39
-# _COLOR_FOREGROUND[BLACK]=30
-# _COLOR_FOREGROUND[RED]=31
-# _COLOR_FOREGROUND[GREEN]=32
-# _COLOR_FOREGROUND[YELLOW]=33
-# _COLOR_FOREGROUND[BLUE]=34
-# _COLOR_FOREGROUND[MAGENTA]=35
-# _COLOR_FOREGROUND[CYAN]=36
-# _COLOR_FOREGROUND[LIGHT_GRAY]=37
-# _COLOR_FOREGROUND[DARK_GRAY]=90
-# _COLOR_FOREGROUND[LIGHT_RED]=91
-# _COLOR_FOREGROUND[LIGHT_GREEN]=92
-# _COLOR_FOREGROUND[LIGHT_YELLOW]=93
-# _COLOR_FOREGROUND[LIGHT_BLUE]=94
-# _COLOR_FOREGROUND[LIGHT_MAGENTA]=95
-# _COLOR_FOREGROUND[LIGHT_CYAN]=96
-# _COLOR_FOREGROUND[WHITE]=97
-
-declare -a _COLOR_BACKGROUND
-# _COLOR_BACKGROUND[DEFAULT]=49
-# _COLOR_BACKGROUND[BLACK]=40
-# _COLOR_BACKGROUND[RED]=41
-# _COLOR_BACKGROUND[GREEN]=42
-# _COLOR_BACKGROUND[YELLOW]=43
-# _COLOR_BACKGROUND[BLUE]=44
-# _COLOR_BACKGROUND[MAGENTA]=45
-# _COLOR_BACKGROUND[CYAN]=46
-# _COLOR_BACKGROUND[LIGHT_GRAY]=47
-# _COLOR_BACKGROUND[DARK_GRAY]=100
-# _COLOR_BACKGROUND[LIGHT_RED]=101
-# _COLOR_BACKGROUND[LIGHT_GREEN]=102
-# _COLOR_BACKGROUND[LIGHT_YELLOW]=103
-# _COLOR_BACKGROUND[LIGHT_BLUE]=104
-# _COLOR_BACKGROUND[LIGHT_MAGENTA]=105
-# _COLOR_BACKGROUND[LIGHT_CYAN]=106
-# _COLOR_BACKGROUND[WHITE]=107
-
-cache_file="${HOME}/.bash_colors.cache"
-
-if [[ -e "${cache_file}" ]]
-then
-    # the colors definition is already cached
-    source "${cache_file}"
-else
-    # define all possible formatting/foreground/background color codes
-    
-    for bg in ${!_COLOR_BACKGROUND[@]}
-    do
-        # define the background-only color code
-        echo "COLOR_ON_${bg}='\e[${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
-        
-        for fg in ${!_COLOR_FOREGROUND[@]}
-        do
-            # define the foreground/background color code
-            echo "COLOR_${fg}_ON_${bg}='\e[${_COLOR_FOREGROUND[${fg}]};${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
-            
-            for fmt in ${!_COLOR_FORMATTING[@]}
-            do
-                # define the formatting/foreground/background color code
-                if [[ "${fmt}" == DEFAULT && "${fg}" == DEFAULT && "${bg}" == DEFAULT ]]
-                then
-                    # rename the all-default color code to COLOR_DEFAULT
-                    echo "COLOR_DEFAULT='\e[${_COLOR_FORMATTING[DEFAULT]};${_COLOR_FOREGROUND[DEFAULT]};${_COLOR_BACKGROUND[DEFAULT]}m'" >> "${cache_file}"
-                    :
-                else
-                    echo "COLOR_${fmt}_${fg}_ON_${bg}='\e[${_COLOR_FORMATTING[${fmt}]};${_COLOR_FOREGROUND[${fg}]};${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
-                fi
-            done
-        done
-    done
-
-    for fg in ${!_COLOR_FOREGROUND[@]}
-    do
-        # define the foreground-only color code
-        echo "COLOR_${fg}='\e[${_COLOR_FOREGROUND[${fg}]}m'" >> "${cache_file}"
-        
-        for fmt in ${!_COLOR_FORMATTING[@]}
-        do
-            # define the formatting/foreground color code
-            echo "COLOR_${fmt}_${fg}='\e[${_COLOR_FORMATTING[${fmt}]};${_COLOR_FOREGROUND[${fg}]}m'" >> "${cache_file}"
-        done
-    done
-    
-    for fmt in ${!_COLOR_FORMATTING[@]}
-    do
-        # define the formatting-only color-code
-        echo "COLOR_${fmt}='\e[${_COLOR_FORMATTING[${fmt}]}m'" >> "${cache_file}"
-        
-        for bg in ${!_COLOR_BACKGROUND[@]}
-        do
-            # define the formatting/background color code
-            echo "COLOR_${fmt}_ON_${bg}='\e[${_COLOR_FORMATTING[${fmt}]};${_COLOR_BACKGROUND[${bg}]}m'" >> "${cache_file}"
-        done
-    done
-    
-    [[ -e "${cache_file}" ]] && source "${cache_file}"
-    
-    unset fg bg fmt
-fi
-
-unset cache_file
+# high intensty
+IBLACK='\033[0;90m'
+IRED='\033[0;91m'
+IGREEN='\033[0;92m'
+IYELLOW='\033[0;93m'
+IBLUE='\033[0;94m'
+IPURPLE='\033[0;95m'
+ICYAN='\033[0;96m'
+IWHITE='\033[0;97m'
 
 function bash_colors
 {
-    local fg
-    local bg
-    local fmt
-    local color_name
-    local max_fg_length
-    local bg_idx
-    local bg_label
-    
-    # calculate the max length of the color names for the padding
-    max_fg_length=0
-    for fg in ${!_COLOR_FOREGROUND[@]}
-    do
-        [[ "${#fg}" -gt "${max_fg_length}" ]] && max_fg_length="${#fg}"
+    local i
+    local color
+
+    echo
+    echo -e "${BOLD}normal bold underlined background tput-color-code${RESET}"
+
+    for i in $(seq 1 7); do
+        color=`tput setaf $i`
+        echo " ${color}Text${RESET}  ${BOLD}${color}Text${RESET}    ${UNDERLINED}${color}Text${RESET}       ${BACKGROUND}${color}Text${RESET}           $i"
     done
 
-    for bg in ${!_COLOR_BACKGROUND[@]}
-    do
-        bg_idx=0
-        bg_label="${bg/_/ }"
-        bg_label="$(printf "%0$((${#_COLOR_FOREGROUND[@]} / 2 + $((${#bg_label} + 1)) / 2))s " "${bg_label}")"
-        
-        for fg in ${!_COLOR_FOREGROUND[@]}
-        do
-            printf "%0${max_fg_length}s " "${fg}"
-            
-            # define the color variable for the colors without a formatting modifier
-            color_name="COLOR_${fg}_ON_${bg}"
-            
-            echo -ne "$(eval echo "\$${color_name}") NORMAL ${COLOR_DEFAULT}"
-            
-            # for each formatting modifier
-            for fmt in ${!_COLOR_FORMATTING[@]}
-            do
-                # define the color variable
-                color_name="COLOR_${fmt}_${fg}_ON_${bg}"
-                
-                echo -ne "$(eval echo "\$${color_name}") ${fmt} ${COLOR_DEFAULT}"
-            done
-            
-            echo "  ${bg_label:${bg_idx}:1}"
-            
-            let bg_idx++
-        done
-    done
+    echo ' Bold                                  bold'
+    echo ' Underline                             smul'
+    echo ' Reset                                 sgr0'
+    echo
 }
