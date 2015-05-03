@@ -29,23 +29,11 @@
 if [[ -n "$BASH" ]]
 then
 
-    # define the path to the profile modules directory
-    profile_modules_dir=~/.profile.d
-
-    # ensure profile_modules_dir exists
-    [[ ! -d "$profile_modules_dir" ]] && mkdir -p "$profile_modules_dir"
-
-    # execute each bashrc script
-    for profile_module in `find /home/xstefanox/.profile.d/ -type f -name '*.sh' | sort`
+    # execute each profile module
+    for profile_module in `find "${HOME}/.profile.d" \( -type f -o -type l \) -name '*.sh' | sort`
     do
         source "$profile_module"
     done
-
-    # cleanup
-    unset profile_module profile_modules_dir
-
-    # determine the OS name
-    export OS=`uname -s`
 
     # include .bashrc if it exists
     if [[ -f ~/.bashrc ]]

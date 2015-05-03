@@ -7,7 +7,7 @@
 ## - notification about SSH session
 
 # prepare the color codes for the current platform
-if [[ $(uname -s) == Darwin ]]
+if [[ $OSTYPE == darwin* ]]
 then
     P_GREEN="${GREEN}"
     P_RED="${RED}"
@@ -41,14 +41,14 @@ PROMPT_COMMAND='PS1_return_value=$?;[[ -w "${PWD}" ]];PS1_cwd_perm=$?'
 # translate the saved return value in a colored string containing the error description
 PS1_return_value='$(
     echo -ne "${NO_COLOR}(";
-    
+
     if [[ "${PS1_return_value}" == 0 ]];
     then
         echo -ne "${P_GREEN}${PS1_return_value}";
     else
         echo -ne "${P_RED}${PS1_return_value}:$([[ ${PS1_return_value} -gt ${PS1_os_maxerr} ]] && echo "Unknown error" || echo "${PS1_os_errno[${PS1_return_value}]}")";
     fi
-    
+
     echo -ne "${NO_COLOR})";
 )'
 
@@ -57,19 +57,19 @@ PS1_git_status='$(
     if which git &> /dev/null && git status &> /dev/null;
     then
         echo -ne "${NO_COLOR}{";
-        
+
         status="$(git status --porcelain)"
-        
+
         if [[ -z "${status}" ]];
         then
             echo -ne "${P_GREEN}";
         else
             echo -ne "${P_RED}";
         fi;
-        
+
         echo -n "git:$(git branch --no-color | sed -n "/^*/ s:[^ ]* :: p")";
-        
-        
+
+
         if [[ -n "${status}" ]];
         then
             declare -a status_info;
@@ -83,9 +83,9 @@ PS1_git_status='$(
             [[ "${untracked_count}" -gt 0 ]] && status_info[3]="$(echo "${untracked_count}" | sed "s:[[:space:]]*:?:")";
             echo -n "($(printf "%s/" "${status_info[@]}" | cut -d "/" -f 1-${#status_info[@]}))";
         fi;
-        
+
         echo -ne "${NO_COLOR}";
-        
+
         echo -n "}"
     fi
 )'
@@ -95,16 +95,16 @@ PS1_hg_status='$(
     if which hg &> /dev/null && hg status &> /dev/null;
     then
         echo -ne "${NO_COLOR}{";
-        
+
         if [[ -z "$(hg status)" ]];
         then
             echo -ne "${P_GREEN}";
         else
             echo -ne "${P_RED}";
         fi;
-        
+
         echo -n "hg:$(hg branch)";
-        
+
         echo -ne "${NO_COLOR}}";
     fi
 )'
@@ -115,13 +115,13 @@ PS1_svn_status='$(
     then
         rev="$(LC_ALL=C svn info | sed -n "/^Revision:/ s/.*:[[:space:]]*// p")"
         status="$(svn status)"
-        
+
         echo -ne "${NO_COLOR}{";
-        
+
         if [[ -n "${status}" ]];
         then
             echo -ne "${P_RED}svn:${rev}";
-            
+
             declare -a status_info;
             added_count=$(echo "${status}" | grep "^A" | wc -l);
             deleted_count=$(echo "${status}" | grep "^D" | wc -l);
@@ -136,10 +136,10 @@ PS1_svn_status='$(
             echo -n "($(printf "%s/" "${status_info[@]}" | cut -d "/" -f 1-${#status_info[@]}))";
         else
             echo -ne "${P_GREEN}";
-            
+
             echo -n "svn:${rev}";
         fi;
-        
+
         echo -ne "${NO_COLOR}}";
     fi
 )'
@@ -157,7 +157,7 @@ PS1_username='$(
         else
             echo -ne "${P_GREEN}";
         fi
-        
+
         echo -ne ${USER}${NO_COLOR}
     #fi
 )'
@@ -181,14 +181,14 @@ PS1_hashtag='$([[ -n "${PS1_tag}" ]] && echo -e " ${CYAN}#${PS1_tag}${NO_COLOR}"
 # set a colored colon depending on the write permissions on the current working directory
 PS1_cwd_perm='$(
     echo -ne "${NO_COLOR}";
-    
+
     if [[ "${PS1_cwd_perm}" == 0 ]];
     then
         echo -ne "${P_GREEN}";
     else
         echo -ne "${P_RED}";
     fi
-    
+
     echo -ne ":${NO_COLOR}";
 )'
 
@@ -243,7 +243,7 @@ PS4='$0, Line $LINENO: '
 function prompt-tag()
 {
     local IFS=
-    
+
     # save the tag
     export PS1_tag="$(echo $@ | sed -e 's:#\{1,\}: :g' -e 's:^[[:space:]]*::' -e 's:[[:space:]]\{1,\}: :g')"
 
