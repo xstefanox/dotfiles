@@ -125,6 +125,20 @@ function valid_ip()
 
 export -f valid_ip
 
+function jsoncolor()
+{
+    read json_string <&0
+
+    if which pygmentize &> /dev/null
+    then
+        echo ${json_string} | python -m json.tool | pygmentize -l javascript
+    else
+        echo ${json_string} | python -m json.tool
+    fi
+}
+
+export -f jsoncolor
+
 ## Enable colors on directory listing
 if [[ $OSTYPE == darwin* || $(uname -s) == FreeBSD ]]
 then
