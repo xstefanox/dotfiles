@@ -7,3 +7,6 @@
 [submodule "submodules/bash-it"]
 	path = submodules/bash-it
 	url = https://github.com/Bash-it/bash-it
+[submodule "submodules/apt-cyg"]
+	path = submodules/apt-cyg
+	url = https://github.com/transcode-open/apt-cyg

@@ -18,16 +18,16 @@ then
     fi
 
     git config --global color.ui true
-    git config --global color.status.added     "green $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.status.changed   "yellow $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.status.untracked "red $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.status.unmerged  "red $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.diff.meta "blue $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.diff.frag "magenta $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.diff.old  "red $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.diff.new  "green $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.branch.current  "green $([[ $(uname -s) == Linux ]] && echo bold)"
-    git config --global color.branch.remote   "red $([[ $(uname -s) == Linux ]] && echo bold)"
+    git config --global color.status.added     "green $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.status.changed   "yellow $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.status.untracked "red $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.status.unmerged  "red $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.diff.meta "blue $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.diff.frag "magenta $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.diff.old  "red $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.diff.new  "green $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.branch.current  "green $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
+    git config --global color.branch.remote   "red $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
 
     git config --global core.excludesfile "~/.gitignore.global"
     git config --global push.default $(git --version | grep --silent " 1.8" && echo simple || echo matching)
