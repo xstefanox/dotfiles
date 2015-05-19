@@ -35,4 +35,15 @@ then
     alias search='yum search'
     alias show='yum info'
     alias list='repoquery --list'
+
+## Cygwin
+elif [[ $OSTYPE == cygwin ]] && which apt-cyg &> /dev/null
+then
+    alias add='apt-cyg install'
+    alias purge='apt-cyg remove'
+    alias dist-upgrade='echo "Not implemented!"; false'
+    alias dist-sync='apt-cyg update'
+    alias search='apt-cyg search'
+    alias show='apt-cyg show'
+    alias list='apt-cyg listfiles'
 fi
