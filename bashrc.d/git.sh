@@ -9,8 +9,6 @@ then
     # include the versioned Git configuration
     git config --global include.path '~/.gitconfig.global'
 
-    git config --global user.name "Stefano Varesi"
-
     # disabled on OSX: this creates a daemon and a warning is always raised when closing the terminal
     if [[ $OSTYPE != darwin* ]]
     then
