@@ -70,6 +70,15 @@ fi
 export LESS="--RAW-CONTROL-CHARS"
 
 ##########
+## TERM ##
+##########
+
+if [[ "${TERM}" == xterm ]]
+then
+    TERM=xterm-256color
+fi
+
+##########
 ## MISC ##
 ##########
 
@@ -78,3 +87,4 @@ export FAT32_MAX_FILE_SIZE="$((2**32 - 1))"
 
 ## Size of a Nintendo WII ISO image
 export WII_ISO_SIZE="4699979776"
+

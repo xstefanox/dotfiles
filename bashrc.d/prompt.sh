@@ -176,7 +176,7 @@ PS1_ssh_status="$([[ -n "${SSH_CLIENT}" ]] && echo "${P_YELLOW}ssh:${NO_COLOR}")
 PS1_screen_status="$([[ -n "${STY}" ]] && echo "[${P_YELLOW}screen:${P_BLUE}$(echo "${STY#*.}" | sed -e "s:.${HOSTNAME}::")${NO_COLOR}]")"
 
 # set the shell tag
-PS1_hashtag='$([[ -n "${PS1_tag}" ]] && echo -e " ${CYAN}#${PS1_tag}${NO_COLOR}")'
+PS1_hashtag='$([[ -n "${PS1_tag}" ]] && echo " ${CYAN}#${PS1_tag}${NO_COLOR}")'
 
 # set a colored colon depending on the write permissions on the current working directory
 PS1_cwd_perm='$(

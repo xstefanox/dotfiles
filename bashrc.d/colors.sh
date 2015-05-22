@@ -18,6 +18,16 @@ MAGENTA=`tput setaf 5`
 CYAN=`tput setaf 6`
 WHITE=`tput setaf 7`
 
+# high intensty colors
+IBLACK=`tput setaf 8`
+IRED=`tput setaf 9`
+IGREEN=`tput setaf 10`
+IYELLOW=`tput setaf 11`
+IBLUE=`tput setaf 12`
+IMAGENTA=`tput setaf 13`
+ICYAN=`tput setaf 14`
+IWHITE=`tput setaf 15`
+
 # bold
 BOLD=`tput bold`
 
@@ -55,23 +65,13 @@ BGMAGENTA=$BACKGROUND$MAGENTA
 BGCYAN=$BACKGROUND$CYAN
 BGWHITE=$BACKGROUND$WHITE
 
-# high intensty
-IBLACK='\033[0;90m'
-IRED='\033[0;91m'
-IGREEN='\033[0;92m'
-IYELLOW='\033[0;93m'
-IBLUE='\033[0;94m'
-IMAGENTA='\033[0;95m'
-ICYAN='\033[0;96m'
-IWHITE='\033[0;97m'
-
 function bash_colors
 {
     local i
     local color
 
     echo
-    echo -e "${BOLD}normal bold underlined background tput-color-code${RESET}"
+    echo "${BOLD}normal bold underlined background tput-color-code${RESET}"
 
     for i in $(seq 1 7); do
         color=`tput setaf $i`
