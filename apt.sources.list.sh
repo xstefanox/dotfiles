@@ -18,7 +18,7 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 91E7EE5E
 add-apt-repository ppa:team-xbmc/ppa
 
 # spotify
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 94558F59
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D2C19886
 echo "deb http://repository.spotify.com stable non-free" > /etc/apt/sources.list.d/spotify.list
 
 # heroku
