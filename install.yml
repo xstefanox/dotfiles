@@ -30,6 +30,7 @@
     ~/.bashrc.d/man.sh:                 bashrc.d/man.sh
     ~/.bashrc.d/apache.sh:              bashrc.d/apache.sh
     ~/.bashrc.d/git.sh:                 bashrc.d/git.sh
+    ~/.bashrc.d/docker.sh:              bashrc.d/docker.sh
     ~/.bashrc.d/desktop-preferences.sh: bashrc.d/desktop-preferences.sh
     ~/.bashrc.d/system-services.sh:     bashrc.d/system-services.sh
     ~/.bashrc.d/package-manager.sh:     bashrc.d/package-manager.sh
