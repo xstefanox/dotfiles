@@ -19,8 +19,7 @@
     ~/.bashrc.d/01.locale.sh:           bashrc.d/locale.sh
     ~/.bashrc.d/02.env.sh:              bashrc.d/env.sh
     ~/.bashrc.d/03.colors.sh:           bashrc.d/colors.sh
-    ~/.bashrc.d/04.prompt.sh:           bashrc.d/prompt.sh
-    ~/.bashrc.d/05.functions.sh:        bashrc.d/functions.sh
+    ~/.bashrc.d/04.functions.sh:        bashrc.d/functions.sh
     ~/.bashrc.d/homebrew.sh:            bashrc.d/homebrew.sh
     ~/.bashrc.d/python.sh:              bashrc.d/python.sh
     ~/.bashrc.d/php.sh:                 bashrc.d/php.sh
@@ -41,8 +40,9 @@
     ~/.bash_completion.d/symfony.sh:    bash_completion.d/symfony.sh
 
     # Bash prompt
-    ~/.bashrc.d/prompt.sh: submodules/liquidprompt/liquidprompt
-    ~/.liquidpromptrc:     liquidpromptrc
+    ~/.bashrc.d/05-liquidprompt.sh:        submodules/liquidprompt/liquidprompt
+    ~/.bashrc.d/06-liquidprompt-custom.sh: bashrc.d/liquidprompt-local.sh
+    ~/.liquidpromptrc:                     liquidpromptrc
 
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
