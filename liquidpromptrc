@@ -1,0 +1,9 @@
+# current working directory
+LP_COLOR_PATH="$BOLD_BLUE"       # as normal user
+LP_COLOR_PATH_ROOT="$BOLD_RED"   # as root
+
+# last error code
+LP_COLOR_ERR="$BOLD_RED"
+
+# show username only if different from the logged in
+LP_USER_ALWAYS=0

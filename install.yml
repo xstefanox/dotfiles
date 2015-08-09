@@ -40,6 +40,10 @@
     ~/.bash_completion.d/ssh.sh:        submodules/bash-it/completion/available/ssh.completion.bash
     ~/.bash_completion.d/symfony.sh:    bash_completion.d/symfony.sh
 
+    # Bash prompt
+    ~/.bashrc.d/prompt.sh: submodules/liquidprompt/liquidprompt
+    ~/.liquidpromptrc:     liquidpromptrc
+
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
     ~/.local/bin/xdg-open:        bin/xdg-open
