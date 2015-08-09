@@ -20,8 +20,10 @@ else
     P_BLUE="${BBLUE}"
 fi
 
-# save the list of return error strings supported by the OS libc and the geatest error number
+# save the list of return error strings supported by the OS libc and the greatest error number
 PS1_os_maxerr=133
+
+IFS_save="${IFS}"
 
 IFS=$'\n' PS1_os_errno=( $(cat << EOT | python - ${PS1_os_maxerr}
 import sys
@@ -34,6 +36,8 @@ for errno in [ os.strerror(e) for e in range(0, int(sys.argv[1]) + 1) ]:
         print(errno)
 EOT
 ) )
+
+IFS="${IFS_save}"
 
 # save the return value of the last executed process and the write permission on the current working directory
 PROMPT_COMMAND='PS1_return_value=$?;[[ -w "${PWD}" ]];PS1_cwd_perm=$?'
@@ -229,10 +233,10 @@ PS1_jobs='$(
 PS1_cwd="${P_BLUE}\w${NO_COLOR}"
 
 ## PS1: Default prompt
-PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_username}${PS1_hostname}${PS1_cwd_perm}${PS1_cwd}]${PS1_return_value}${PS1_vcs_status}${PS1_jobs}${PS1_hashtag}${PS1_cpu_load}\n\$ "
+PS1="${NO_COLOR}${PS1_screen_status}[${PS1_ssh_status}${PS1_username}${PS1_hostname}${PS1_cwd_perm}${PS1_cwd}]${PS1_return_value}${PS1_vcs_status}${PS1_jobs}${PS1_hashtag}\n\$ "
 
 # clean the environment
-unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_username PS1_hostname PS1_cwd_perm PS1_hashtag PS1_cpu_load PS1_jobs PS1_cwd
+unset PS1_return_value PS1_git_status PS1_hg_status PS1_svn_status PS1_vcs_status PS1_ssh_status PS1_screen_status PS1_username PS1_hostname PS1_cwd_perm PS1_hashtag PS1_jobs PS1_cwd
 
 ## Use Bash defaults for continuation prompt (PS2) and select prompt (PS3)
 
@@ -253,19 +257,4 @@ function prompt-tag()
             [[ -n "${PS1_tag}" ]] && echo -ne "\033]0;#${PS1_tag}\007" || echo -ne "\033]0;Terminal\007"
             ;;
     esac
-}
-
-# prompt self-updater
-function prompt-self-update()
-{
-    local prompt_file_path="${BASH_SOURCE}"
-
-    # if the prompt file is a symlink, do nothing
-    [[ -L "${prompt_file_path}" ]] && echo "${prompt_file_path} is a symlink, skipping..." && return 0
-
-    # update the prompt file
-    wget --quiet --no-check-certificate "https://raw.github.com/xstefanox/dotfiles/master/bash_prompt" -O "${prompt_file_path}"
-
-    # reload the prompt
-    source "${prompt_file_path}"
 }
