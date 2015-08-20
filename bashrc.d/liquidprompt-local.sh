@@ -15,7 +15,7 @@ _lp_git_branch()
         # No escape needed
         local rev=$(\git rev-parse --short -q HEAD)
         local tag
-        if tag=$(\git describe --abbrev --exact-match ${rev} 2> /dev/null); then
+        if tag=$(\git describe --tags --abbrev --exact-match ${rev} 2> /dev/null); then
           echo $tag
         else
           echo $rev

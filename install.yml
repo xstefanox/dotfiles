@@ -40,8 +40,8 @@
     ~/.bash_completion.d/symfony.sh:    bash_completion.d/symfony.sh
 
     # Bash prompt
-    ~/.bashrc.d/05-liquidprompt.sh:        submodules/liquidprompt/liquidprompt
-    ~/.bashrc.d/06-liquidprompt-custom.sh: bashrc.d/liquidprompt-local.sh
+    ~/.bashrc.d/05.liquidprompt.sh:        submodules/liquidprompt/liquidprompt
+    ~/.bashrc.d/06.liquidprompt-custom.sh: bashrc.d/liquidprompt-local.sh
     ~/.liquidpromptrc:                     liquidpromptrc
 
     # binaries

@@ -7,3 +7,6 @@ LP_COLOR_ERR="$BOLD_RED"
 
 # show username only if different from the logged in
 LP_USER_ALWAYS=0
+
+# always show the full path
+LP_ENABLE_SHORTEN_PATH=0
