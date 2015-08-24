@@ -1,0 +1,19 @@
+[core]
+    excludesfile = ~/.gitignore.global
+
+[push]
+    default = simple
+
+[alias]
+    # @see https://gist.github.com/unphased/5303697
+    plog = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an <%ae>%Creset' --abbrev-commit --date=relative
+    s = status
+    d = diff
+
+[tag]
+    sort = version:refname
+
+[pager]
+    log = diff-highlight | less
+    show = diff-highlight | less
+    diff = diff-highlight | less

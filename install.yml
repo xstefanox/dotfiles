@@ -55,6 +55,7 @@
     ~/.bashrc:            bashrc
     ~/.colorsvnrc:        colorsvnrc
     ~/.gitignore.global:  gitignore.global
+    ~/.gitconfig.global:  gitconfig.global
     ~/.my.cnf:            my.cnf
     ~/.nanorc:            nanorc
     ~/.profile:           profile
