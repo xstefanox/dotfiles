@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $EUID -ne 0]]
+if [[ $EUID -ne 0 ]]
 then
     echo "You must be root"
     exit 1
@@ -42,3 +42,9 @@ echo 'deb https://get.docker.com/ubuntu docker main' > /etc/apt/sources.list.d/d
 
 # ruby 2.x
 apt-add-repository ppa:brightbox/ruby-ng
+
+# ansible
+apt-add-repository ppa:ansible/ansible
+
+# wine
+apt-add-repository ppa:ubuntu-wine/ppa
