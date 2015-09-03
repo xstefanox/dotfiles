@@ -5,27 +5,41 @@
 ########################
 
 ## Linux
-if [[ $OSTYPE == darwin* ]]
+if [[ $OSTYPE == linux* ]]
 then
     # define a wrapper arount service and start/restart/stop commands
     function _service_manager()
     {
-        # on Ubuntu and derived distros
+        local action=$1
+        local svc=$2
+
+        [[ -z $action ]] && echo 'The action is needed' && return 1
+        [[ -z $svc ]] && echo 'The service name is needed' && return 1
+
+        # on upstart based distros (Ubuntu and derivatives), try 'upstart' and fallback to 'service'
         if which _upstart_jobs &> /dev/null
         then
             if [[ $UID != 0 ]]
             then
-                _upstart_jobs | grep --silent $2 && sudo $1 $2 || sudo service $2 $1
+                _upstart_jobs | grep --silent $svc && sudo $action $svc || sudo service $svc $action
             else
-                _upstart_jobs | grep --silent $2 && $1 $2 || service $2 $1
+                _upstart_jobs | grep --silent $svc && $action $svc || service $svc $action
             fi
+        # on Debian-based distros
         elif which invoke-rc.d &> /dev/null
         then
             if [[ $UID != 0 ]]
             then
-                find /etc/init.d/ -not -name '.*' -exec basename {} \; | grep $2 &> /dev/null && sudo service $2 $1
+                sudo invoke-rc.d $svc $action
             else
-                find /etc/init.d/ -not -name '.*' -exec basename {} \; | grep $2 &> /dev/null && service $2 $1
+                invoke-rc.d $svc $action
+            fi
+        else
+            if [[ $UID != 0 ]]
+            then
+                sudo /etc/init.d/$svc $action
+            else
+                /etc/init.d/$svc $action
             fi
         fi
     }
