@@ -12,6 +12,23 @@ function svn-ignore()
     EDITOR="nano" svn propedit svn:ignore "${path}"
 }
 
+# show file affected from the commits from the given date and containing the given string in the comment
+function svn-affected()
+{
+    local contains=$1
+    local from=$2
+
+    for rev in `svn log -r {${from}}:{$(date +%Y-%m-%d)} \
+        | \grep "#${contains}" -B2 \
+        | \grep ^r \
+        | cut -b-6`; do svn log -v -$rev; done \
+        | \grep '^   ' \
+        | cut -b6- \
+        | sort \
+        | uniq
+}
+
+
 # alias the original svn command to add coloring and automatic proxy management
 if which svn &> /dev/null
 then
