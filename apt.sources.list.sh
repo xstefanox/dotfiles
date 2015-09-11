@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $EUID -ne 0 ]]
+if [[ $EUID -ne 0]]
 then
     echo "You must be root"
     exit 1
@@ -37,7 +37,8 @@ echo 'deb http://vagrant-deb.linestarve.com/ any main' > /etc/apt/sources.list.d
 add-apt-repository ppa:git-core/ppa
 
 # docker
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+#apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+wget -qO- https://get.docker.com/gpg | apt-key add -
 echo 'deb https://get.docker.com/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
 
 # ruby 2.x
@@ -48,3 +49,10 @@ apt-add-repository ppa:ansible/ansible
 
 # wine
 apt-add-repository ppa:ubuntu-wine/ppa
+
+# mysql workbench
+echo 'deb http://repo.mysql.com/apt/ubuntu/ precise workbench-6.2' > /etc/apt/sources.list.d/mysql-workbench.list
+echo 'deb http://repo.mysql.com/apt/ubuntu/ vivid workbench-6.2' >> /etc/apt/sources.list.d/mysql-workbench.list
+
+# gpu drivers
+add-apt-repository ppa:graphics-drivers/ppa
