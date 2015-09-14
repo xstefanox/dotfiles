@@ -53,6 +53,7 @@
 
     # misc
     ~/.bashrc:            bashrc
+    ~/.colordiffrc:       colordiffrc
     ~/.colorsvnrc:        colorsvnrc
     ~/.gitignore.global:  gitignore.global
     ~/.gitconfig.global:  gitconfig.global
