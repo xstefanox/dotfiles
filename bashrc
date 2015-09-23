@@ -39,9 +39,10 @@ then
         source "$(brew --prefix)/Library/Contributions/brew_bash_completion.sh"
     fi
 else
-    [[ -z "$BASH_COMPLETION" && -f /etc/bash_completion ]] && export BASH_COMPLETION=/etc/bash_completion
-    [[ -z "$BASH_COMPLETION_DIR" && -f /etc/bash_completion.d ]] && export BASH_COMPLETION_DIR=/etc/bash_completion.d
-    [[ -z "$BASH_COMPLETION_COMPAT_DIR" && -f /etc/bash_completion.d ]] && export BASH_COMPLETION_COMPAT_DIR=/etc/bash_completion.d
+    if [[ -f /etc/bash_completion ]] && ! shopt -oq posix
+    then
+        source /etc/bash_completion
+    fi
 fi
 
 # TAB-completion for sudo
