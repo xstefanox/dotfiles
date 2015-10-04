@@ -11,8 +11,8 @@
 # Composer: add user packages bin directory to the PATH
 PATH=$HOME/.composer/vendor/bin:$PATH
 
-# phpbrew
-#[[ -e ~/.phpbrew ]] && source ~/.phpbrew/bashrc
+# PHPBrew
+[[ -e ~/.phpbrew ]] && source ~/.phpbrew/bashrc
 
 # XDebug
 alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
