@@ -22,3 +22,18 @@ _lp_git_branch()
         fi
     fi
 }
+
+prompt_tag()
+{
+    local tag="$(_lp_sr "$(for w in $@; do echo -n " #$w"; done)")"
+
+    # set the tag in the prompt
+    export LP_PS1_TAG="${LP_COLOR_TAG}${tag}${NO_COL}"
+
+    # set the window title
+    case "${TERM}" in
+        xterm*)
+            [[ -n "${tag}" ]] && echo -ne "\033]0;${tag}\007" || echo -ne "\033]0;Terminal\007"
+            ;;
+    esac
+}

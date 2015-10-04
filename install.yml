@@ -29,6 +29,7 @@
     ~/.bashrc.d/man.sh:                 bashrc.d/man.sh
     ~/.bashrc.d/apache.sh:              bashrc.d/apache.sh
     ~/.bashrc.d/git.sh:                 bashrc.d/git.sh
+    ~/.bashrc.d/ssh.sh:                 bashrc.d/ssh.sh
     ~/.bashrc.d/docker.sh:              bashrc.d/docker.sh
     ~/.bashrc.d/desktop-preferences.sh: bashrc.d/desktop-preferences.sh
     ~/.bashrc.d/system-services.sh:     bashrc.d/system-services.sh
@@ -43,6 +44,7 @@
     ~/.bashrc.d/05.liquidprompt.sh:        submodules/liquidprompt/liquidprompt
     ~/.bashrc.d/06.liquidprompt-custom.sh: bashrc.d/liquidprompt-local.sh
     ~/.liquidpromptrc:                     liquidpromptrc
+    ~/.liquidprompt.ps1:                   liquidprompt.ps1
 
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
