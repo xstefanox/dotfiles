@@ -13,3 +13,6 @@
 [submodule "submodules/liquidprompt"]
 	path = submodules/liquidprompt
 	url = https://github.com/nojhan/liquidprompt.git
+[submodule "submodules/ruby.tmbundle"]
+	path = submodules/ruby.tmbundle
+	url = https://github.com/textmate/ruby.tmbundle.git
