@@ -16,3 +16,6 @@
 [submodule "submodules/ruby.tmbundle"]
 	path = submodules/ruby.tmbundle
 	url = https://github.com/textmate/ruby.tmbundle.git
+[submodule "submodules/nvm"]
+	path = submodules/nvm
+	url = https://github.com/creationix/nvm.git
