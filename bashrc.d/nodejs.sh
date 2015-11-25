@@ -25,7 +25,5 @@ if [[ -e "${HOME}/.local/opt/dotfiles/submodules/nvm/nvm.sh" ]]
 then
     # load NVM
     . "${HOME}/.local/opt/dotfiles/submodules/nvm/nvm.sh"
-
-    # set the stable nodejs version
-    nvm use stable 1> /dev/null 1> /dev/null
 fi
+
