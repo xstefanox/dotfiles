@@ -5,6 +5,9 @@ LP_COLOR_PATH_ROOT="$BOLD_RED"   # as root
 # last error code
 LP_COLOR_ERR="$BOLD_RED"
 
+# PHP version color
+LP_COLOR_PHPBREW="$YELLOW"
+
 # show username only if different from the logged in
 LP_USER_ALWAYS=0
 
@@ -19,3 +22,4 @@ LP_COLOR_TAG="$CYAN"
 
 # load the custom theme file
 LP_PS1_FILE="${HOME}/.liquidprompt.ps1"
+

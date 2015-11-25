@@ -40,7 +40,7 @@ LP_PS1="${LP_PS1}${LP_PWD}${LP_BRACKET_CLOSE}${LP_VENV}${LP_PROXY}"
 LP_PS1="${LP_PS1}${LP_VCS}"
 
 # add return code and prompt mark
-LP_PS1="${LP_PS1}${LP_RUNTIME}${LP_ERR}${LP_PS1_TAG}${LP_MARK_PREFIX}${LP_MARK}${LP_PS1_POSTFIX}"
+LP_PS1="${LP_PS1}${LP_RUNTIME}${LP_ERR}$(_lp_phpbrew)${LP_PS1_TAG}${LP_MARK_PREFIX}${LP_MARK}${LP_PS1_POSTFIX}"
 
 # "invisible" parts
 # Get the current prompt on the fly and make it a title

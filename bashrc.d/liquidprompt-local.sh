@@ -23,6 +23,21 @@ _lp_git_branch()
     fi
 }
 
+_lp_phpbrew()
+{
+    local php_version
+
+    if [[ `command -v php` != /usr/bin/php ]]
+    then
+        php_version=`phpbrew_current_php_version 2> /dev/null`
+        php_version=`_lp_escape $php_version`
+        php_version="{$php_version}"
+        php_version="`_lp_sl $php_version`"
+
+        echo "${LP_COLOR_PHPBREW}${php_version}${NO_COL}"
+    fi
+}
+
 prompt_tag()
 {
     local tag="$(_lp_sr "$(for w in $@; do echo -n " #$w"; done)")"
@@ -37,3 +52,4 @@ prompt_tag()
             ;;
     esac
 }
+
