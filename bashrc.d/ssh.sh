@@ -5,7 +5,7 @@
 #########
 
 # wrap the ssh command to automatically restore the window title on exit
-if which ssh &> /dev/null
+if command -v ssh &> /dev/null
 then
   function ssh()
   {

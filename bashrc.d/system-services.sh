@@ -17,7 +17,7 @@ then
         [[ -z $svc ]] && echo 'The service name is needed' && return 1
 
         # on upstart based distros (Ubuntu and derivatives), try 'upstart' and fallback to 'service'
-        if which _upstart_jobs &> /dev/null
+        if command -v _upstart_jobs &> /dev/null
         then
             if [[ $UID != 0 ]]
             then
@@ -26,7 +26,7 @@ then
                 _upstart_jobs | grep --silent $svc && $action $svc || service $svc $action
             fi
         # on Debian-based distros
-        elif which invoke-rc.d &> /dev/null
+        elif command -v invoke-rc.d &> /dev/null
         then
             if [[ $UID != 0 ]]
             then
