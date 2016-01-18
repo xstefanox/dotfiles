@@ -19,3 +19,9 @@
 [submodule "submodules/nvm"]
 	path = submodules/nvm
 	url = https://github.com/creationix/nvm.git
+[submodule "submodules/rflow"]
+	path = submodules/rflow
+	url = https://github.com/xstefanox/rflow.git
+[submodule "submodules/gitflow"]
+	path = submodules/gitflow
+	url = https://github.com/nvie/gitflow.git
