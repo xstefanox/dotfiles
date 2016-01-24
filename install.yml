@@ -53,7 +53,6 @@
     ~/.local/bin/diff-highlight:  submodules/git/contrib/diff-highlight/diff-highlight
     ~/.local/bin/apt-cyg:         submodules/apt-cyg/apt-cyg
     ~/.local/bin/git-rflow:       submodules/rflow/bin/git-rflow
-    ~/.local/bin/git-flow:        submodules/gitflow/git-flow
 
     # misc
     ~/.bashrc:            bashrc

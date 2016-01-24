@@ -22,6 +22,3 @@
 [submodule "submodules/rflow"]
 	path = submodules/rflow
 	url = https://github.com/xstefanox/rflow.git
-[submodule "submodules/gitflow"]
-	path = submodules/gitflow
-	url = https://github.com/nvie/gitflow.git
