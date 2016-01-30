@@ -127,7 +127,7 @@ export -f valid_ip
 
 function jsoncolor()
 {
-    read json_string <&0
+    read -r json_string <&0
 
     if which pygmentize &> /dev/null
     then
