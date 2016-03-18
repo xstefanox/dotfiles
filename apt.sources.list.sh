@@ -37,9 +37,8 @@ echo 'deb http://vagrant-deb.linestarve.com/ any main' > /etc/apt/sources.list.d
 add-apt-repository ppa:git-core/ppa
 
 # docker
-#apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
-wget -qO- https://get.docker.com/gpg | apt-key add -
-echo 'deb https://get.docker.com/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
+curl -fsSL https://get.docker.com/gpg
+curl -fsSL https://get.docker.com/ | sh
 
 # ruby 2.x
 apt-add-repository ppa:brightbox/ruby-ng
@@ -62,7 +61,7 @@ echo "deb http://ppa.launchpad.net/nginx/stable/ubuntu $(lsb_release -sc) main" 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C300EE8C
 
 # google chrome
-echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list
+echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 
 # geary
