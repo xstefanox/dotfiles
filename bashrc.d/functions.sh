@@ -268,6 +268,9 @@ which transmission-remote &> /dev/null && function tdr()
     fi
 }
 
+## Gitg
+which gitg &> /dev/null && alias gitg='gitg &>/dev/null &'
+
 ## Password generator
 function genpasswd()
 {

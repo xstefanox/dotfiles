@@ -10,6 +10,7 @@
     s = status
     d = diff
     c = checkout
+    a = add
 
 [tag]
     sort = version:refname
