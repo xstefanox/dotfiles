@@ -36,7 +36,7 @@ if [[ $OSTYPE == darwin* ]]
 then
     if which brew &> /dev/null
     then
-        source "$(brew --prefix)/Library/Contributions/brew_bash_completion.sh"
+        source "$(brew --prefix)/etc/bash_completion.d/brew"
     fi
 else
     if [[ -f /etc/bash_completion ]] && ! shopt -oq posix
