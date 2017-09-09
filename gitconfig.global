@@ -11,6 +11,7 @@
     d = diff
     c = checkout
     a = add
+    su = submodule update
 
 [tag]
     sort = version:refname
