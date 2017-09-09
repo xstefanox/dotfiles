@@ -11,7 +11,8 @@
     - [ test -d ~/.bashrc.d || mkdir -p ~/.bashrc.d, Creating Bash modules directory ]
     - [ test -d ~/.bash_completion.d || mkdir -p ~/.bash_completion.d, Creating Bash completion user modules directory ]
     - [ test -d ~/.local/bin || mkdir -p ~/.local/bin, Creating user binaries directory ]
-    - [ 'test -f ~/.local/bin/composer || wget https://getcomposer.org/installer -O - | php -- --install-dir ~/.local/bin --filename composer', Installing composer]
+    - [ 'test -f ~/.local/bin/composer || { { wget -q -O - https://getcomposer.org/installer || curl -s -o - https://getcomposer.org/installer; } | php -- --install-dir ~/.local/bin --filename composer; }', Installing composer ]
+    - [ cd submodules/git/contrib/diff-highlight && make, Compiling Git diff-highlight ]
 
 - link:
 

@@ -12,6 +12,7 @@
     c = checkout
     a = add
     su = submodule update
+    au = add -u
 
 [tag]
     sort = version:refname
