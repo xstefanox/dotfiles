@@ -13,6 +13,9 @@
     a = add
     su = submodule update
     au = add -u
+    aa = add -A
+    mt = mergetool
+    amend = commit --amend
 
 [tag]
     sort = version:refname
