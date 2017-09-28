@@ -41,9 +41,9 @@ then
     fi
 elif [[ -n "$DISPLAY" ]]
 then
-    if which subl &> /dev/null
+    if which mousepad &> /dev/null
     then
-        export EDITOR=subl
+        export EDITOR=mousepad
     elif which geany &> /dev/null
     then
         export EDITOR=geany
@@ -87,4 +87,3 @@ export FAT32_MAX_FILE_SIZE="$((2**32 - 1))"
 
 ## Size of a Nintendo WII ISO image
 export WII_ISO_SIZE="4699979776"
-
