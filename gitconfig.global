@@ -15,7 +15,8 @@
     au = add -u
     aa = add -A
     mt = mergetool
-    amend = commit --amend
+    amend = commit --amend --no-edit
+    f = fetch --prune
 
 [tag]
     sort = version:refname
