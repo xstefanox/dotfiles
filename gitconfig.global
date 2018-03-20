@@ -17,6 +17,7 @@
     mt = mergetool
     amend = commit --amend --no-edit
     f = fetch --prune
+    pt = "! git tag -l | xargs git tag -d; git fetch -t"
 
 [tag]
     sort = version:refname
