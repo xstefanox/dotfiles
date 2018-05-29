@@ -227,6 +227,9 @@ alias path='echo -e ${PATH//:/\\n}'
 ## a shortcut to purge directories
 alias rimraf='rm -rf'
 
+## simple line counter
+alias wl='wc -l'
+
 ## A shortcut to open a file or a directory
 if [[ $OSTYPE == darwin* ]]
 then
