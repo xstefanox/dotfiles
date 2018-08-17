@@ -70,3 +70,7 @@ add-apt-repository ppa:geary-team/releases
 # mongodb
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+
+# visual studio code
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo apt-key add -
+echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
