@@ -18,6 +18,8 @@
     amend = commit --amend --no-edit
     f = fetch --prune
     pt = "! git tag -l | xargs git tag -d; git fetch -t"
+    pf = push --force
+    ff = merge --ff-only
 
 [tag]
     sort = version:refname
