@@ -15,12 +15,6 @@ else
   export PATH=/media/WII/bin:$PATH
 fi
 
-## Heroku binary path
-if [[ -d "/usr/local/heroku" ]]
-then
-    PATH="/usr/local/heroku/bin:$PATH"
-fi
-
 ## Packer binaries installed in HOME (there is no installer or package yet)
 if [[ -d "${HOME}/.local/opt/packer" ]]
 then

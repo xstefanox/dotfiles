@@ -22,8 +22,8 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D2C19886
 echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
 # heroku
-wget -O- https://toolbelt.heroku.com/apt/release.key | sudo apt-key add -
-echo "deb http://toolbelt.heroku.com/ubuntu ./" | sudo tee /etc/apt/sources.list.d/heroku.list
+curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+echo "deb https://cli-assets.heroku.com/apt ./" | sudo tee /etc/apt/sources.list.d/heroku.list
 
 # nodejs
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
