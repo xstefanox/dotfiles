@@ -57,13 +57,17 @@
     ~/.local/bin/git-rflow:       submodules/rflow/bin/git-rflow
 
     # misc
-    ~/.bashrc:            bashrc
+    ~/.bashrc:
+        path:  bashrc
+        force: true
     ~/.colordiffrc:       colordiffrc
     ~/.colorsvnrc:        colorsvnrc
     ~/.gitignore.global:  gitignore.global
     ~/.gitconfig.global:  gitconfig.global
     ~/.my.cnf:            my.cnf
     ~/.nanorc:            nanorc
-    ~/.profile:           profile
+    ~/.profile:
+        path:  profile
+        force: true
     ~/.pythonrc:          pythonrc
     ~/.screenrc:          screenrc
