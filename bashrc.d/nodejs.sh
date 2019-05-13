@@ -19,6 +19,11 @@
 #    NODE_PATH=$NODE_PATH:/home/xstefanox/.npm/packages/lib/node_modules
 #fi
 
+if which yarn &> /dev/null
+then
+    PATH=$HOME/.yarn/bin:$PATH
+fi
+
 # put NVM in the use home
 export NVM_DIR="${HOME}/.nvm"
 
