@@ -50,7 +50,6 @@
 
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
-    ~/.local/bin/xdg-open:        bin/xdg-open
     ~/.local/bin/git-multistatus: bin/git-multistatus
     ~/.local/bin/diff-highlight:  submodules/git/contrib/diff-highlight/diff-highlight
     ~/.local/bin/apt-cyg:         submodules/apt-cyg/apt-cyg

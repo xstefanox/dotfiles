@@ -125,20 +125,6 @@ function valid_ip()
 
 export -f valid_ip
 
-function jsoncolor()
-{
-    read -r json_string <&0
-
-    if which pygmentize &> /dev/null
-    then
-        echo ${json_string} | python -m json.tool | pygmentize -l javascript
-    else
-        echo ${json_string} | python -m json.tool
-    fi
-}
-
-export -f jsoncolor
-
 ## Enable colors on directory listing
 if [[ $OSTYPE == darwin* || $(uname -s) == FreeBSD ]]
 then
@@ -236,7 +222,7 @@ then
     alias o='open'
 else
     # on other Unix systems, check for an active X11 session
-    [[ $OSTYPE == linux* ]] && [[ -n "$DISPLAY" ]] && alias o='xdg-open' || alias o='$EDITOR'
+    [[ $OSTYPE == linux* ]] && [[ -n "$DISPLAY" ]] && alias o='gio open' || alias o='$EDITOR'
 fi
 
 ## Baobab
