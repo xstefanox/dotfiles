@@ -13,9 +13,6 @@ set tabsize 4
 # don't wrap text
 set nowrap
 
-# constantly display the cursor position in the statusbar
-set const
-
 # make the home key smarter
 set smarthome
 
