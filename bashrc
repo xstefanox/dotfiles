@@ -45,5 +45,10 @@ else
     fi
 fi
 
+for bash_completion_module in `find "${HOME}/.bash_completion.d" \( -type f -o -type l \) -name '*.sh' | sort`
+do
+    source "$bash_completion_module"
+done
+
 # TAB-completion for sudo
 complete -cf sudo
