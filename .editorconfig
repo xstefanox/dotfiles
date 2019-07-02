@@ -1,0 +1,4 @@
+root = true
+
+[{*.sh,bashrc}]
+indent_size = 4
