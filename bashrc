@@ -36,7 +36,14 @@ if [[ $OSTYPE == darwin* ]]
 then
     if which brew &> /dev/null
     then
-        source "$(brew --prefix)/completions/bash/brew"
+        brew_prefix=$(brew --prefix)
+
+        if [[ -r "${brew_prefix}/etc/profile.d/bash_completion.sh" ]]
+        then
+            . "${brew_prefix}/etc/profile.d/bash_completion.sh"
+        fi
+
+        unset brew_prefix
     fi
 else
     if [[ -f /etc/bash_completion ]] && ! shopt -oq posix
