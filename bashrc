@@ -16,11 +16,21 @@ shopt -s no_empty_cmd_completion
 # Append to the Bash history file, rather than overwriting it
 shopt -s histappend;
 
+###########################
+## ENVIRONMENT VARIABLES ##
+###########################
+
+for env_module in `find "${HOME}/.env.d" \( -type f -o -type l \) -name '*.sh' | sort`
+do
+    source "$env_module"
+done
+
+unset env_module
+
 ####################
 ## BASHRC MODULES ##
 ####################
 
-## execute each bashrc module
 for bashrc_module in `find "${HOME}/.bashrc.d" \( -type f -o -type l \) -name '*.sh' | sort`
 do
     source "$bashrc_module"
@@ -34,16 +44,13 @@ unset bashrc_module
 
 if [[ $OSTYPE == darwin* ]]
 then
-    if which brew &> /dev/null
+
+    if [[ -n "$BREW_PREFIX" ]]
     then
-        brew_prefix=$(brew --prefix)
-
-        if [[ -r "${brew_prefix}/etc/profile.d/bash_completion.sh" ]]
+        if [[ -r "${BREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
         then
-            . "${brew_prefix}/etc/profile.d/bash_completion.sh"
+            . "${BREW_PREFIX}/etc/profile.d/bash_completion.sh"
         fi
-
-        unset brew_prefix
     fi
 else
     if [[ -f /etc/bash_completion ]] && ! shopt -oq posix
@@ -56,6 +63,8 @@ for bash_completion_module in `find "${HOME}/.bash_completion.d" \( -type f -o -
 do
     source "$bash_completion_module"
 done
+
+unset bash_completion_module
 
 # TAB-completion for sudo
 complete -cf sudo

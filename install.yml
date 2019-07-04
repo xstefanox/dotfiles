@@ -1,5 +1,6 @@
 - clean:
   - '~'
+  - ~/.env.d
   - ~/.profile.d
   - ~/.bashrc.d
   - ~/.bash_completion.d
@@ -7,6 +8,7 @@
 
 - shell:
     - [ git submodule update --init --recursive, Installing submodules ]
+    - [ test -d ~/.env.d || mkdir -p ~/.env.d, Creating environment modules directory ]
     - [ test -d ~/.profile.d || mkdir -p ~/.bashrc.d, Creating profile modules directory ]
     - [ test -d ~/.bashrc.d || mkdir -p ~/.bashrc.d, Creating Bash modules directory ]
     - [ test -d ~/.bash_completion.d || mkdir -p ~/.bash_completion.d, Creating Bash completion user modules directory ]
@@ -17,12 +19,17 @@
 
 - link:
 
+    ~/.env.d/wii.sh:        env.d/wii.sh
+    ~/.env.d/editor.sh:     env.d/editor.sh
+    ~/.env.d/pager.sh:      env.d/pager.sh
+    ~/.env.d/term.sh:       env.d/term.sh
+    ~/.env.d/misc.sh:       env.d/misc.sh
+    ~/.env.d/brew.sh:       env.d/brew.sh
+
     # Bash modules
     ~/.bashrc.d/01.locale.sh:           bashrc.d/locale.sh
-    ~/.bashrc.d/02.env.sh:              bashrc.d/env.sh
     ~/.bashrc.d/03.colors.sh:           bashrc.d/colors.sh
     ~/.bashrc.d/04.functions.sh:        bashrc.d/functions.sh
-    ~/.bashrc.d/homebrew.sh:            bashrc.d/homebrew.sh
     ~/.bashrc.d/python.sh:              bashrc.d/python.sh
     ~/.bashrc.d/php.sh:                 bashrc.d/php.sh
     ~/.bashrc.d/ruby.sh:                bashrc.d/ruby.sh
