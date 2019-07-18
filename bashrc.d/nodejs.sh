@@ -24,11 +24,7 @@ then
     PATH=$HOME/.yarn/bin:$PATH
 fi
 
-# put NVM in the use home
-export NVM_DIR="${HOME}/.nvm"
-
-if [[ -e "${HOME}/.local/opt/dotfiles/submodules/nvm/nvm.sh" ]]
+if [[ -e "${NVM_HOME}/nvm.sh" ]]
 then
-    # load NVM
-    . "${HOME}/.local/opt/dotfiles/submodules/nvm/nvm.sh"
+    . "${NVM_HOME}/nvm.sh"
 fi

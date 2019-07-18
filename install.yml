@@ -25,6 +25,7 @@
     ~/.env.d/term.sh:       env.d/term.sh
     ~/.env.d/misc.sh:       env.d/misc.sh
     ~/.env.d/brew.sh:       env.d/brew.sh
+    ~/.env.d/nvm.sh:        env.d/nvm.sh
 
     # Bash modules
     ~/.bashrc.d/01.locale.sh:           bashrc.d/locale.sh
