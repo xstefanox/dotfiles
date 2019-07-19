@@ -38,6 +38,14 @@ _lp_phpbrew()
     fi
 }
 
+_lp_nvm()
+{
+    if [[ -n "$NVM_NON_DEFAULT" ]]
+    then
+        echo " ${CYAN}{node.js:${NVM_NON_DEFAULT}}${NO_COLOR}"
+    fi
+}
+
 prompt_tag()
 {
     local tag="$(_lp_sr "$(for w in $@; do echo -n " #$w"; done)")"

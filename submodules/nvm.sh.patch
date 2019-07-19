@@ -1,0 +1,10 @@
+--- submodules/nvm/nvm.sh	2019-07-19 12:02:47.000000000 +0200
++++ submodules/nvm/nvm.sh.patched	2019-07-19 12:03:41.000000000 +0200
+@@ -2977,6 +2977,7 @@
+       if [ -n "${NVM_USE_OUTPUT-}" ]; then
+         nvm_echo "$NVM_USE_OUTPUT"
+       fi
++      export NVM_NON_DEFAULT=$([[ "$VERSION" != "$(nvm_resolve_alias default)" ]] && echo $VERSION || echo)
+     ;;
+     "run" )
+       local provided_version

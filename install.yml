@@ -16,6 +16,7 @@
     - [ 'test -f ~/.local/bin/composer || { { wget -q -O - https://getcomposer.org/installer || curl -s -o - https://getcomposer.org/installer; } | php -- --install-dir ~/.local/bin --filename composer; }', Installing composer ]
     - [ cd submodules/git/contrib/diff-highlight && make, Compiling Git diff-highlight ]
     - [ 'test -f ~/.local/bin/docker-compose || { { wget -q -O ~/.local/bin/docker-compose https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m) || curl -L -s -o ~/.local/bin/docker-compose https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m); } && chmod +x ~/.local/bin/docker-compose; }', Installing Docker Compose ]
+    - [ patch -p0 -N -r /tmp/nvm-patch.rej -i submodules/nvm.sh.patch, Patching NVM ]
 
 - link:
 
