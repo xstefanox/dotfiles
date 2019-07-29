@@ -40,9 +40,9 @@ _lp_phpbrew()
 
 _lp_nvm()
 {
-    if [[ -n "$NVM_NON_DEFAULT" ]]
+    if [[ -n "$NVM_NON_DEFAULT_VERSION" ]]
     then
-        echo " ${CYAN}{node.js:${NVM_NON_DEFAULT}}${NO_COLOR}"
+        echo " ${CYAN}{node.js:${NVM_NON_DEFAULT_VERSION}}${NO_COLOR}"
     fi
 }
 
@@ -60,4 +60,3 @@ prompt_tag()
             ;;
     esac
 }
-

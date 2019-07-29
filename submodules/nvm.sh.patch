@@ -4,7 +4,7 @@
        if [ -n "${NVM_USE_OUTPUT-}" ]; then
          nvm_echo "$NVM_USE_OUTPUT"
        fi
-+      export NVM_NON_DEFAULT=$([[ "$VERSION" != "$(nvm_resolve_alias default)" ]] && echo $VERSION || echo)
++      export NVM_NON_DEFAULT_VERSION=$([[ "$VERSION" != "$(nvm_resolve_alias default)" ]] && echo $VERSION || echo)
      ;;
      "run" )
        local provided_version
