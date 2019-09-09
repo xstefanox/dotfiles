@@ -1,5 +1,13 @@
 --- submodules/nvm/nvm.sh	2019-07-19 12:02:47.000000000 +0200
 +++ submodules/nvm/nvm.sh.patched	2019-07-19 12:03:41.000000000 +0200
+@@ -2905,6 +2905,7 @@
+           if [ $NVM_USE_SILENT -ne 1 ]; then
+             nvm_echo "Now using system version of node: $(node -v 2>/dev/null)$(nvm_print_npm_version)"
+           fi
++          unset NVM_NON_DEFAULT_VERSION
+           return
+         elif nvm_has_system_iojs && nvm deactivate >/dev/null 2>&1; then
+           if [ $NVM_USE_SILENT -ne 1 ]; then
 @@ -2977,6 +2977,7 @@
        if [ -n "${NVM_USE_OUTPUT-}" ]; then
          nvm_echo "$NVM_USE_OUTPUT"
