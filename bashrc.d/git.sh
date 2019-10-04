@@ -4,8 +4,11 @@
 ## GIT ##
 #########
 
-if which git &> /dev/null
-then
+function apply-preferences-git()
+{
+  if which git &> /dev/null
+  then
+
     # include the versioned Git configuration
     git config --global include.path '~/.gitconfig.global'
 
@@ -26,4 +29,7 @@ then
     git config --global color.branch.current  "green $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
     git config --global color.branch.remote   "red $([[ $OSTYPE == linux* || $OSTYPE == cygwin ]] && echo bold)"
 
-fi
+  else
+    echo "!!! git not found in PATH"
+  fi
+}

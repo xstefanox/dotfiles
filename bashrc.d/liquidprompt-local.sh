@@ -27,7 +27,7 @@ _lp_phpbrew()
 {
     local php_version
 
-    if [[ -n `command -v phpbrew` && `command -v php` != /usr/bin/php ]]
+    if [[ -n `which phpbrew` && `which php` != /usr/bin/php ]]
     then
         php_version=`phpbrew_current_php_version 2> /dev/null`
         php_version=`_lp_escape $php_version`
