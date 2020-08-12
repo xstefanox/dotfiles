@@ -1,7 +1,7 @@
 if [[ $OSTYPE == darwin* ]]
 then
 
-    BREW_PREFIX=$HOME/Library/Homebrew
+    BREW_PREFIX=$HOME/.local/opt/homebrew
 
     if [[ -d "$BREW_PREFIX" ]]
     then
