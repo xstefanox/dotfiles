@@ -1,6 +1,9 @@
 if [[ $OSTYPE == darwin* ]]
 then
-    if which atom &> /dev/null
+    if which code &> /dev/null
+    then
+        export EDITOR="code"
+    elif which atom &> /dev/null
     then
         export EDITOR="atom"
     elif which mate &> /dev/null
