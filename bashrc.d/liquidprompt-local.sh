@@ -46,6 +46,21 @@ _lp_nvm()
     fi
 }
 
+_lp_docker()
+{
+    if [[ -n "$DOCKER_HOST" ]]
+    then
+        echo " ${CYAN}<docker:${DOCKER_HOST}>${NO_COLOR}"
+    fi
+}
+
+_lp_jenv() {
+    if [[ -n "$JENV_VERSION" ]]
+    then
+        echo " ${CYAN}<java:${JENV_VERSION}>${NO_COLOR}"
+    fi
+}
+
 prompt_tag()
 {
     local tag="$(_lp_sr "$(for w in $@; do echo -n " #$w"; done)")"
