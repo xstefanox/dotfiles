@@ -146,7 +146,7 @@ alias df='df -h'
 
 ## grep:
 #- colored output
-alias grep='grep --color -n'
+alias grep='grep --color'
 
 ## diff
 #- always show patch output style
