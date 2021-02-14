@@ -80,5 +80,4 @@
     ~/.profile:
         path:  profile
         force: true
-    ~/.pythonrc:          pythonrc
     ~/.screenrc:          screenrc
