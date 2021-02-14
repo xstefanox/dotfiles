@@ -4,45 +4,56 @@
 ## PYTHON ##
 ############
 
-# don't use the bloated easy_install
-alias easy_install='echo "!!! Deprecated"; false'
-alias easy_install-2.5='echo "!!! Deprecated"; false'
-alias easy_install-2.6='echo "!!! Deprecated"; false'
-alias easy_install-2.7='echo "!!! Deprecated"; false'
-alias easy_install3='echo "!!! Deprecated"; false'
-alias easy_install-3.3='echo "!!! Deprecated"; false'
-
-export PYTHONSTARTUP=$HOME/.pythonrc
-export PYTHONHISTORY=$HOME/.python_history
 export PYTHONPATH27=$HOME/.eggs/2.7/site-packages
-export PYTHONPATH33=$HOME/.eggs/3.3/site-packages
+export PYTHONPATH37=$HOME/.eggs/3.7/site-packages
+export PYTHONPATH38=$HOME/.eggs/3.8/site-packages
+export PYTHONPATH39=$HOME/.eggs/3.9/site-packages
 export PYTHONBINPATH27=$PYTHONPATH27/bin
-export PYTHONBINPATH33=$PYTHONPATH33/bin
-export PATH=$PYTHONBINPATH33:$PYTHONBINPATH27:$PATH
-export PYTHONPATH=$PYTHONPATH33:$PYTHONPATH27:$PYTHONPATH
+export PYTHONBINPATH37=$PYTHONPATH37/bin
+export PYTHONBINPATH38=$PYTHONPATH38/bin
+export PYTHONBINPATH39=$PYTHONPATH39/bin
+
+export PATH=$PYTHONBINPATH39:$PYTHONBINPATH38:$PYTHONBINPATH37:$PYTHONBINPATH27:$PATH
+export PYTHONPATH=$PYTHONPATH39:$PYTHONPATH38:$PYTHONPATH37:$PYTHONPATH27:$PYTHONPATH
 
 # make pip use the default paths and install every egg into the user home
 
-which pip &> /dev/null && function pip()
+function pip27()
 {
-    pip=`which pip`
-
     if [[ $1 == install ]]
     then
-        $pip $@ --install-option="--install-purelib=$PYTHONPATH27" --install-option="--install-platlib=$PYTHONPATH27" --install-option="--prefix=$PYTHONPATH27"
+        pip $@  --only-binary=:all: --python-version 27 --target $PYTHONPATH27
     else
-        $pip $@
+        pip $@
     fi
-} && export -f pip
+} && export -f pip27
 
-which pip3 &> /dev/null && function pip3()
+function pip37()
 {
-    pip3=`which pip3`
-
     if [[ $1 == install ]]
     then
-        $pip3 $@ --install-option="--install-purelib=$PYTHONPATH33" --install-option="--install-platlib=$PYTHONPATH33" --install-option="--prefix=$PYTHONPATH33"
+        pip3 $@ --only-binary=:all: --python-version 37 --target $PYTHONPATH37
     else
-        $pip3 $@
+        pip3 $@
     fi
-} && export -f pip3
+} && export -f pip37
+
+function pip38()
+{
+    if [[ $1 == install ]]
+    then
+        pip3 $@ --only-binary=:all: --python-version 38 --target $PYTHONPATH38
+    else
+        pip3 $@
+    fi
+} && export -f pip38
+
+function pip39()
+{
+    if [[ $1 == install ]]
+    then
+        pip3 $@ --only-binary=:all: --python-version 39 --target $PYTHONPATH39
+    else
+        pip3 $@
+    fi
+} && export -f pip39
