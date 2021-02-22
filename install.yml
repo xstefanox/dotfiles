@@ -28,9 +28,9 @@
     ~/.env.d/brew.sh:       env.d/brew.sh
     ~/.env.d/nvm.sh:        env.d/nvm.sh
     ~/.env.d/cargo.sh:      env.d/cargo.sh
+    ~/.env.d/locale.sh:     env.d/locale.sh
 
     # Bash modules
-    ~/.bashrc.d/01.locale.sh:           bashrc.d/locale.sh
     ~/.bashrc.d/03.colors.sh:           bashrc.d/colors.sh
     ~/.bashrc.d/04.functions.sh:        bashrc.d/functions.sh
     ~/.bashrc.d/python.sh:              bashrc.d/python.sh

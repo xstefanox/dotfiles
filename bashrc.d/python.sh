@@ -4,56 +4,41 @@
 ## PYTHON ##
 ############
 
-export PYTHONPATH27=$HOME/.eggs/2.7/site-packages
-export PYTHONPATH37=$HOME/.eggs/3.7/site-packages
-export PYTHONPATH38=$HOME/.eggs/3.8/site-packages
-export PYTHONPATH39=$HOME/.eggs/3.9/site-packages
-export PYTHONBINPATH27=$PYTHONPATH27/bin
-export PYTHONBINPATH37=$PYTHONPATH37/bin
-export PYTHONBINPATH38=$PYTHONPATH38/bin
-export PYTHONBINPATH39=$PYTHONPATH39/bin
+# configure python path for every installed version
+for full_version in $(compgen -c | if [[ $OSTYPE == darwin* ]]
+then
+    sed -n -E '/^python[[:digit:]]\.[[:digit:]]+$/ p'
+else
+    sed -n -r '/^python[[:digit:]]\.[[:digit:]]+$/ p'
+fi | sort --version-sort)
+do
+    version=${full_version/python/}
+    short_version=${version/./}
+    site_packages_path=$HOME/.eggs/$version/site-packages
 
-export PATH=$PYTHONBINPATH39:$PYTHONBINPATH38:$PYTHONBINPATH37:$PYTHONBINPATH27:$PATH
-export PYTHONPATH=$PYTHONPATH39:$PYTHONPATH38:$PYTHONPATH37:$PYTHONPATH27:$PYTHONPATH
+    export PYTHONPATH$short_version=$site_packages_path
+    export PYTHONBINPATH$short_version=$site_packages_path/bin
+    export PATH=$site_packages_path/bin:$PATH
+    export PYTHONPATH=$site_packages_path/bin:$PYTHONPATH
 
-# make pip use the default paths and install every egg into the user home
+    # make pip use the default paths and install every egg into the user home
 
-function pip27()
-{
-    if [[ $1 == install ]]
+    if [[ $version =~ ^3 ]]
     then
-        pip $@  --only-binary=:all: --python-version 27 --target $PYTHONPATH27
+        pip_bin=pip3
     else
-        pip $@
+        pip_bin=pip
     fi
-} && export -f pip27
 
-function pip37()
-{
-    if [[ $1 == install ]]
-    then
-        pip3 $@ --only-binary=:all: --python-version 37 --target $PYTHONPATH37
-    else
-        pip3 $@
-    fi
-} && export -f pip37
+    eval "function pip$version()
+    {
+        if [[ \$1 == install ]]
+        then
+            $pip_bin \$@  --only-binary=:all: --python-version $short_version --target $PYTHONPATH$short_version
+        else
+            $pip_bin \$@
+        fi
+    }" && export -f pip$version
+done
 
-function pip38()
-{
-    if [[ $1 == install ]]
-    then
-        pip3 $@ --only-binary=:all: --python-version 38 --target $PYTHONPATH38
-    else
-        pip3 $@
-    fi
-} && export -f pip38
-
-function pip39()
-{
-    if [[ $1 == install ]]
-    then
-        pip3 $@ --only-binary=:all: --python-version 39 --target $PYTHONPATH39
-    else
-        pip3 $@
-    fi
-} && export -f pip39
+unset full_version version short_version site_packages_path pip_bin
