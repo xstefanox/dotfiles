@@ -40,9 +40,13 @@ _lp_phpbrew()
 
 _lp_nvm()
 {
-    if [[ -n "$NVM_NON_DEFAULT_VERSION" ]]
+    local node_version
+
+    if [[ -n "$NVM_BIN" ]]
     then
-        echo " ${CYAN}{node.js:${NVM_NON_DEFAULT_VERSION}}${NO_COLOR}"
+        node_version=${NVM_BIN/${NVM_DIR}\/versions\/node\//}
+        node_version=${node_version/\/bin/}
+        echo " ${CYAN}{node.js:${node_version}}${NO_COLOR}"
     fi
 }
 
