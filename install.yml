@@ -47,9 +47,7 @@
     ~/.bashrc.d/package-manager.sh:     bashrc.d/package-manager.sh
 
     # Bash completion modules
-    ~/.bash_completion.d/capistrano.sh: submodules/bash-it/completion/available/capistrano.completion.bash
     ~/.bash_completion.d/ssh.sh:        submodules/bash-it/completion/available/ssh.completion.bash
-    ~/.bash_completion.d/symfony.sh:    bash_completion.d/symfony.sh
     ~/.bash_completion.d/git.sh:        bash_completion.d/git.sh
 
     # Bash prompt

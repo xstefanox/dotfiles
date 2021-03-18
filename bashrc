@@ -44,13 +44,12 @@ unset bashrc_module
 
 if [[ $OSTYPE == darwin* ]]
 then
-
-    if [[ -n "$BREW_PREFIX" ]]
+    if [[ -n "$BREW_PREFIX" && -r "${BREW_PREFIX}/etc/bash_completion.d" ]]
     then
-        if [[ -r "${BREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
-        then
-            . "${BREW_PREFIX}/etc/profile.d/bash_completion.sh"
-        fi
+        for brew_completion in $(find ${BREW_PREFIX}/etc/bash_completion.d -type f -o -type l)
+        do
+            source $brew_completion
+        done
     fi
 else
     if [[ -f /etc/bash_completion ]] && ! shopt -oq posix
