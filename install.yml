@@ -27,6 +27,7 @@
     ~/.env.d/nvm.sh:        env.d/nvm.sh
     ~/.env.d/cargo.sh:      env.d/cargo.sh
     ~/.env.d/locale.sh:     env.d/locale.sh
+    ~/.env.d/pipenv.sh:     env.d/pipenv.sh
 
     # Bash modules
     ~/.bashrc.d/03.colors.sh:           bashrc.d/colors.sh
