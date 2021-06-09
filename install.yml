@@ -45,10 +45,12 @@
     ~/.bashrc.d/desktop-preferences.sh: bashrc.d/desktop-preferences.sh
     ~/.bashrc.d/system-services.sh:     bashrc.d/system-services.sh
     ~/.bashrc.d/package-manager.sh:     bashrc.d/package-manager.sh
+    ~/.bashrc.d/java.sh:                bashrc.d/java.sh
 
     # Bash completion modules
-    ~/.bash_completion.d/ssh.sh:        submodules/bash-it/completion/available/ssh.completion.bash
-    ~/.bash_completion.d/git.sh:        bash_completion.d/git.sh
+    ~/.bash_completion.d/ssh.sh:              submodules/bash-it/completion/available/ssh.completion.bash
+    ~/.bash_completion.d/docker-compose.sh:   submodules/bash-it/completion/available/docker-compose.completion.bash
+    ~/.bash_completion.d/git.sh:              bash_completion.d/git.sh
 
     # Bash prompt
     ~/.bashrc.d/05.liquidprompt.sh:        submodules/liquidprompt/liquidprompt
