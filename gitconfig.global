@@ -20,6 +20,7 @@
     pt = "! git tag -l | xargs git tag -d; git fetch -t"
     pf = push --force
     ff = merge --ff-only
+    pr = pull --rebase
 
 [tag]
     sort = version:refname
