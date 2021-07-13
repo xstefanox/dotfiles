@@ -350,3 +350,6 @@ then
         export -f notify
     fi
 fi
+
+## Visual Studio Code
+which codium &> /dev/null && alias code=codium
