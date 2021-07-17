@@ -16,11 +16,10 @@
     aa = add -A
     mt = mergetool
     amend = commit --amend --no-edit
-    f = fetch --prune
+    f = fetch
     pt = "! git tag -l | xargs git tag -d; git fetch -t"
     pf = push --force
     ff = merge --ff-only
-    pr = pull --rebase
 
 [tag]
     sort = version:refname
@@ -32,3 +31,9 @@
 
 [mergetool]
     keepBackup = false
+
+[fetch]
+	prune = true
+
+[pull]
+	rebase = true
