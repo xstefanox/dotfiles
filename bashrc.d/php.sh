@@ -27,3 +27,13 @@ then
     which php5enmod &> /dev/null && alias php5enmod='sudo php5enmod'
     which php5dismod &> /dev/null && alias php5dismod='sudo php5dismod'
 fi
+
+if [[ $OSTYPE == darwin* && -n "$BREW_PREFIX" ]]
+then
+    for php_version in $(find ${BREW_PREFIX}/opt -name php@*)
+    do
+        export PATH="${php_version}/bin:$PATH"
+        export PATH="${php_version}/sbin:$PATH"
+    done
+    unset php_version
+fi
