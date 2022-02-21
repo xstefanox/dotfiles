@@ -36,7 +36,10 @@ do
 
         if [[ \$1 == install ]]
         then
-            $pip_bin \$@  --only-binary=:all: --python-version $short_version --target \${!target_var}
+            $pip_bin \$@ --only-binary=:all: --python-version $short_version --target $site_packages_path
+        elif [[ \$1 == list ]]
+        then
+            $pip_bin \$@ --path $site_packages_path
         else
             $pip_bin \$@
         fi
@@ -44,3 +47,8 @@ do
 done
 
 unset full_version version short_version site_packages_path pip_bin
+
+if which pyenv &> /dev/null
+then
+    eval "$(pyenv init -)"
+fi
