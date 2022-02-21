@@ -19,6 +19,7 @@
     f = fetch
     pt = "! git tag -l | xargs git tag -d; git fetch -t"
     pf = push --force
+    pfs = push --force -o ci.skip
     ff = merge --ff-only
 
 [tag]
