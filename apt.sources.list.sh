@@ -76,3 +76,7 @@ echo 'deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs/ vscodium mai
 # terraform
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 echo "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com focal main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+# adoptium
+wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo apt-key add -
+echo "deb https://packages.adoptium.net/artifactory/deb focal main" | sudo tee /etc/apt/sources.list.d/adoptium.list
