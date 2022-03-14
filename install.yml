@@ -54,8 +54,7 @@
     ~/.bash_completion.d/git.sh:              bash_completion.d/git.sh
 
     # Bash prompt
-    ~/.bashrc.d/05.liquidprompt.sh:        submodules/liquidprompt/liquidprompt
-    ~/.bashrc.d/06.liquidprompt-custom.sh: bashrc.d/liquidprompt-local.sh
+    ~/.bashrc.d/05.ph-my-posh.sh:          bashrc.d/oh-my-posh.sh
     ~/.liquidpromptrc:                     liquidpromptrc
     ~/.liquidprompt.ps1:                   liquidprompt.ps1
 
@@ -77,3 +76,4 @@
         path:  profile
         force: true
     ~/.screenrc:          screenrc
+    ~/.oh-my-posh.json:   oh-my-posh.json
