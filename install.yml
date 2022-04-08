@@ -55,9 +55,7 @@
 
     # Bash prompt
     ~/.bashrc.d/05.ph-my-posh.sh:          bashrc.d/oh-my-posh.sh
-    ~/.liquidpromptrc:                     liquidpromptrc
-    ~/.liquidprompt.ps1:                   liquidprompt.ps1
-
+    
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
     ~/.local/bin/diff-highlight:  submodules/git/contrib/diff-highlight/diff-highlight
