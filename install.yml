@@ -50,7 +50,6 @@
 
     # Bash completion modules
     ~/.bash_completion.d/ssh.sh:              submodules/bash-it/completion/available/ssh.completion.bash
-    ~/.bash_completion.d/docker-compose.sh:   submodules/bash-it/completion/available/docker-compose.completion.bash
     ~/.bash_completion.d/git.sh:              bash_completion.d/git.sh
 
     # Bash prompt
