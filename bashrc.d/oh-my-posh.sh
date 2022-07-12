@@ -1,4 +1,4 @@
 if oh-my-posh &> /dev/null
 then
-    eval "$(oh-my-posh --init --shell bash --config ${HOME}/.oh-my-posh.json)"
+    eval "$(oh-my-posh --config ${HOME}/.oh-my-posh.json init bash)"
 fi
