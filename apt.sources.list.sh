@@ -6,6 +6,8 @@ then
     exit 1
 fi
 
+UBUNTU_BASE_VERSION=jammy
+
 # atom
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
 add-apt-repository ppa:webupd8team/atom
@@ -28,16 +30,13 @@ echo "deb https://cli-assets.heroku.com/apt ./" | sudo tee /etc/apt/sources.list
 # nodejs
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 
-# vagrant (unofficial)
-sudo apt-key adv --keyserver pgp.mit.edu --recv-key 2099F7A4
-echo 'deb http://vagrant-deb.linestarve.com/ any main' | sudo tee /etc/apt/sources.list.d/vagrant.list
-
 # git
 sudo add-apt-repository ppa:git-core/ppa
 
 # docker
-sudo curl -fsSL https://get.docker.com/gpg
-curl -fsSL https://get.docker.com/ | sh
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  ${UBUNTU_BASE_VERSION} stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # ruby 2.x
 sudo apt-add-repository ppa:brightbox/ruby-ng
@@ -54,10 +53,6 @@ echo 'deb http://repo.mysql.com/apt/ubuntu/ focal workbench-6.2' >> /etc/apt/sou
 # gpu drivers
 add-apt-repository ppa:graphics-drivers/ppa
 
-# nginx
-echo "deb http://ppa.launchpad.net/nginx/stable/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/nginx-stable.list
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C300EE8C
-
 # google chrome
 echo 'deb [arch=$(dpkg --print-architecture)] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -65,18 +60,14 @@ wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-ke
 # geary
 add-apt-repository ppa:geary-team/releases
 
-# mongodb
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
-
 # visual studio code
 wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor | sudo apt-key add -
 echo 'deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs/ vscodium main' | sudo tee --append /etc/apt/sources.list.d/vscodium.list
 
 # terraform
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-echo "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com focal main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/hashicorp.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $UBUNTU_BASE_VERSION main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
 # adoptium
-wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo apt-key add -
-echo "deb https://packages.adoptium.net/artifactory/deb focal main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
+echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb focal main" | sudo tee /etc/apt/sources.list.d/adoptium.list
