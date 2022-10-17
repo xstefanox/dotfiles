@@ -4,36 +4,23 @@
 ## PHP ##
 #########
 
-# Pear
-[[ $UID != 0 ]] && alias pear='sudo pear'
-[[ $UID != 0 ]] && alias pecl='sudo pecl'
-
 # Composer: add user packages bin directory to the PATH
 PATH=$HOME/.composer/vendor/bin:$PATH
 
 # PHPBrew
 [[ -e ~/.phpbrew ]] && source ~/.phpbrew/bashrc
 
-# XDebug
-alias xdebug-on='export XDEBUG_CONFIG="remote_enable=1"'
-alias xdebug-off='export XDEBUG_CONFIG="remote_enable=0"'
-
-# XDebug is disabled by default
-export XDEBUG_CONFIG="remote_enable=0"
-
-# modules
-if [[ $UID != 0 ]]
-then
-    which php5enmod &> /dev/null && alias php5enmod='sudo php5enmod'
-    which php5dismod &> /dev/null && alias php5dismod='sudo php5dismod'
-fi
-
 if [[ $OSTYPE == darwin* && -n "$BREW_PREFIX" ]]
 then
-    for php_version in $(find ${BREW_PREFIX}/opt -name php@*)
-    do
-        export PATH="${php_version}/bin:$PATH"
-        export PATH="${php_version}/sbin:$PATH"
-    done
-    unset php_version
+    # use the latest version as default
+    export PATH="$BREW_PREFIX/opt/php/bin:$PATH"
+        
+    function pvm() {
+        local version=$1
+
+        export PATH="$BREW_PREFIX/opt/php@${version}/bin:$PATH"
+        export PATH="$BREW_PREFIX/opt/php@${version}/sbin:$PATH"
+    }
+
+    complete -W "$(find ${BREW_PREFIX}/opt -name php@* | cut -d@ -f2 | tr \\n ' ')" pvm
 fi
