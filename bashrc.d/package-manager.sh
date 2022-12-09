@@ -7,18 +7,31 @@
 ## dpkg-based distros package manager functions
 if which dpkg &> /dev/null
 then
+    if which nala &> /dev/null
+    then
+        alias add='sudo nala install'
+        alias purge='sudo nala purge'
+        alias dist-upgrade='sudo nala upgrade'
+        alias show='nala show'
 
-    [[ $UID == 0 ]] && alias add='apt-get install' || alias add='sudo apt-get install'
-    [[ $UID == 0 ]] && alias purge='apt-get autoremove' || alias purge='sudo apt-get autoremove'
-    [[ $UID == 0 ]] && alias dist-upgrade='apt-get dist-upgrade' || alias dist-upgrade='sudo apt-get dist-upgrade'
-    [[ $UID == 0 ]] && alias dist-sync='apt-get update' || alias dist-sync='sudo apt-get update'
-    alias show='apt-cache show'
+        function search()
+        {
+            nala list $@
+        }
+    else
+        [[ $UID == 0 ]] && alias add='apt-get install' || alias add='sudo apt-get install'
+        [[ $UID == 0 ]] && alias purge='apt-get autoremove' || alias purge='sudo apt-get autoremove'
+        [[ $UID == 0 ]] && alias dist-upgrade='apt-get dist-upgrade' || alias dist-upgrade='sudo apt-get dist-upgrade'
+        [[ $UID == 0 ]] && alias dist-sync='apt-get update' || alias dist-sync='sudo apt-get update'
+        alias show='apt-cache show'
+
+        function search()
+        {
+            apt-cache search --names-only $@ | sort
+        }
+    fi
+
     alias list='dpkg -L'
-
-    function search()
-    {
-        apt-cache search --names-only $@ | sort
-    }
 
     function apt-list-from-repository()
     {
