@@ -12,6 +12,7 @@ then
         alias add='sudo nala install'
         alias purge='sudo nala purge'
         alias dist-upgrade='sudo nala upgrade'
+        alias dist-sync='sudo nala update'
         alias show='nala show'
 
         function search()
