@@ -39,10 +39,13 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
   ${UBUNTU_BASE_VERSION} stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # ruby 2.x
-sudo apt-add-repository ppa:brightbox/ruby-ng
+apt-add-repository ppa:brightbox/ruby-ng
 
 # ansible
 apt-add-repository ppa:ansible/ansible
+
+# PHP with support for multiple versions
+add-apt-repository ppa:ondrej/php
 
 # wine
 apt-add-repository ppa:ubuntu-wine/ppa

@@ -31,6 +31,7 @@
     ~/.env.d/zsh-silence.sh: env.d/zsh-silence.sh
     ~/.env.d/jenv.sh:        env.d/jenv.sh
     ~/.env.d/pipx.sh:        env.d/pipx.sh
+    ~/.env.d/poetry.sh:      env.d/poetry.sh
 
     # Bash modules
     ~/.bashrc.d/03.colors.sh:           bashrc.d/colors.sh
