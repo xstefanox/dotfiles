@@ -6,26 +6,18 @@ then
     exit 1
 fi
 
-UBUNTU_BASE_VERSION=jammy
-
-# atom
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
-add-apt-repository ppa:webupd8team/atom
-
-# sun jdk
-add-apt-repository ppa:webupd8team/java
+UBUNTU_BASE_VERSION=kinetic
 
 # kodi
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 91E7EE5E
 add-apt-repository ppa:team-xbmc/ppa
 
 # spotify
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D2C19886
-echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+curl -sS https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/spotify.gpg
+echo "deb [signed-by=/etc/apt/keyrings/spotify.gpg] http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
 # heroku
-curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
-echo "deb https://cli-assets.heroku.com/apt ./" | sudo tee /etc/apt/sources.list.d/heroku.list
+curl -fsSL https://cli-assets.heroku.com/apt/release.key | sudo gpg --dearmor -o /etc/apt/keyrings/heroku.gpg
+echo "deb [signed-by=/etc/apt/keyrings/heroku.gpg] https://cli-assets.heroku.com/apt ./" | sudo tee /etc/apt/sources.list.d/heroku.list
 
 # nodejs
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
@@ -35,8 +27,7 @@ sudo add-apt-repository ppa:git-core/ppa
 
 # docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  ${UBUNTU_BASE_VERSION} stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu ${UBUNTU_BASE_VERSION} stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # ruby 2.x
 apt-add-repository ppa:brightbox/ruby-ng
@@ -51,20 +42,20 @@ add-apt-repository ppa:ondrej/php
 apt-add-repository ppa:ubuntu-wine/ppa
 
 # mysql workbench
-echo 'deb http://repo.mysql.com/apt/ubuntu/ focal workbench-6.2' >> /etc/apt/sources.list.d/mysql-workbench.list
+echo "deb http://repo.mysql.com/apt/ubuntu/ $UBUNTU_BASE_VERSION workbench-8.0" >> /etc/apt/sources.list.d/mysql-workbench.list
 
 # gpu drivers
 add-apt-repository ppa:graphics-drivers/ppa
 
 # google chrome
-echo 'deb [arch=$(dpkg --print-architecture)] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
 # geary
 add-apt-repository ppa:geary-team/releases
 
 # visual studio code
-wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor | sudo apt-key add -
+curl -fsSL https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/vscodium.gpg
 echo 'deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs/ vscodium main' | sudo tee --append /etc/apt/sources.list.d/vscodium.list
 
 # terraform
@@ -73,4 +64,8 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/hashico
 
 # adoptium
 curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
-echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb focal main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb $UBUNTU_BASE_VERSION main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+
+# Mozilla
+add-apt-repository ppa:mozillateam/ppa
+
