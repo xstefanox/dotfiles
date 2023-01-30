@@ -66,6 +66,10 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/hashico
 curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
 echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb $UBUNTU_BASE_VERSION main" | sudo tee /etc/apt/sources.list.d/adoptium.list
 
+# Balena Etcher
+curl -fsSL "https://dl.cloudsmith.io/public/balena/etcher/gpg.70528471AFF9A051.key" | sudo gpg --dearmor -o /etc/apt/keyrings/balena-etcher.gpg
+echo "deb [signed-by=/etc/apt/keyrings/balena-etcher.gpg] https://dl.cloudsmith.io/public/balena/etcher/deb/ubuntu kinetic main" | sudo tee /etc/apt/sources.list.d/balena-etcher.list
+
 # Mozilla
 add-apt-repository ppa:mozillateam/ppa
 
