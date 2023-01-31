@@ -10,7 +10,7 @@ then
     then
         export EDITOR="mate -w"
     else
-        export EDITOR=nano
+        export EDITOR=micro
     fi
 elif [[ -n "$DISPLAY" ]]
 then
