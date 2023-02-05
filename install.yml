@@ -61,6 +61,8 @@
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
     ~/.local/bin/diff-highlight:  submodules/git/contrib/diff-highlight/diff-highlight
+    ~/.local/bin/php:             bin/shim
+    ~/.local/bin/python:          bin/shim
 
     # misc
     ~/.bashrc:

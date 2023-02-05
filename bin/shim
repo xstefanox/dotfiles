@@ -1,0 +1,42 @@
+#!/bin/sh
+
+PHP_VERSION=${PHP_VERSION:-8.2}
+PYTHON_VERSION=${PYTHON_VERSION:-3.11}
+
+BIN_NAME=$(basename $0)
+BIN_PATH_PREFIX=/usr/bin/${BIN_NAME}
+
+function try_exec()
+{
+    local bin_path=$1
+    shift
+
+    if which ${bin_path} &> /dev/null
+    then
+        exec ${bin_path} $@
+    fi
+}
+
+case "${BIN_NAME}"
+in
+    php)
+        BIN_VERSION=${PHP_VERSION}
+        ;;
+    python)
+        BIN_VERSION=${PYTHON_VERSION}
+        ;;
+    *)
+        echo "Binary '${BIN_NAME}' not supported"
+        exit 1
+        ;;
+esac
+
+BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION}
+try_exec ${BIN_PATH} $@
+
+BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION/./}
+try_exec ${BIN_PATH} $@
+
+echo -n "Binary '${BIN_NAME}' version '${BIN_VERSION}' not found"
+exit 1
+
