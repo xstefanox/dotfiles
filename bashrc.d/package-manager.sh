@@ -50,6 +50,16 @@ then
     alias show='yum info'
     alias list='repoquery --list'
 
+## Arch-based distros using yay package manager functions
+elif which yay &> /dev/null
+then
+    alias add='yay -S'
+    alias purge='yay -Rns'
+    alias dist-upgrade='yay -Syua'
+    alias search='yay -Ss'
+    alias show='yay -Si'
+    alias list='yay -Ql'
+
 ## Cygwin
 elif [[ $OSTYPE == cygwin ]] && which apt-cyg &> /dev/null
 then
