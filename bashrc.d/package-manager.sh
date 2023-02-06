@@ -55,7 +55,7 @@ elif which yay &> /dev/null
 then
     alias add='yay -S'
     alias purge='yay -Rns'
-    alias dist-upgrade='yay -Syua'
+    alias dist-upgrade='yay -Syu'
     alias search='yay -Ss'
     alias show='yay -Si'
     alias list='yay -Ql'
