@@ -22,6 +22,8 @@
 # ~/.bashrc
 #--------------------------------------
 
+export GTK_THEME=Arc-Dark
+
 # if not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
 
