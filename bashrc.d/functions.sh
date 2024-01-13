@@ -133,8 +133,15 @@ else
     alias ls='ls --color=auto'
 fi
 alias l='ls -1'     # single-column output
-alias ll='ls -lh'   # show details, with size in human readable form
 alias la='ls -alh'  # show hidden files
+
+# show details, with size in human readable form
+if which exa &> /dev/null
+then
+    alias ll='exa --long --group --header --git'
+else
+    alias ll='ls -lh'
+fi
 
 ## ping:
 #- avoid endless ping
@@ -353,3 +360,7 @@ fi
 
 ## Visual Studio Code
 which codium &> /dev/null && alias code=codium
+
+## Bitwarden
+alias bwu='BW_SESSION=$(bw unlock --raw) bash'
+
