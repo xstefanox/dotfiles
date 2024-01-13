@@ -34,7 +34,6 @@
     # Bash modules
     ~/.bashrc.d/03.colors.sh:           bashrc.d/colors.sh
     ~/.bashrc.d/04.functions.sh:        bashrc.d/functions.sh
-    ~/.bashrc.d/python.sh:              bashrc.d/python.sh
     ~/.bashrc.d/php.sh:                 bashrc.d/php.sh
     ~/.bashrc.d/ruby.sh:                bashrc.d/ruby.sh
     ~/.bashrc.d/nodejs.sh:              bashrc.d/nodejs.sh
