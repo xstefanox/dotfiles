@@ -1,5 +1,6 @@
 [core]
     excludesfile = ~/.gitignore.global
+    pager = diff-so-fancy | less -R
 
 [push]
     default = simple
@@ -24,11 +25,6 @@
 
 [tag]
     sort = version:refname
-
-[pager]
-    log = diff-highlight | less
-    show = diff-highlight | less
-    diff = diff-highlight | less
 
 [mergetool]
     keepBackup = false
