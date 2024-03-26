@@ -149,42 +149,6 @@ alias df='df -h'
 #- colored output
 alias grep='grep --color'
 
-## diff
-#- always show patch output style
-#- use colors where possible
-
-which colordiff &> /dev/null && alias colordiff='colordiff -Nur'
-
-function diff()
-{
-    local cmd
-    local item
-
-    # check if we can use colored output
-    if which colordiff &> /dev/null
-    then
-        cmd="colordiff -Nur"
-    else
-        cmd="diff -Nur"
-    fi
-
-    # append the quoted arguments to the command
-    for item in $@
-    do
-        cmd+=" '${item}'"
-    done
-
-    # show word diff if diff-highlight (from Git) is installed
-    # @see https://raw.github.com/git/git/master/contrib/diff-highlight/diff-highlight
-    if which diff-highlight &> /dev/null
-    then
-        cmd+=" | diff-highlight"
-    fi
-
-    # execute the diff
-    eval "$cmd"
-}
-
 ## tail
 #- use color where possible
 which colortail &> /dev/null && alias tail='colortail'
