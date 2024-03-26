@@ -50,7 +50,6 @@
 
     # Bash completion modules
     ~/.bash_completion.d/ssh.sh:              submodules/bash-it/completion/available/ssh.completion.bash
-    ~/.bash_completion.d/git.sh:              bash_completion.d/git.sh
 
     # Bash prompt
     ~/.bashrc.d/05.prompt.sh:          bashrc.d/prompt.sh
