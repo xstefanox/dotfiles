@@ -125,22 +125,16 @@ function valid_ip()
 
 export -f valid_ip
 
-## Enable colors on directory listing
-if [[ $OSTYPE == darwin* || $(uname -s) == FreeBSD ]]
-then
-    alias ls='ls -G'
-else
-    alias ls='ls --color=auto'
-fi
-alias l='ls -1'     # single-column output
-alias la='ls -alh'  # show hidden files
-
 # show details, with size in human readable form
-if which exa &> /dev/null
+if which lsd &> /dev/null
 then
-    alias ll='exa --long --group --header --git'
+    alias ll='lsd --long --group-directories-first --header --git'
+    alias l='ls --oneline'  # single-column output
+    alias la='ls --all'     # show hidden files
 else
     alias ll='ls -lh'
+    alias l='ls -1'     # single-column output
+    alias la='ls -alh'  # show hidden files
 fi
 
 ## ping:
