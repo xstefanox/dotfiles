@@ -1,10 +1,9 @@
 #!/bin/sh
 
 PHP_VERSION=${PHP_VERSION:-8.2}
-PYTHON_VERSION=${PYTHON_VERSION:-3.12}
+PYTHON_VERSION=${PYTHON_VERSION:-3.11}
 
 BIN_NAME=$(basename $0)
-BIN_PATH_PREFIX=/usr/bin/${BIN_NAME}
 
 function try_exec()
 {
@@ -31,12 +30,16 @@ in
         ;;
 esac
 
-BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION}
+if [[ $OSTYPE == darwin* ]]
+then
+    BIN_PATH_PREFIX=/usr/local/bin/${BIN_NAME}
+    BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION}
+else
+    BIN_PATH_PREFIX=/usr/bin/${BIN_NAME}
+    BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION/./}
+fi
+
 try_exec ${BIN_PATH} $@
 
-BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION/./}
-try_exec ${BIN_PATH} $@
-
-echo -n "Binary '${BIN_NAME}' version '${BIN_VERSION}' not found"
+echo "Binary '${BIN_NAME}' version '${BIN_VERSION}' not found"
 exit 1
-
