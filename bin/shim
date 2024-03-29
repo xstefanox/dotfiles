@@ -33,11 +33,11 @@ esac
 if [[ $OSTYPE == darwin* ]]
 then
     BIN_PATH_PREFIX=/usr/local/bin/${BIN_NAME}
-    BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION}
 else
     BIN_PATH_PREFIX=/usr/bin/${BIN_NAME}
-    BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION/./}
 fi
+
+BIN_PATH=${BIN_PATH_PREFIX}${BIN_VERSION}
 
 try_exec ${BIN_PATH} $@
 
