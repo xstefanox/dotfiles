@@ -130,7 +130,7 @@ if which lsd &> /dev/null
 then
     alias ll='lsd --long --group-directories-first --header --git'
     alias l='ls --oneline'  # single-column output
-    alias la='ls --all'     # show hidden files
+    alias la='ll --all'     # show hidden files
 else
     alias ll='ls -lh'
     alias l='ls -1'     # single-column output
@@ -322,3 +322,9 @@ which codium &> /dev/null && alias code=codium
 ## Bitwarden
 alias bwu='BW_SESSION=$(bw unlock --raw) bash'
 
+function devc() {
+    local cmd=$1
+    shift
+    
+    devcontainer $cmd --workspace-folder . $@
+}
