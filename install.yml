@@ -58,7 +58,6 @@
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
     ~/.local/bin/php:             bin/shim
-    ~/.local/bin/python:          bin/shim
 
     # misc
     ~/.bashrc:
