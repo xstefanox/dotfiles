@@ -47,6 +47,7 @@
     ~/.bashrc.d/system-services.sh:     bashrc.d/system-services.sh
     ~/.bashrc.d/package-manager.sh:     bashrc.d/package-manager.sh
     ~/.bashrc.d/java.sh:                bashrc.d/java.sh
+    ~/.bashrc.d/sdkman.sh:              bashrc.d/sdkman.sh
 
     # Bash completion modules
     ~/.bash_completion.d/ssh.sh:              submodules/bash-it/completion/available/ssh.completion.bash
