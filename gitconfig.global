@@ -4,6 +4,7 @@
 
 [push]
     default = simple
+    autoSetupRemote = true
 
 [alias]
     # @see https://gist.github.com/unphased/5303697
