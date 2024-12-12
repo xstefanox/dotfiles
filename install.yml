@@ -22,7 +22,6 @@
     ~/.env.d/term.sh:        env.d/term.sh
     ~/.env.d/misc.sh:        env.d/misc.sh
     ~/.env.d/brew.sh:        env.d/brew.sh
-    ~/.env.d/nvm.sh:         env.d/nvm.sh
     ~/.env.d/cargo.sh:       env.d/cargo.sh
     ~/.env.d/locale.sh:      env.d/locale.sh
     ~/.env.d/pipenv.sh:      env.d/pipenv.sh
@@ -36,7 +35,6 @@
     ~/.bashrc.d/04.functions.sh:        bashrc.d/functions.sh
     ~/.bashrc.d/php.sh:                 bashrc.d/php.sh
     ~/.bashrc.d/ruby.sh:                bashrc.d/ruby.sh
-    ~/.bashrc.d/nodejs.sh:              bashrc.d/nodejs.sh
     ~/.bashrc.d/svn.sh:                 bashrc.d/svn.sh
     ~/.bashrc.d/man.sh:                 bashrc.d/man.sh
     ~/.bashrc.d/apache.sh:              bashrc.d/apache.sh
@@ -47,7 +45,7 @@
     ~/.bashrc.d/system-services.sh:     bashrc.d/system-services.sh
     ~/.bashrc.d/package-manager.sh:     bashrc.d/package-manager.sh
     ~/.bashrc.d/java.sh:                bashrc.d/java.sh
-    ~/.bashrc.d/sdkman.sh:              bashrc.d/sdkman.sh
+    ~/.bashrc.d/mise.sh:                bashrc.d/mise.sh
 
     # Bash completion modules
     ~/.bash_completion.d/ssh.sh:              submodules/bash-it/completion/available/ssh.completion.bash
