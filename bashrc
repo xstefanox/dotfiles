@@ -48,10 +48,18 @@ then
     source /etc/bash_completion
 fi
 
+dotfiles_path=$(dirname $(readlink $BASH_SOURCE))
+
+# dotfiles completions
+for bash_completion_module in $(find "${dotfiles_path}/bash_completion.d" \( -type f -o -type l \) -name '*.sh' | sort)
+do
+    source $bash_completion_module
+done
+
 # user completions
 for bash_completion_module in `find "${HOME}/.bash_completion.d" \( -type f -o -type l \) -name '*.sh' | sort`
 do
     source "$bash_completion_module"
 done
 
-unset bash_completion_module
+unset bash_completion_module dotfiles_path
