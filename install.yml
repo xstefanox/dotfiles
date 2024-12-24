@@ -16,20 +16,6 @@
 
 - link:
 
-    ~/.env.d/wii.sh:         env.d/wii.sh
-    ~/.env.d/editor.sh:      env.d/editor.sh
-    ~/.env.d/pager.sh:       env.d/pager.sh
-    ~/.env.d/term.sh:        env.d/term.sh
-    ~/.env.d/misc.sh:        env.d/misc.sh
-    ~/.env.d/brew.sh:        env.d/brew.sh
-    ~/.env.d/cargo.sh:       env.d/cargo.sh
-    ~/.env.d/locale.sh:      env.d/locale.sh
-    ~/.env.d/pipenv.sh:      env.d/pipenv.sh
-    ~/.env.d/zsh-silence.sh: env.d/zsh-silence.sh
-    ~/.env.d/jenv.sh:        env.d/jenv.sh
-    ~/.env.d/pipx.sh:        env.d/pipx.sh
-    ~/.env.d/poetry.sh:      env.d/poetry.sh
-
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
 

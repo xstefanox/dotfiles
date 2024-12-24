@@ -32,6 +32,13 @@ shopt -s histappend;
 ## ENVIRONMENT VARIABLES ##
 ###########################
 
+# dotfiles environment variables
+for env_module in $(_list_modules ${dotfiles_path}/env.d)
+do
+    source "$env_module"
+done
+
+# user environment variables
 for env_module in $(_list_modules ${HOME}/.env.d)
 do
     source "$env_module"
