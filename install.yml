@@ -16,15 +16,10 @@
 
 - link:
 
-    # binaries
-    ~/.local/bin/colorsvn:        bin/colorsvn
-
     # misc
     ~/.bashrc:
         path:  bashrc
         force: true
-    ~/.colordiffrc:       colordiffrc
-    ~/.colorsvnrc:        colorsvnrc
     ~/.gitignore.global:  gitignore.global
     ~/.gitconfig.global:  gitconfig.global
     ~/.my.cnf:            my.cnf
