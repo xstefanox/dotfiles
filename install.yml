@@ -30,26 +30,6 @@
     ~/.env.d/pipx.sh:        env.d/pipx.sh
     ~/.env.d/poetry.sh:      env.d/poetry.sh
 
-    # Bash modules
-    ~/.bashrc.d/03.colors.sh:           bashrc.d/colors.sh
-    ~/.bashrc.d/04.functions.sh:        bashrc.d/functions.sh
-    ~/.bashrc.d/php.sh:                 bashrc.d/php.sh
-    ~/.bashrc.d/ruby.sh:                bashrc.d/ruby.sh
-    ~/.bashrc.d/svn.sh:                 bashrc.d/svn.sh
-    ~/.bashrc.d/man.sh:                 bashrc.d/man.sh
-    ~/.bashrc.d/apache.sh:              bashrc.d/apache.sh
-    ~/.bashrc.d/git.sh:                 bashrc.d/git.sh
-    ~/.bashrc.d/ssh.sh:                 bashrc.d/ssh.sh
-    ~/.bashrc.d/docker.sh:              bashrc.d/docker.sh
-    ~/.bashrc.d/desktop-preferences.sh: bashrc.d/desktop-preferences.sh
-    ~/.bashrc.d/system-services.sh:     bashrc.d/system-services.sh
-    ~/.bashrc.d/package-manager.sh:     bashrc.d/package-manager.sh
-    ~/.bashrc.d/java.sh:                bashrc.d/java.sh
-    ~/.bashrc.d/mise.sh:                bashrc.d/mise.sh
-
-    # Bash prompt
-    ~/.bashrc.d/05.prompt.sh:          bashrc.d/prompt.sh
-    
     # binaries
     ~/.local/bin/colorsvn:        bin/colorsvn
 

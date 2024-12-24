@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+###########
+## SETUP ##
+###########
+
+function _list_modules() {
+    local dot_dir=$1
+
+    find "${dot_dir}" \( -type f -o -type l \) -name '*.sh' | sort
+}
+
+dotfiles_path=$(dirname $(readlink $BASH_SOURCE))
+
 ##################
 ## BASH OPTIONS ##
 ##################
@@ -20,7 +32,7 @@ shopt -s histappend;
 ## ENVIRONMENT VARIABLES ##
 ###########################
 
-for env_module in `find "${HOME}/.env.d" \( -type f -o -type l \) -name '*.sh' | sort`
+for env_module in $(_list_modules ${HOME}/.env.d)
 do
     source "$env_module"
 done
@@ -31,7 +43,14 @@ unset env_module
 ## BASHRC MODULES ##
 ####################
 
-for bashrc_module in `find "${HOME}/.bashrc.d" \( -type f -o -type l \) -name '*.sh' | sort`
+# dotfiles bashrc
+for bashrc_module in $(_list_modules ${dotfiles_path}/bashrc.d)
+do
+    source "$bashrc_module"
+done
+
+# user bashrc
+for bashrc_module in $(_list_modules ${HOME}/.bashrc.d)
 do
     source "$bashrc_module"
 done
@@ -48,18 +67,23 @@ then
     source /etc/bash_completion
 fi
 
-dotfiles_path=$(dirname $(readlink $BASH_SOURCE))
-
 # dotfiles completions
-for bash_completion_module in $(find "${dotfiles_path}/bash_completion.d" \( -type f -o -type l \) -name '*.sh' | sort)
+for bash_completion_module in $(_list_modules ${dotfiles_path}/bash_completion.d)
 do
     source $bash_completion_module
 done
 
 # user completions
-for bash_completion_module in `find "${HOME}/.bash_completion.d" \( -type f -o -type l \) -name '*.sh' | sort`
+for bash_completion_module in $(_list_modules ${HOME}/.bash_completion.d)
 do
     source "$bash_completion_module"
 done
 
-unset bash_completion_module dotfiles_path
+unset bash_completion_module
+
+#############
+## CLEANUP ##
+#############
+
+unset dotfiles_path
+unset _list_modules
