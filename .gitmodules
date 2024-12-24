@@ -4,6 +4,3 @@
 [submodule "submodules/bash-it"]
 	path = submodules/bash-it
 	url = https://github.com/Bash-it/bash-it
-[submodule "submodules/nvm"]
-	path = submodules/nvm
-	url = https://github.com/creationix/nvm.git

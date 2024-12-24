@@ -48,7 +48,7 @@
     ~/.bashrc.d/mise.sh:                bashrc.d/mise.sh
 
     # Bash completion modules
-    ~/.bash_completion.d/ssh.sh:              submodules/bash-it/completion/available/ssh.completion.bash
+    ~/.bash_completion.d/ssh.sh:        submodules/bash-it/completion/available/ssh.completion.bash
     ~/.bash_completion.d/procs.sh:      bash_completion.d/procs.sh
 
     # Bash prompt
