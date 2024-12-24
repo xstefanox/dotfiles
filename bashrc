@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ##################
 ## BASH OPTIONS ##
@@ -42,28 +42,16 @@ unset bashrc_module
 ## BASH COMPLETION ##
 #####################
 
-if [[ $OSTYPE == darwin* ]]
+# system completions
+if [[ -f /etc/bash_completion ]] && ! shopt -oq posix
 then
-    if [[ -n "$BREW_PREFIX" && -r "${BREW_PREFIX}/etc/bash_completion.d" ]]
-    then
-        for brew_completion in $(find ${BREW_PREFIX}/etc/bash_completion.d -type f -o -type l)
-        do
-            source $brew_completion
-        done
-    fi
-else
-    if [[ -f /etc/bash_completion ]] && ! shopt -oq posix
-    then
-        source /etc/bash_completion
-    fi
+    source /etc/bash_completion
 fi
 
+# user completions
 for bash_completion_module in `find "${HOME}/.bash_completion.d" \( -type f -o -type l \) -name '*.sh' | sort`
 do
     source "$bash_completion_module"
 done
 
 unset bash_completion_module
-
-# TAB-completion for sudo
-complete -cf sudo
