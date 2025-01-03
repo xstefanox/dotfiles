@@ -10,6 +10,7 @@ then
         rye
         uv
         uvx
+        xh
     )
 
     for MODULE in ${MODULES[*]}
