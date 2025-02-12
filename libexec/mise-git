@@ -5,4 +5,4 @@ then
     eval "$(mise activate bash)"
 fi
 
-exec git $@
+exec git "$@"
