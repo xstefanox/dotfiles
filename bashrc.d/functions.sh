@@ -231,16 +231,6 @@ which gitk &> /dev/null && alias gitk='gitk --all &'
 ## SourceGit
 which sourcegit &> /dev/null && alias sg='sourcegit . &'
 
-## Password generator
-function genpasswd()
-{
-    # exit if pwgen is not installed
-    ! which pwgen &> /dev/null && echo "Error: pwgen not installed" && return 1
-
-    # generate only one password, 8 character long, containing only lowercase chars
-    pwgen --no-capitalize --numerals 8 1
-}
-
 ## Check if a file can be written on a FAT32 partition
 function is_FAT32_compliant()
 {
