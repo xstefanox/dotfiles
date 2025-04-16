@@ -228,6 +228,9 @@ which gitg &> /dev/null && alias gitg='gitg &>/dev/null &'
 ## Gitk
 which gitk &> /dev/null && alias gitk='gitk --all &'
 
+## SourceGit
+which sourcegit &> /dev/null && alias sg='sourcegit . &'
+
 ## Password generator
 function genpasswd()
 {
