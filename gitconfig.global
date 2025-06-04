@@ -20,8 +20,8 @@
     amend = commit --amend --no-edit
     f = fetch
     pt = "! git tag -l | xargs git tag -d; git fetch -t"
-    pf = push --force
-    pfs = push --force -o ci.skip
+    pf = push --force-with-lease
+    pfs = push --force-with-lease -o ci.skip
     ff = merge --ff-only
 
 [tag]
