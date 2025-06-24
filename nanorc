@@ -1,9 +1,3 @@
-# use smooth scrolling
-set smooth
-
-# use the blank line below the titlebar as extra editing space
-set morespace
-
 # convert tabs to spaces
 set tabstospaces
 
