@@ -23,6 +23,7 @@
     pf = push --force-with-lease
     pfs = push --force-with-lease -o ci.skip
     ff = merge --ff-only
+    ui = !sourcegit . &
 
 [tag]
     sort = version:refname
