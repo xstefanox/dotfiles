@@ -312,9 +312,6 @@ fi
 ## Visual Studio Code
 which codium &> /dev/null && alias code=codium
 
-## Bitwarden
-alias bwu='BW_SESSION=$(bw unlock --raw) bash'
-
 function devc() {
     local cmd=$1
     shift
