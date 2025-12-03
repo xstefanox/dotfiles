@@ -129,8 +129,8 @@ export -f valid_ip
 if which lsd &> /dev/null
 then
     alias ll='lsd --long --group-directories-first --header --git'
-    alias l='ls --oneline'  # single-column output
-    alias la='ll --all'     # show hidden files
+    alias l='lsd --oneline'  # single-column output
+    alias la='ll --all'      # show hidden files
 else
     alias ll='ls -lh'
     alias l='ls -1'     # single-column output
@@ -315,6 +315,6 @@ which codium &> /dev/null && alias code=codium
 function devc() {
     local cmd=$1
     shift
-    
+
     devcontainer $cmd --workspace-folder . $@
 }
