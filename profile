@@ -22,7 +22,7 @@
 # ~/.bashrc
 #--------------------------------------
 
-export GTK_THEME=Arc-Dark
+export GTK_THEME=Mint-Y-Dark-Aqua
 
 # if not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
