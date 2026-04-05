@@ -24,6 +24,8 @@
     pfs = push --force-with-lease -o ci.skip
     ff = merge --ff-only
     ui = !sourcegit . &
+    fixup = commit --fixup
+    ra = rebase --autosquash
 
 [tag]
     sort = version:refname
