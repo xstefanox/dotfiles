@@ -71,8 +71,6 @@ function apply-preferences()
           # desktop preferences: Cinnamon
           if gsettings list-schemas | grep org.nemo.desktop &> /dev/null
           then
-              # the following setting make Cinnamon 2.4 crash
-              #gsettings set org.nemo.desktop               show-desktop-icons    true
               gsettings set org.nemo.desktop               computer-icon-visible false
               gsettings set org.nemo.desktop               home-icon-visible     false
               gsettings set org.nemo.desktop               network-icon-visible  false
@@ -83,7 +81,12 @@ function apply-preferences()
               gsettings set org.gnome.desktop.interface    monospace-font-name   'Ubuntu Mono 11'
               gsettings set org.cinnamon.desktop.interface font-name             'Ubuntu 10'
               gsettings set org.gnome.desktop.interface    document-font-name    'Sans 9'
-              #gsettings set org.nemo.desktop              font                  ''
+
+              # disable workspaces
+              gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-up    "['never']"
+              gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-down  "['never']"
+              gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-left  "['never']"
+              gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-right "['never']"
           fi
 
           # desktop preferences: Gnome/Unity
@@ -117,6 +120,22 @@ function apply-preferences()
 
               # set only one workspace
               gsettings set org.gnome.desktop.wm.preferences num-workspaces 1
+
+              # remove bindings to move between workspaces
+              gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "[]"
+              gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "[]"
+              gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "[]"
+              gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down "[]"
+
+              # remove bindings to move windows betwen workspaces
+              gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "[]"
+              gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "[]"
+              gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "[]"
+              gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "[]"
+
+              # removed Emoji shortcuts
+              gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]"
+              gsettings set org.freedesktop.ibus.panel.emoji unicode-hotkey "[]"
 
           fi
 
