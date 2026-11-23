@@ -43,6 +43,22 @@ function _list_modules()
     fi
 }
 
+# Source all the shell modules (*.sh) in the given directory, sorted by name.
+# The list is read from file descriptor 3, so that the modules cannot consume it through the standard input
+function _source_modules()
+{
+    local modules_dir=$1
+    local module_file
+
+    while IFS= read -r -u 3 module_file
+    do
+        if [[ -n "${module_file}" ]]
+        then
+            source "${module_file}"
+        fi
+    done 3<<< "$(_list_modules "${modules_dir}")"
+}
+
 # Put the given directory at the front of PATH, removing any other occurrence of it:
 # this keeps PATH free of duplicates even if the environment modules are loaded more than once
 function path_prepend()
@@ -70,14 +86,6 @@ function path_prepend()
 # Load again the environment modules, to apply the changes made to them without opening a new login shell
 function reload-env()
 {
-    local env_dir
-    local env_module
-
-    for env_dir in "${DOTFILES_PATH}/env.d" "${HOME}/.env.d"
-    do
-        for env_module in $(_list_modules "${env_dir}")
-        do
-            source "${env_module}"
-        done
-    done
+    _source_modules "${DOTFILES_PATH}/env.d"
+    _source_modules "${HOME}/.env.d"
 }

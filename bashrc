@@ -49,18 +49,10 @@ shopt -s histappend;
 ####################
 
 # dotfiles bashrc
-for bashrc_module in $(_list_modules ${DOTFILES_PATH}/bashrc.d)
-do
-    source "$bashrc_module"
-done
+_source_modules "${DOTFILES_PATH}/bashrc.d"
 
 # user bashrc
-for bashrc_module in $(_list_modules ${HOME}/.bashrc.d)
-do
-    source "$bashrc_module"
-done
-
-unset bashrc_module
+_source_modules "${HOME}/.bashrc.d"
 
 #####################
 ## BASH COMPLETION ##
@@ -73,15 +65,7 @@ then
 fi
 
 # dotfiles completions
-for bash_completion_module in $(_list_modules ${DOTFILES_PATH}/bash_completion.d)
-do
-    source $bash_completion_module
-done
+_source_modules "${DOTFILES_PATH}/bash_completion.d"
 
 # user completions
-for bash_completion_module in $(_list_modules ${HOME}/.bash_completion.d)
-do
-    source "$bash_completion_module"
-done
-
-unset bash_completion_module
+_source_modules "${HOME}/.bash_completion.d"

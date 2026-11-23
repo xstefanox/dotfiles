@@ -39,12 +39,7 @@ fi
 if [ -n "$BASH_VERSION" ]
 then
     # execute each profile module
-    for profile_module in $(_list_modules "${HOME}/.profile.d")
-    do
-        source "$profile_module"
-    done
-
-    unset profile_module
+    _source_modules "${HOME}/.profile.d"
 
     # include .bashrc if it exists
     if [ -f ~/.bashrc ]
