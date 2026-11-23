@@ -4,9 +4,6 @@
 ## PHP ##
 #########
 
-# Composer: add user packages bin directory to the PATH
-PATH=$HOME/.composer/vendor/bin:$PATH
-
 # PHPBrew
 [[ -e ~/.phpbrew ]] && source ~/.phpbrew/bashrc
 
