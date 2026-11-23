@@ -22,8 +22,6 @@
 # ~/.bashrc
 #--------------------------------------
 
-export GTK_THEME=Mint-Y-Dark-Aqua
-
 # load the environment modules: this must happen before the interactivity check below,
 # because the display manager reads this file in a non-interactive shell to set up the graphical session
 if [ -n "$BASH_VERSION" ]
