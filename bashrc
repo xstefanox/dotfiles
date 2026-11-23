@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+#################
+## INTERACTIVE ##
+#################
+
+# This file is also read by Bash in some non-interactive cases (e.g. "ssh host command"):
+# in that case do nothing, because the following configuration is meant for interactive shells only
+if [[ $- != *i* ]]
+then
+    return
+fi
+
 ###########
 ## SETUP ##
 ###########
