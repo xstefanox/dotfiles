@@ -15,13 +15,18 @@ fi
 ## SETUP ##
 ###########
 
-function _list_modules() {
-    local dot_dir=$1
+# find the dotfiles directory through the symlink of this file
+_bashrc_dir=$(dirname "$(readlink "${BASH_SOURCE[0]}")")
 
-    find "${dot_dir}" \( -type f -o -type l \) -name '*.sh' | sort
-}
+if [[ "$_bashrc_dir" == "." ]]
+then
+    _bashrc_dir=$(dirname "${BASH_SOURCE[0]}")
+fi
 
-dotfiles_path=$(dirname $(readlink $BASH_SOURCE))
+# shared helpers (DOTFILES_PATH, _list_modules, path_prepend, reload-env)
+source "${_bashrc_dir}/dotfiles.sh"
+
+unset _bashrc_dir
 
 ##################
 ## BASH OPTIONS ##
@@ -39,30 +44,12 @@ shopt -s no_empty_cmd_completion
 # Append to the Bash history file, rather than overwriting it
 shopt -s histappend;
 
-###########################
-## ENVIRONMENT VARIABLES ##
-###########################
-
-# dotfiles environment variables
-for env_module in $(_list_modules ${dotfiles_path}/env.d)
-do
-    source "$env_module"
-done
-
-# user environment variables
-for env_module in $(_list_modules ${HOME}/.env.d)
-do
-    source "$env_module"
-done
-
-unset env_module
-
 ####################
 ## BASHRC MODULES ##
 ####################
 
 # dotfiles bashrc
-for bashrc_module in $(_list_modules ${dotfiles_path}/bashrc.d)
+for bashrc_module in $(_list_modules ${DOTFILES_PATH}/bashrc.d)
 do
     source "$bashrc_module"
 done
@@ -86,7 +73,7 @@ then
 fi
 
 # dotfiles completions
-for bash_completion_module in $(_list_modules ${dotfiles_path}/bash_completion.d)
+for bash_completion_module in $(_list_modules ${DOTFILES_PATH}/bash_completion.d)
 do
     source $bash_completion_module
 done
@@ -98,10 +85,3 @@ do
 done
 
 unset bash_completion_module
-
-#############
-## CLEANUP ##
-#############
-
-unset dotfiles_path
-unset _list_modules
