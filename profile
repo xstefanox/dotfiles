@@ -1,25 +1,14 @@
 #!/bin/sh
 
 #--------------------------------------
-# Bash initialization
+# Login shell initialization
 #
-# LOGIN:
-# /etc/profile
-#     /etc/profile.env (if exists)
-#     /etc/bash/bashrc (if exists)
-#     /etc/profile.d/*.sh (if exists)
+# This file is also read by the display manager to set up the graphical session, in a non-interactive shell.
 #
-# ~/.bash_profile
-#     /etc/bashrc
-#     ~/.bashrc (if exists)
-# if( ~/.bash_profile doesn't exist)
-#     ~/.bash_login
-# if( ~/.bash_profile doesn't exist)
-#     ~/.bash_login
+#   1. environment modules (env.d): loaded by every login shell, interactive or not
+#   2. if the shell is interactive: profile modules (~/.profile.d), then ~/.bashrc
 #
-# NON-LOGIN
-# /etc/bash/bashrc
-# ~/.bashrc
+# Outside of the Bash-only blocks keep the syntax POSIX, because other shells may read this file.
 #--------------------------------------
 
 # load the environment modules: this must happen before the interactivity check below,
@@ -29,7 +18,7 @@ then
     # find the dotfiles directory through the symlink of this file
     _profile_dir=$(dirname "$(readlink "${BASH_SOURCE[0]}")")
 
-    if [[ "$_profile_dir" == "." ]]
+    if [ "$_profile_dir" = "." ]
     then
         _profile_dir=$(dirname "${BASH_SOURCE[0]}")
     fi
@@ -41,20 +30,24 @@ then
 fi
 
 # if not running interactively, don't do anything
-[[ -z "$PS1" ]] && return
+if [ -z "$PS1" ]
+then
+    return
+fi
 
 # if running Bash
-if [[ -n "$BASH" ]]
+if [ -n "$BASH_VERSION" ]
 then
-
     # execute each profile module
-    for profile_module in `find "${HOME}/.profile.d" \( -type f -o -type l \) -name '*.sh' | sort`
+    for profile_module in $(_list_modules "${HOME}/.profile.d")
     do
         source "$profile_module"
     done
 
+    unset profile_module
+
     # include .bashrc if it exists
-    if [[ -f ~/.bashrc ]]
+    if [ -f ~/.bashrc ]
     then
         . ~/.bashrc
     fi
