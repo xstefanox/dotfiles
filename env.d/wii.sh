@@ -1,9 +1,9 @@
 # WII hd mount point
 if [[ $OSTYPE == darwin* ]]
 then
-  export PATH=/Volumes/WII/bin:$PATH
+  path_prepend /Volumes/WII/bin
 else
-  export PATH=/media/WII/bin:$PATH
+  path_prepend /media/WII/bin
 fi
 
 ## Size of a Nintendo WII ISO image

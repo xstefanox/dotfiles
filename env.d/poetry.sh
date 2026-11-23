@@ -1,1 +1,1 @@
-export PATH="$HOME/.poetry/bin:$PATH"
+path_prepend "$HOME/.poetry/bin"
