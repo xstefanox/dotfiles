@@ -24,6 +24,24 @@
 
 export GTK_THEME=Mint-Y-Dark-Aqua
 
+# load the environment modules: this must happen before the interactivity check below,
+# because the display manager reads this file in a non-interactive shell to set up the graphical session
+if [ -n "$BASH_VERSION" ]
+then
+    # find the dotfiles directory through the symlink of this file
+    _profile_dir=$(dirname "$(readlink "${BASH_SOURCE[0]}")")
+
+    if [[ "$_profile_dir" == "." ]]
+    then
+        _profile_dir=$(dirname "${BASH_SOURCE[0]}")
+    fi
+
+    source "${_profile_dir}/dotfiles.sh"
+    reload-env
+
+    unset _profile_dir
+fi
+
 # if not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
 
