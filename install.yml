@@ -28,3 +28,8 @@
         path:  profile
         force: true
     ~/.screenrc:          screenrc
+
+    # Claude Code
+    ~/.claude/CLAUDE.md:
+        path:   claude/CLAUDE.md
+        create: true
