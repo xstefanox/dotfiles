@@ -1,4 +1,5 @@
 @RTK.md
+@LSP.md
 
 # Branches and worktrees
 

@@ -33,3 +33,6 @@
     ~/.claude/CLAUDE.md:
         path:   claude/CLAUDE.md
         create: true
+    ~/.claude/LSP.md:
+        path:   claude/LSP.md
+        create: true
